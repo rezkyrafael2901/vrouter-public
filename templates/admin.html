@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Admin — {{ site_name }}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08090D;--surface:#11131A;--elevated:#151821;--border:#222632;--text:#F5F7FA;--text2:#8B93A7;--muted:#5F6678;--accent:#8B5CF6;--accent-b:#A78BFA;--accent-d:#7C3AED;--green:#10B981;--red:#EF4444;--amber:#F59E0B;--radius:12px}
+body{font-family:'JetBrains Mono',monospace;line-height:1.5;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text);min-height:100vh}
+code,pre,kbd,.mono{font-family:'JetBrains Mono',monospace}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#222632;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#3A3F50}
+
+/* ─── HEADER ─── */
+.header{padding:20px 20px 0}
+.header-top{display:flex;justify-content:space-between;align-items:center}
+.header-top h1{font-size:24px;font-weight:700;white-space:nowrap}
+.header-actions{display:flex;justify-content:flex-start;gap:8px;flex-wrap:wrap;padding:12px 0 16px}
+
+/* ─── HAMBURGER DROPDOWN ─── */
+.hamburger-wrap{position:relative}
+.hamburger-btn{background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;padding:8px 10px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.hamburger-btn:hover{background:var(--elevated);color:var(--text);border-color:var(--accent)}
+.hamburger-btn svg{width:18px;height:18px}
+.hamburger-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:220px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:50;overflow:hidden}
+.hamburger-dropdown.open{display:block;animation:dropIn .15s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.hamburger-dropdown nav{display:flex;flex-direction:column;padding:6px}
+.hamburger-dropdown .dropdown-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:7px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;transition:all .12s}
+.hamburger-dropdown .dropdown-link:hover{background:var(--elevated);color:var(--text)}
+.hamburger-dropdown .dropdown-link.active{background:rgba(139,92,246,.1);color:var(--accent-b)}
+.hamburger-dropdown .dropdown-link svg{width:16px;height:16px;opacity:.6}
+.hamburger-dropdown .dropdown-link.active svg{opacity:1}
+.hamburger-dropdown .dropdown-divider{height:1px;background:var(--border);margin:4px 8px}
+.hamburger-dropdown .dropdown-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:11px;color:var(--accent-b);opacity:.7}
+.hamburger-dropdown .dropdown-footer svg{width:14px;height:14px;flex-shrink:0}
+
+/* ─── MOBILE DRAWER BACKDROP ─── */
+.menu-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:49}
+.menu-backdrop.open{display:block}
+
+/* ─── MAIN CONTENT ─── */
+.main{padding:20px;min-height:100vh}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;text-decoration:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-d)}
+.btn-secondary{background:var(--elevated);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface);color:var(--text)}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.2)}
+.btn-success{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.btn-success:hover{background:rgba(16,185,129,.2)}
+.btn-amber{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.btn-amber:hover{background:rgba(245,158,11,.2)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn svg{width:14px;height:14px}
+
+/* ─── TABLE ROWS ─── */
+.row-disabled{opacity:.5}
+.row-disabled td{border-bottom-color:rgba(34,38,50,.3)}
+.row-enabled td{border-bottom-color:var(--border)}
+.row-enabled .badge-provider{background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.2)}
+.row-disabled .badge-provider{background:rgba(95,102,120,.1);border-color:rgba(95,102,120,.2)}
+.row-hidden{opacity:.35;background:rgba(239,68,68,.03)}
+.row-hidden td{border-bottom-color:rgba(239,68,68,.1)}
+
+/* ─── STATS ─── */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.stat-value{font-size:28px;font-weight:700}
+.stat-value.accent{color:var(--accent-b)}
+.stat-value.green{color:var(--green)}
+.stat-value.amber{color:var(--amber)}
+.stat-value.red{color:var(--red)}
+.stat-value.muted{color:var(--muted)}
+
+/* ─── TABLE ─── */
+.table-wrapper{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto}
+.table-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.table-header h2{font-size:15px;font-weight:600}
+.table-header-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--elevated);border:1px solid var(--border);border-radius:8px;padding:6px 12px;width:260px}
+.search-box input{background:none;border:none;color:var(--text);font-size:13px;outline:none;width:100%}
+.search-box input::placeholder{color:var(--muted)}
+.search-box svg{width:16px;height:16px;color:var(--muted);flex-shrink:0}
+
+.toggle-hidden-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--elevated);color:var(--text2);cursor:pointer;transition:all .15s}
+.toggle-hidden-btn:hover{background:var(--surface);color:var(--text)}
+.toggle-hidden-btn.active{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 20px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+td{padding:12px 20px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover{background:var(--elevated)}
+
+/* ─── BADGES ─── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.badge-free{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.badge-pro{background:rgba(139,92,246,.1);color:var(--accent-b);border:1px solid rgba(139,92,246,.2)}
+.badge-disabled{background:rgba(95,102,120,.1);color:var(--muted);border:1px solid rgba(95,102,120,.2)}
+.badge-hidden{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.badge-provider{background:var(--elevated);color:var(--text2);border:1px solid var(--border);font-size:10px}
+
+/* ─── TOGGLE ─── */
+.toggle{position:relative;width:40px;height:22px;cursor:pointer;display:inline-block}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;top:0;left:0;right:0;bottom:0;background:#EF4444;border-radius:22px;transition:.25s ease;box-shadow:inset 0 1px 3px rgba(0,0,0,.2)}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.25s ease;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle input:checked+.toggle-slider{background:#10B981}
+.toggle input:checked+.toggle-slider:before{transform:translateX(18px)}
+
+.tier-select{background:var(--elevated);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer}
+.tier-select:focus{outline:none;border-color:var(--accent)}
+
+.rename-input{background:#11131A;border:1px solid #8B5CF6;color:#F5F7FA;padding:4px 8px;border-radius:4px;font-size:12px;width:100%;box-sizing:border-box;font-family:inherit}
+.rename-input:focus{outline:none;border-color:var(--accent-b)}
+
+.display-name-cell{display:flex;align-items:center;gap:6px}
+.display-name-text{color:#8B93A7;font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.edit-name-btn{background:transparent;color:#8B5CF6;border:1px solid #333;padding:2px 6px;border-radius:3px;cursor:pointer;font-size:10px;flex-shrink:0;transition:all .15s}
+.edit-name-btn:hover{background:rgba(139,92,246,.1);border-color:#8B5CF6}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--green);color:var(--green);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .3s;z-index:999}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.error{border-color:var(--red);color:var(--red)}
+
+/* ─── LOADING ─── */
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--muted);font-size:13px}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-right:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .search-box{width:100%}
+  .header{padding:16px 12px 0}
+  .main{padding:16px 12px}
+  .hamburger-dropdown{position:fixed;top:0;right:0;bottom:0;width:280px;min-width:280px;max-width:85vw;border-radius:0;border-left:1px solid var(--border);box-shadow:-8px 0 32px rgba(0,0,0,.5);animation:slideInRight .2s ease;display:none}
+  .hamburger-dropdown.open{display:flex;flex-direction:column}
+  .hamburger-dropdown nav{flex:1;overflow-y:auto}
+  .hamburger-dropdown .dropdown-link{padding:14px 16px;font-size:14px}
+  .dropdown-footer{padding:14px 16px}
+}
+@keyframes slideInRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
+
+kbd{background:var(--elevated);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:11px;color:var(--text2)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <h1>Model Manager</h1>
+    <div class="menu-backdrop" id="menu-backdrop" onclick="toggleDropdown()"></div>
+    <div class="hamburger-wrap">
+      <button class="hamburger-btn" onclick="toggleDropdown()" id="hamburger-btn" aria-label="Menu">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="hamburger-dropdown" id="hamburger-dropdown">
+        <nav>
+          <a href="/dashboard" class="dropdown-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
+            Dashboard
+          </a>
+          <a href="/admin" class="dropdown-link active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Model Manager
+          </a>
+          <a href="/" class="dropdown-link">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/></svg>
+            Website
+          </a>
+        </nav>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-footer">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          {{ admin_email }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="syncModels()" id="sync-btn">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      Sync Backend
+    </button>
+    <button class="btn btn-secondary" onclick="bulkTier('free')" id="all-free-btn">All Free</button>
+    <button class="btn btn-primary" onclick="bulkTier('pro')" id="all-pro-btn">All Pro</button>
+    <span style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-left:4px"><kbd>⌘K</kbd> focus search · <kbd>Esc</kbd> clear</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Visible</div>
+      <div class="stat-value green" id="stat-visible">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Hidden</div>
+      <div class="stat-value red" id="stat-hidden">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Free</div>
+      <div class="stat-value accent" id="stat-free">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pro</div>
+      <div class="stat-value accent" id="stat-pro">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Disabled</div>
+      <div class="stat-value muted" id="stat-disabled">—</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <div class="table-header">
+      <div class="table-header-left">
+        <h2>All Models</h2>
+        <button class="toggle-hidden-btn" id="toggle-hidden-btn" onclick="toggleShowHidden()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          Show Hidden
+        </button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div class="search-box">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search models..." id="search" oninput="filterModels()">
+        </div>
+        <span id="bulk-actions" style="display:none;gap:6px;align-items:center">
+          <button class="btn btn-danger btn-sm" onclick="bulkHideSelected()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+            Hide (<span id="sel-count">0</span>)
+          </button>
+          <button class="btn btn-success btn-sm" onclick="bulkUnhideSelected()">
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Unhide (<span id="sel-count-unhide">0</span>)
+          </button>
+        </span>
+      </div>
+    </div>
+    <div id="models-container">
+      <div class="loading"><div class="spinner"></div>Loading models...</div>
+    </div>
+  </div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+let allModels = [];
+let allModelsRaw = [];
+let selectedModels = new Set();
+let showHidden = false;
+
+// ─── KEYBOARD SHORTCUTS ───
+document.addEventListener('keydown', function(e) {
+  // Cmd/Ctrl+K → focus search
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    var search = document.getElementById('search');
+    if (search) { search.focus(); search.select(); }
+  }
+  // Esc → clear search + blur
+  if (e.key === 'Escape') {
+    var search = document.getElementById('search');
+    if (document.activeElement === search) {
+      search.value = '';
+      filterModels();
+      search.blur();
+    }
+  }
+});
+
+// ─── HAMBURGER DROPDOWN ───
+function toggleDropdown() {
+  var dd = document.getElementById('hamburger-dropdown');
+  var backdrop = document.getElementById('menu-backdrop');
+  var open = dd.classList.toggle('open');
+  backdrop.classList.toggle('open', open);
+}
+// Close on outside click
+document.addEventListener('click', function(e) {
+  var wrap = document.querySelector('.hamburger-wrap');
+  var dd = document.getElementById('hamburger-dropdown');
+  var backdrop = document.getElementById('menu-backdrop');
+  if (wrap && !wrap.contains(e.target) && e.target !== backdrop) {
+    dd.classList.remove('open');
+    backdrop.classList.remove('open');
+  }
+});
+
+async function loadModels() {
+  const container = document.getElementById('models-container');
+  try {
+    const resp = await fetch('/admin/api/models');
+    const data = await resp.json();
+    allModelsRaw = data.models || [];
+    applyFilter();
+  } catch(e) {
+    container.innerHTML = '<div class="loading">Error loading models: ' + e.message + '</div>';
+  }
+}
+
+function applyFilter() {
+  if (showHidden) {
+    allModels = allModelsRaw;
+  } else {
+    allModels = allModelsRaw.filter(m => !m.hidden);
+  }
+  updateStats();
+  renderModels(allModels);
+}
+
+function toggleShowHidden() {
+  showHidden = !showHidden;
+  var btn = document.getElementById('toggle-hidden-btn');
+  btn.classList.toggle('active', showHidden);
+  btn.innerHTML = showHidden
+    ? '<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg> Hide Hidden'
+    : '<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> Show Hidden';
+  selectedModels.clear();
+  updateBulkBtn();
+  filterModels();
+}
+
+function updateStats() {
+  var visible = allModelsRaw.filter(m => !m.hidden && m.enabled).length;
+  var hidden = allModelsRaw.filter(m => m.hidden).length;
+  var free = allModelsRaw.filter(m => !m.hidden && m.tier === 'free' && m.enabled).length;
+  var pro = allModelsRaw.filter(m => !m.hidden && m.tier === 'pro' && m.enabled).length;
+  var disabled = allModelsRaw.filter(m => !m.hidden && !m.enabled).length;
+  document.getElementById('stat-visible').textContent = visible;
+  document.getElementById('stat-hidden').textContent = hidden;
+  document.getElementById('stat-free').textContent = free;
+  document.getElementById('stat-pro').textContent = pro;
+  document.getElementById('stat-disabled').textContent = disabled;
+}
+
+function renderModels(models) {
+  var container = document.getElementById('models-container');
+  if (models.length === 0) {
+    // Empty state — nice placeholder instead of bare text
+    container.innerHTML = '<div class="empty-state" style="text-align:center;padding:60px 20px;color:var(--muted)">' +
+      '<svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin:0 auto 16px;opacity:.4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>' +
+      '<div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:6px">No models found</div>' +
+      '<div style="font-size:12px;margin-bottom:20px">Click "Sync Backend" to import available models, or adjust your search.</div>' +
+      '<button class="btn btn-primary" onclick="syncModels()">Sync Backend</button>' +
+      '</div>';
+    return;
+  }
+  var html = '<div class="table-wrapper"><table><thead><tr>';
+  html += '<th style="width:40px;text-align:center"><input type="checkbox" id="select-all" onchange="toggleSelectAll(this.checked)" title="Select All"></th>';
+  html += '<th>Model ID</th><th>Display Name (Alias)</th><th>Provider</th><th>Tier</th><th>Status</th><th style="text-align:right">Actions</th>';
+  html += '</tr></thead><tbody>';
+
+  for (var i = 0; i < models.length; i++) {
+    var m = models[i];
+    var isEnabled = m.enabled;
+    var isHidden = m.hidden;
+    var rowClass = isHidden ? 'row-hidden' : (isEnabled ? 'row-enabled' : 'row-disabled');
+
+    var tierBadge = m.tier === 'free' ? '<span class="badge badge-free">Free</span>' :
+                    m.tier === 'pro' ? '<span class="badge badge-pro">Pro</span>' :
+                    '<span class="badge badge-disabled">Disabled</span>';
+    if (isHidden) tierBadge += ' <span class="badge badge-hidden">Hidden</span>';
+
+    var toggle = isEnabled
+      ? '<label class="toggle"><input type="checkbox" checked onchange="toggleModel(\''+m.id+'\',this.checked)"><span class="toggle-slider"></span></label>'
+      : '<label class="toggle"><input type="checkbox" onchange="toggleModel(\''+m.id+'\',this.checked)"><span class="toggle-slider"></span></label>';
+
+    html += '<tr class="'+rowClass+'" data-id="'+m.id+'">';
+    html += '<td style="text-align:center"><input type="checkbox" class="row-select" data-id="'+m.id+'" onchange="toggleSelect(\''+m.id+'\',this.checked)"></td>';
+    html += '<td><div style="font-weight:600;font-size:13px">'+m.id+'</div></td>';
+
+    var displayName = m.display_name || '';
+    html += '<td><div class="display-name-cell">';
+    html += '<span class="display-name-text" id="dn-'+m.id.replace(/[^a-zA-Z0-9]/g,'_')+'">'+(displayName || '<i style="opacity:0.4">— set alias —</i>')+'</span>';
+    html += '<button class="edit-name-btn" onclick="editModel(\''+m.id+'\')">Edit</button>';
+    html += '</div></td>';
+
+    html += '<td><span class="badge badge-provider">'+m.provider+'</span></td>';
+    html += '<td><select class="tier-select" onchange="changeTier(\''+m.id+'\',this.value)">';
+    html += '<option value="free"'+(m.tier==='free'?' selected':'')+'>Free</option>';
+    html += '<option value="pro"'+(m.tier==='pro'?' selected':'')+'>Pro</option>';
+    html += '<option value="disabled"'+(m.tier==='disabled'?' selected':'')+'>Disabled</option>';
+    html += '</select></td>';
+    html += '<td>'+toggle+'</td>';
+
+    html += '<td style="text-align:right;display:flex;gap:4px;justify-content:flex-end">';
+    if (isHidden) {
+      html += '<button class="btn btn-success btn-sm" onclick="unhideModel(\''+m.id+'\')">Unhide</button>';
+    } else {
+      html += '<button class="btn btn-danger btn-sm" onclick="hideModel(\''+m.id+'\')">Hide</button>';
+    }
+    html += '</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+}
+
+function filterModels() {
+  var q = document.getElementById('search').value.toLowerCase();
+  var filtered = allModels.filter(function(m) {
+    return m.id.toLowerCase().includes(q)
+      || (m.display_name || '').toLowerCase().includes(q)
+      || m.provider.toLowerCase().includes(q)
+      || m.tier.includes(q);
+  });
+  renderModels(filtered);
+}
+
+async function toggleModel(modelId, enabled) {
+  var m = allModels.find(function(x){return x.id===modelId});
+  if (m) { m.enabled = enabled ? 1 : 0; updateStats(); }
+  await fetch('/admin/api/models/update', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model_id: modelId, enabled: enabled ? 1 : 0, tier: m ? m.tier : 'free', display_name: m ? (m.display_name||'') : ''})
+  });
+  showToast('Updated ' + modelId);
+}
+
+async function changeTier(modelId, tier) {
+  var m = allModels.find(function(x){return x.id===modelId});
+  if (m) m.tier = tier;
+  await fetch('/admin/api/models/update', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model_id: modelId, enabled: m ? m.enabled : 1, tier: tier, display_name: m ? (m.display_name||'') : ''})
+  });
+  updateStats();
+  showToast('Set ' + modelId + ' → ' + tier);
+}
+
+async function hideModel(modelId) {
+  if (!confirm('Hide ' + modelId + ' from users?')) return;
+  await fetch('/admin/api/models/delete', {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model_id: modelId})
+  });
+  showToast('Hidden ' + modelId);
+  await loadModels();
+}
+
+async function unhideModel(modelId) {
+  await fetch('/admin/api/models/update', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model_id: modelId, enabled: 1, tier: 'free', display_name: '', hidden: 0})
+  });
+  showToast('Unhidden ' + modelId);
+  await loadModels();
+}
+
+function editModel(modelId) {
+  var m = allModels.find(function(x){return x.id===modelId});
+  if (!m) return;
+  var row = document.querySelector('tr[data-id="'+modelId+'"]');
+  if (!row) return;
+  var cells = row.querySelectorAll('td');
+
+  // cell 1 = model id, cell 2 = display name, cell 3 = provider
+  var modelIdCell = cells[1];
+  var nameCell = cells[2];
+  var providerCell = cells[3];
+  if (!modelIdCell || !nameCell || !providerCell) return;
+
+  modelIdCell.innerHTML = '<input class="rename-input" id="edit-model-id" type="text" value="'+m.id.replace(/"/g,'&quot;')+'" placeholder="Model ID">';
+  nameCell.innerHTML = '<input class="rename-input" id="edit-display-name" type="text" value="'+(m.display_name||'').replace(/"/g,'&quot;')+'" placeholder="Display name">';
+  providerCell.innerHTML = '<input class="rename-input" id="edit-provider" type="text" value="'+m.provider.replace(/"/g,'&quot;')+'" placeholder="Provider">';
+  // Add save button in actions cell
+  var actionsCell = cells[6];
+  actionsCell.innerHTML = '<div style="display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-sm btn-primary" onclick="saveEdit(\''+modelId+'\')" style="padding:4px 8px;font-size:11px">Save</button><button class="btn btn-sm btn-secondary" onclick="loadModels()" style="padding:4px 8px;font-size:11px">Cancel</button></div>';
+  document.getElementById('edit-model-id').focus();
+}
+
+async function saveEdit(modelId) {
+  var newModelId = document.getElementById('edit-model-id').value.trim();
+  var newDisplayName = document.getElementById('edit-display-name').value.trim();
+  var newProvider = document.getElementById('edit-provider').value.trim();
+  if (!newModelId || !newProvider) { showToast('Model ID and Provider required', 'error'); return; }
+  var m = allModels.find(function(x){return x.id===modelId});
+  // If model_id changed, delete old and create new
+  if (newModelId !== modelId) {
+    await fetch('/admin/api/models/delete', {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({model_id: modelId})
+    });
+    await fetch('/admin/api/models/update', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model_id: newModelId,
+        display_name: newDisplayName,
+        provider: newProvider,
+        enabled: m ? m.enabled : 1,
+        tier: m ? m.tier : 'free'
+      })
+    });
+  } else {
+    await fetch('/admin/api/models/update', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model_id: modelId,
+        display_name: newDisplayName,
+        provider: newProvider,
+        enabled: m ? m.enabled : 1,
+        tier: m ? m.tier : 'free'
+      })
+    });
+  }
+  showToast('Updated: ' + newModelId);
+  await loadModels();
+}
+
+function toggleSelect(modelId, checked) {
+  if (checked) { selectedModels.add(modelId); } else { selectedModels.delete(modelId); }
+  updateBulkBtn();
+}
+
+function toggleSelectAll(checked) {
+  selectedModels.clear();
+  if (checked) { allModels.forEach(function(m){selectedModels.add(m.id)}); }
+  document.querySelectorAll('.row-select').forEach(function(cb){cb.checked = checked});
+  updateBulkBtn();
+}
+
+function updateBulkBtn() {
+  var bulkDiv = document.getElementById('bulk-actions');
+  var countEl = document.getElementById('sel-count');
+  var countEl2 = document.getElementById('sel-count-unhide');
+  var n = selectedModels.size;
+  bulkDiv.style.display = n > 0 ? 'inline-flex' : 'none';
+  countEl.textContent = n;
+  countEl2.textContent = n;
+}
+
+async function bulkHideSelected() {
+  var ids = Array.from(selectedModels);
+  if (ids.length === 0) return;
+  if (!confirm('Hide ' + ids.length + ' selected model(s) from users?')) return;
+  var deleted = 0;
+  for (var i = 0; i < ids.length; i++) {
+    try {
+      var resp = await fetch('/admin/api/models/delete', {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({model_id: ids[i]})
+      });
+      var data = await resp.json();
+      if (data.ok) deleted++;
+    } catch(e) {}
+  }
+  selectedModels.clear();
+  updateBulkBtn();
+  showToast('Hidden ' + deleted + ' of ' + ids.length + ' models');
+  await loadModels();
+}
+
+async function bulkUnhideSelected() {
+  var ids = Array.from(selectedModels);
+  if (ids.length === 0) return;
+  if (!confirm('Unhide ' + ids.length + ' selected model(s)?')) return;
+  var restored = 0;
+  for (var i = 0; i < ids.length; i++) {
+    try {
+      var resp = await fetch('/admin/api/models/update', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({model_id: ids[i], enabled: 1, tier: 'free', display_name: '', hidden: 0})
+      });
+      var data = await resp.json();
+      if (data.ok) restored++;
+    } catch(e) {}
+  }
+  selectedModels.clear();
+  updateBulkBtn();
+  showToast('Unhidden ' + restored + ' of ' + ids.length + ' models');
+  await loadModels();
+}
+
+async function bulkTier(tier) {
+  if (!confirm('Set ALL visible models to ' + tier + '?')) return;
+  var btn = document.getElementById(tier === 'free' ? 'all-free-btn' : 'all-pro-btn');
+  var orig = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;margin:0"></div> Applying...';
+  try {
+    var models = allModels.filter(function(m){return !m.hidden}).map(function(m){
+      return {model_id: m.id, enabled: m.enabled, tier: tier};
+    });
+    var resp = await fetch('/admin/api/models/bulk', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({models: models})
+    });
+    var data = await resp.json();
+    if (!data.ok) throw new Error(data.error || 'Failed');
+    showToast('All visible models set to ' + tier);
+    await loadModels();
+  } catch(e) {
+    showToast('Bulk tier failed: ' + e.message, 'error');
+  }
+  btn.disabled = false;
+  btn.innerHTML = orig;
+}
+
+async function syncModels() {
+  var btn = document.getElementById('sync-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px"></div> Syncing...';
+  try {
+    var resp = await fetch('/admin/api/models/sync', {method: 'POST'});
+    var data = await resp.json();
+    showToast('Synced! Added ' + data.added + ', skipped ' + data.skipped);
+    await loadModels();
+  } catch(e) {
+    showToast('Sync failed: ' + e.message);
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Sync Backend';
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'error' ? ' error' : '');
+  setTimeout(function(){t.className = 'toast'}, 2500);
+}
+
+// Init
+loadModels();
+</script>
+</body>
+</html>

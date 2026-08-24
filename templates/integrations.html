@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrations & Tools — {{ site_name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08090D;
+  --surface: #11131A;
+  --border: #222632;
+  --text: #F5F7FA;
+  --text2: #8B93A7;
+  --text3: #525868;
+  --accent: #8B5CF6;
+  --accent-hover: #A78BFA;
+  --accent-dim: rgba(139, 92, 246, 0.12);
+  --accent-border: rgba(139, 92, 246, 0.25);
+  --green: #34D399;
+  --teal: #2DD4BF;
+  --amber: #FBBF24;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code, .mono { font-family: 'JetBrains Mono', monospace; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+a:hover { opacity: 0.85; text-decoration: underline; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8, 9, 13, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--text); font-weight: 700; font-size: 18px;
+}
+.nav-logo img { height: 28px; width: auto; }
+.nav-center { flex: 1; display: flex; justify-content: center; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  color: var(--text2); font-size: 14px; font-weight: 500;
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); text-decoration: none; opacity: 1; }
+.nav-links a.active { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 10px; font-weight: 500; font-size: 14px;
+  transition: all 0.2s; cursor: pointer; border: none; padding: 8px 18px;
+  text-decoration: none;
+}
+.btn-accent {
+  background: var(--accent-dim); color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.btn-accent:hover { background: rgba(139, 92, 246, 0.2); text-decoration: none; opacity: 1; }
+.btn-ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.04); color: var(--text);
+  text-decoration: none; opacity: 1;
+}
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+
+/* PAGE HEADER */
+.page-header {
+  padding: 64px 0 48px;
+  text-align: center;
+}
+.page-header h1 {
+  font-size: 42px; font-weight: 800; margin-bottom: 16px;
+  letter-spacing: -1px; line-height: 1.15;
+}
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.page-header p {
+  font-size: 17px; color: var(--text2); max-width: 600px;
+  margin: 0 auto; line-height: 1.7;
+}
+
+/* INTEGRATIONS GRID */
+.integrations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  padding-bottom: 80px;
+}
+
+.int-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  transition: transform 0.2s ease, border-color 0.25s ease;
+}
+.int-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-border);
+}
+
+.int-card-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+}
+.int-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.int-card-header h3 {
+  font-size: 18px; font-weight: 700; color: var(--text);
+}
+.int-card-header .int-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 6px;
+  margin-left: auto;
+}
+
+.int-desc {
+  font-size: 14px; color: var(--text2); margin-bottom: 20px; line-height: 1.65;
+}
+
+.int-code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-size: 12px; line-height: 1.75;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text2); white-space: pre;
+}
+.int-code .key { color: var(--accent-hover); }
+.int-code .str { color: var(--green); }
+.int-code .comment { color: var(--text3); }
+
+/* BACK LINK */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--text2); font-size: 13px; font-weight: 500;
+  text-decoration: none; margin-bottom: 12px;
+}
+.back-link:hover { color: var(--accent); text-decoration: none; opacity: 1; }
+.back-link svg { width: 14px; height: 14px; }
+
+/* FOOTER */
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 60px 0 32px;
+  font-size: 14px;
+}
+.footer-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+}
+.footer-top {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px; margin-bottom: 40px;
+}
+.footer-col h4 {
+  font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text);
+}
+.footer-col a {
+  display: block; margin-bottom: 10px; color: var(--text2); font-weight: 400;
+}
+.footer-col a:hover { color: var(--accent); text-decoration: none; opacity: 1; }
+.footer-desc {
+  font-size: 14px; color: var(--text2); margin-top: 12px; max-width: 320px;
+}
+.footer-bottom {
+  padding-top: 32px; border-top: 1px solid var(--border);
+  text-align: center; color: var(--text2); font-size: 13px;
+}
+.footer-bottom a { color: var(--text2); font-weight: 500; }
+.footer-bottom a:hover { color: var(--accent); }
+
+@media (max-width: 768px) {
+  .nav-center { display: none; }
+  .nav-inner { padding: 0 16px; }
+  .integrations-grid { grid-template-columns: 1fr; }
+  .page-header h1 { font-size: 28px; }
+  .page-header { padding: 40px 16px 32px; }
+  .footer-top { grid-template-columns: 1fr; gap: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <img src="/static/vrouter-logo.svg" alt="VRouter" />
+    </a>
+    <div class="nav-center">
+      <div class="nav-links">
+        <a href="/features">Features</a>
+        <a href="/docs">Docs</a>
+        <a href="/status">Status</a>
+        <a href="/faq">FAQ</a>
+        <a href="/integrations" class="active">Integrations</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      {% if is_logged_in %}
+        <a href="/dashboard" class="btn btn-ghost">Dashboard</a>
+        <span class="user-avatar">{{ user_initial }}</span>
+      {% else %}
+        <a href="/auth" class="btn btn-accent">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="container" style="display:block;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;">
+    <div class="page-header">
+      <a href="/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Home
+      </a>
+      <h1><span class="gradient-text">Integrations & Tools</span></h1>
+      <p>Configure your favorite AI tools to use VRouter as the backend. Just change the base URL and paste your API key.</p>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGRATIONS GRID -->
+<div class="container" style="display:block;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;">
+    <div class="integrations-grid">
+
+      <!-- Cursor -->
+      <div class="int-card">
+        <div class="int-card-header">
+          <div class="int-icon" style="background:rgba(14,165,233,0.1);">⚡</div>
+          <h3>Cursor</h3>
+          <span class="int-tag" style="background:rgba(14,165,233,0.1);color:#38bdf8;">IDE</span>
+        </div>
+        <p class="int-desc">Use VRouter as a custom OpenAI endpoint in Cursor's AI settings. Works with all models through the Chat, Composer, and Tab features.</p>
+        <div class="int-code"><span class="comment">// Cursor Settings → Models → OpenAI API Key</span>
+<span class="comment">// Settings → Models → Override OpenAI Base URL</span>
+
+<span class="key">Base URL:</span> <span class="str">https://vrouter.my.id/v1</span>
+<span class="key">API Key:</span>  <span class="str">vr-you...-key</span></div>
+      </div>
+
+      <!-- Claude Code -->
+      <div class="int-card">
+        <div class="int-card-header">
+          <div class="int-icon" style="background:rgba(217,119,87,0.1);">🧠</div>
+          <h3>Claude Code</h3>
+          <span class="int-tag" style="background:rgba(217,119,87,0.1);color:#d97757;">CLI</span>
+        </div>
+        <p class="int-desc">Route Claude Code through VRouter by setting the Anthropic base URL environment variable. All Claude models available.</p>
+        <div class="int-code"><span class="comment"># Set environment variable before launching</span>
+<span class="key">export</span> <span class="str">ANTHROPIC_BASE_URL=https://vrouter.my.id/v1</span>
+<span class="key">export</span> <span class="str">ANTHROPIC_API_KEY=vr-you...-key</span>
+
+<span class="comment"># Then start Claude Code normally</span>
+<span class="key">claude</span></div>
+      </div>
+
+      <!-- OpenAI Codex -->
+      <div class="int-card">
+        <div class="int-card-header">
+          <div class="int-icon" style="background:rgba(16,163,127,0.1);">🤖</div>
+          <h3>OpenAI Codex</h3>
+          <span class="int-tag" style="background:rgba(16,163,127,0.1);color:#10a37f;">CLI</span>
+        </div>
+        <p class="int-desc">Use VRouter with OpenAI Codex CLI by pointing the OpenAI base URL to our endpoint.</p>
+        <div class="int-code"><span class="comment"># Set environment variable</span>
+<span class="key">export</span> <span class="str">OPENAI_BASE_URL=https://vrouter.my.id/v1</span>
+<span class="key">export</span> <span class="str">OPENAI_API_KEY=vr-you...-key</span>
+
+<span class="comment"># Run codex with any model</span>
+<span class="key">codex</span> <span class="str">--model gpt-4o "your prompt"</span></div>
+      </div>
+
+      <!-- Continue.dev -->
+      <div class="int-card">
+        <div class="int-card-header">
+          <div class="int-icon" style="background:var(--accent-dim);">🔌</div>
+          <h3>Continue.dev</h3>
+          <span class="int-tag" style="background:var(--accent-dim);color:var(--accent);">EXT</span>
+        </div>
+        <p class="int-desc">Configure Continue.dev VS Code / JetBrains extension to use VRouter as the LLM provider via its apiBase config.</p>
+        <div class="int-code"><span class="comment">// ~/.continue/config.json</span>
+{
+  <span class="key">"models"</span>: [{
+    <span class="key">"title"</span>: <span class="str">"VRouter"</span>,
+    <span class="key">"provider"</span>: <span class="str">"openai"</span>,
+    <span class="key">"model"</span>: <span class="str">"gpt-4o"</span>,
+    <span class="key">"apiBase"</span>: <span class="str">"https://vrouter.my.id/v1"</span>,
+    <span class="key">"apiKey"</span>: <span class="str">"vr-you...-key"</span>
+  }]
+}</div>
+      </div>
+
+      <!-- Hermes / Aider -->
+      <div class="int-card">
+        <div class="int-card-header">
+          <div class="int-icon" style="background:rgba(251,191,36,0.1);">🔮</div>
+          <h3>Hermes / Aider</h3>
+          <span class="int-tag" style="background:rgba(251,191,36,0.1);color:var(--amber);">AGENT</span>
+        </div>
+        <p class="int-desc">Use VRouter with Hermes Agent, Aider, or any OpenAI-compatible agent via Bearer token authentication.</p>
+        <div class="int-code"><span class="comment"># Aider</span>
+<span class="key">export</span> <span class="str">OPENAI_API_BASE=https://vrouter.my.id/v1</span>
+<span class="key">export</span> <span class="str">OPENAI_API_KEY=vr-you...-key</span>
+<span class="key">aider</span> <span class="str">--model openai/gpt-4o</span>
+
+<span class="comment"># Hermes Agent</span>
+<span class="key">export</span> <span class="str">OPENAI_BASE_URL=https://vrouter.my.id/v1</span>
+<span class="key">export</span> <span class="str">OPENAI_API_KEY=vr-you...-key</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-col">
+        <a href="/" class="nav-logo" style="margin-bottom:4px;">
+          <img src="/static/vrouter-logo.svg" alt="VRouter" />
+        </a>
+        <p class="footer-desc">OpenAI-compatible LLM router with 1000+ models across 30+ providers.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/integrations">Integrations</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Docs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="/status">Status</a>
+        <a href="/faq">FAQ</a>
+        <a href="/terms">Terms</a>
+        <a href="/fair-use">Fair Use</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="mailto:viresen16@gmail.com">Contact</a>
+        <a href="https://github.com/rezkyrafael2901/vrouter">GitHub</a>
+        <a href="https://t.me/virexagent">Telegram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 VRouter. Built in Indonesia. &middot; <a href="/auth">Admin Login</a></p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

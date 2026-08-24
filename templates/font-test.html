@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Test — VRouter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#08090D; color:#F5F7FA; padding:24px; font-family:'Geist',system-ui,sans-serif; }
+h1 { font-size:28px; margin-bottom:8px; }
+.sub { color:#8B93A7; margin-bottom:32px; font-size:14px; }
+
+.font-block { 
+  background:#11131A; border:1px solid #222632; border-radius:16px; 
+  padding:24px; margin-bottom:20px;
+  border-left: 4px solid #8B5CF6;
+}
+.font-block.highlight { border-left-color:#22c55e; }
+.font-name { 
+  font-size:13px; font-weight:700; color:#8B5CF6; text-transform:uppercase; 
+  letter-spacing:0.08em; margin-bottom:16px;
+}
+.font-block.highlight .font-name { color:#22c55e; }
+
+.row { display:flex; gap:24px; flex-wrap:wrap; margin-bottom:12px; align-items:baseline; }
+.label { font-size:11px; color:#555C70; width:120px; flex-shrink:0; }
+.value { font-size:15px; }
+
+.stat-card {
+  background:#0D0F15; border:1px solid #222632; border-radius:12px;
+  padding:16px 20px; min-width:150px; flex:1;
+}
+.stat-label { font-size:11px; color:#555C70; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+.stat-value { font-size:22px; font-weight:800; }
+.stat-value.white { color:#F5F7FA; }
+.stat-value.purple { color:#A78BFA; }
+.stat-value.green { color:#22c55e; }
+
+.model-row {
+  display:flex; align-items:center; gap:12px;
+  background:#0D0F15; border:1px solid #222632; border-radius:12px;
+  padding:12px 16px; margin-top:12px;
+}
+.model-icon {
+  width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,#8B5CF6,#7C3AED);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:16px; color:white;
+}
+.model-name { flex:1; font-size:14px; font-weight:600; }
+.model-stats { text-align:right; font-size:12px; color:#8B93A7; }
+.model-stats strong { color:#F5F7FA; font-size:13px; display:block; }
+
+.section-title { font-size:13px; font-weight:700; color:#F5F7FA; margin-bottom:12px; }
+
+.diff-table { width:100%; border-collapse:collapse; margin-top:12px; }
+.diff-table th { font-size:11px; color:#555C70; text-align:left; padding:8px; border-bottom:1px solid #222632; }
+.diff-table td { font-size:14px; padding:8px; border-bottom:1px solid #1a1d27; }
+.diff-table td:first-child { color:#8B93A7; width:60px; }
+
+code { background:#1a1d27; padding:2px 8px; border-radius:4px; font-size:13px; }
+</style>
+</head>
+<body>
+<h1>🔤 Font Comparison Test</h1>
+<p class="sub">Same content, 4 monospace fonts + Geist (original). Compare with your screenshot.</p>
+
+<!-- ==================== JetBrains Mono ==================== -->
+<div class="font-block highlight">
+  <div class="font-name">1️⃣ JetBrains Mono (Vercel default mono)</div>
+  
+  <div class="row" style="margin-bottom:16px">
+    <div class="stat-card">
+      <div class="stat-label">Total Requests</div>
+      <div class="stat-value white" style="font-family:'JetBrains Mono',monospace">1,664</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens In</div>
+      <div class="stat-value purple" style="font-family:'JetBrains Mono',monospace">128,767</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens Out</div>
+      <div class="stat-value purple" style="font-family:'JetBrains Mono',monospace">80,629</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Latency</div>
+      <div class="stat-value green" style="font-family:'JetBrains Mono',monospace">6659ms</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-family:'JetBrains Mono',monospace">Last 24 Hours</div>
+  <table class="diff-table" style="font-family:'JetBrains Mono',monospace">
+    <tr><td>Requests</td><td style="color:#F5F7FA;font-weight:600">1,005</td></tr>
+    <tr><td>Tokens In</td><td style="color:#A78BFA;font-weight:600">79,591</td></tr>
+    <tr><td>Tokens Out</td><td style="color:#A78BFA;font-weight:600">49,365</td></tr>
+  </table>
+
+  <div class="section-title" style="font-family:'JetBrains Mono',monospace;margin-top:16px">Top Models (24h)</div>
+  <div class="model-row" style="font-family:'JetBrains Mono',monospace">
+    <div class="model-icon">J</div>
+    <div class="model-name">jr/f/mimo-v2.5-free</div>
+    <div class="model-stats"><strong>266 req</strong>80,424 tokens</div>
+  </div>
+
+  <div style="margin-top:16px;font-family:'JetBrains Mono',monospace">
+    <code>curl https://vrouter.my.id/v1/chat/completions -H "Authorization: Bearer sk-xxx"</code>
+  </div>
+</div>
+
+<!-- ==================== Fira Code ==================== -->
+<div class="font-block">
+  <div class="font-name">2️⃣ Fira Code</div>
+  
+  <div class="row" style="margin-bottom:16px">
+    <div class="stat-card">
+      <div class="stat-label">Total Requests</div>
+      <div class="stat-value white" style="font-family:'Fira Code',monospace">1,664</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens In</div>
+      <div class="stat-value purple" style="font-family:'Fira Code',monospace">128,767</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens Out</div>
+      <div class="stat-value purple" style="font-family:'Fira Code',monospace">80,629</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Latency</div>
+      <div class="stat-value green" style="font-family:'Fira Code',monospace">6659ms</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-family:'Fira Code',monospace">Last 24 Hours</div>
+  <table class="diff-table" style="font-family:'Fira Code',monospace">
+    <tr><td>Requests</td><td style="color:#F5F7FA;font-weight:600">1,005</td></tr>
+    <tr><td>Tokens In</td><td style="color:#A78BFA;font-weight:600">79,591</td></tr>
+    <tr><td>Tokens Out</td><td style="color:#A78BFA;font-weight:600">49,365</td></tr>
+  </table>
+
+  <div class="section-title" style="font-family:'Fira Code',monospace;margin-top:16px">Top Models (24h)</div>
+  <div class="model-row" style="font-family:'Fira Code',monospace">
+    <div class="model-icon">J</div>
+    <div class="model-name">jr/f/mimo-v2.5-free</div>
+    <div class="model-stats"><strong>266 req</strong>80,424 tokens</div>
+  </div>
+
+  <div style="margin-top:16px;font-family:'Fira Code',monospace">
+    <code>curl https://vrouter.my.id/v1/chat/completions -H "Authorization: Bearer sk-xxx"</code>
+  </div>
+</div>
+
+<!-- ==================== IBM Plex Mono ==================== -->
+<div class="font-block">
+  <div class="font-name">3️⃣ IBM Plex Mono</div>
+  
+  <div class="row" style="margin-bottom:16px">
+    <div class="stat-card">
+      <div class="stat-label">Total Requests</div>
+      <div class="stat-value white" style="font-family:'IBM Plex Mono',monospace">1,664</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens In</div>
+      <div class="stat-value purple" style="font-family:'IBM Plex Mono',monospace">128,767</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens Out</div>
+      <div class="stat-value purple" style="font-family:'IBM Plex Mono',monospace">80,629</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Latency</div>
+      <div class="stat-value green" style="font-family:'IBM Plex Mono',monospace">6659ms</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-family:'IBM Plex Mono',monospace">Last 24 Hours</div>
+  <table class="diff-table" style="font-family:'IBM Plex Mono',monospace">
+    <tr><td>Requests</td><td style="color:#F5F7FA;font-weight:600">1,005</td></tr>
+    <tr><td>Tokens In</td><td style="color:#A78BFA;font-weight:600">79,591</td></tr>
+    <tr><td>Tokens Out</td><td style="color:#A78BFA;font-weight:600">49,365</td></tr>
+  </table>
+
+  <div class="section-title" style="font-family:'IBM Plex Mono',monospace;margin-top:16px">Top Models (24h)</div>
+  <div class="model-row" style="font-family:'IBM Plex Mono',monospace">
+    <div class="model-icon">J</div>
+    <div class="model-name">jr/f/mimo-v2.5-free</div>
+    <div class="model-stats"><strong>266 req</strong>80,424 tokens</div>
+  </div>
+
+  <div style="margin-top:16px;font-family:'IBM Plex Mono',monospace">
+    <code>curl https://vrouter.my.id/v1/chat/completions -H "Authorization: Bearer sk-xxx"</code>
+  </div>
+</div>
+
+<!-- ==================== Space Mono ==================== -->
+<div class="font-block">
+  <div class="font-name">4️⃣ Space Mono</div>
+  
+  <div class="row" style="margin-bottom:16px">
+    <div class="stat-card">
+      <div class="stat-label">Total Requests</div>
+      <div class="stat-value white" style="font-family:'Space Mono',monospace">1,664</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens In</div>
+      <div class="stat-value purple" style="font-family:'Space Mono',monospace">128,767</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens Out</div>
+      <div class="stat-value purple" style="font-family:'Space Mono',monospace">80,629</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Latency</div>
+      <div class="stat-value green" style="font-family:'Space Mono',monospace">6659ms</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-family:'Space Mono',monospace">Last 24 Hours</div>
+  <table class="diff-table" style="font-family:'Space Mono',monospace">
+    <tr><td>Requests</td><td style="color:#F5F7FA;font-weight:600">1,005</td></tr>
+    <tr><td>Tokens In</td><td style="color:#A78BFA;font-weight:600">79,591</td></tr>
+    <tr><td>Tokens Out</td><td style="color:#A78BFA;font-weight:600">49,365</td></tr>
+  </table>
+
+  <div class="section-title" style="font-family:'Space Mono',monospace;margin-top:16px">Top Models (24h)</div>
+  <div class="model-row" style="font-family:'Space Mono',monospace">
+    <div class="model-icon">J</div>
+    <div class="model-name">jr/f/mimo-v2.5-free</div>
+    <div class="model-stats"><strong>266 req</strong>80,424 tokens</div>
+  </div>
+
+  <div style="margin-top:16px;font-family:'Space Mono',monospace">
+    <code>curl https://vrouter.my.id/v1/chat/completions -H "Authorization: Bearer sk-xxx"</code>
+  </div>
+</div>
+
+<!-- ==================== Geist (current / reference) ==================== -->
+<div class="font-block" style="border-left-color:#F59E0B;">
+  <div class="font-name" style="color:#F59E0B">0️⃣ Geist Sans (current / reference)</div>
+  
+  <div class="row" style="margin-bottom:16px">
+    <div class="stat-card">
+      <div class="stat-label">Total Requests</div>
+      <div class="stat-value white" style="font-family:'Geist',system-ui,sans-serif">1,664</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens In</div>
+      <div class="stat-value purple" style="font-family:'Geist',system-ui,sans-serif">128,767</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens Out</div>
+      <div class="stat-value purple" style="font-family:'Geist',system-ui,sans-serif">80,629</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Latency</div>
+      <div class="stat-value green" style="font-family:'Geist',system-ui,sans-serif">6659ms</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-family:'Geist',system-ui,sans-serif">Last 24 Hours</div>
+  <table class="diff-table" style="font-family:'Geist',system-ui,sans-serif">
+    <tr><td>Requests</td><td style="color:#F5F7FA;font-weight:600">1,005</td></tr>
+    <tr><td>Tokens In</td><td style="color:#A78BFA;font-weight:600">79,591</td></tr>
+    <tr><td>Tokens Out</td><td style="color:#A78BFA;font-weight:600">49,365</td></tr>
+  </table>
+
+  <div class="section-title" style="font-family:'Geist',system-ui,sans-serif;margin-top:16px">Top Models (24h)</div>
+  <div class="model-row" style="font-family:'Geist',system-ui,sans-serif">
+    <div class="model-icon">J</div>
+    <div class="model-name">jr/f/mimo-v2.5-free</div>
+    <div class="model-stats"><strong>266 req</strong>80,424 tokens</div>
+  </div>
+
+  <div style="margin-top:16px;font-family:'Geist',system-ui,sans-serif">
+    <code>curl https://vrouter.my.id/v1/chat/completions -H "Authorization: Bearer sk-xxx"</code>
+  </div>
+</div>
+
+<div style="text-align:center;padding:32px;color:#555C70;font-size:12px;">
+  Compare each block with your screenshot. Reply with the number (1-4) or "0" for Geist.
+</div>
+
+</body>
+</html>

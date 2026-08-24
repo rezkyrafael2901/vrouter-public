@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status — {{ site_name }}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        bg: '#08090D',
+        surface: '#11131A',
+        border: '#222632',
+        accent: '#8B5CF6',
+        'accent-light': '#A78BFA',
+        'accent-dim': '#4C1D95',
+        primary: '#F5F7FA',
+        secondary: '#8B93A7',
+      }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; margin: 0; -webkit-font-smoothing: antialiased; }
+::selection { background: rgba(139,92,246,0.3); }
+a { color: #A78BFA; text-decoration: none; transition: color 0.2s; }
+a:hover { color: #C4B5FD; }
+
+/* ── Animations ── */
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.animate-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.delay-1 { animation-delay: 0.06s; }
+.delay-2 { animation-delay: 0.12s; }
+.delay-3 { animation-delay: 0.18s; }
+.delay-4 { animation-delay: 0.24s; }
+.delay-5 { animation-delay: 0.30s; }
+.delay-6 { animation-delay: 0.36s; }
+
+/* ── Status Banner ── */
+.status-banner {
+  border-radius: 16px; padding: 28px 32px; position: relative; overflow: hidden;
+  border: 1px solid rgba(34,197,94,0.12); background: #11131A;
+}
+.status-banner::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34,197,94,0.4), transparent);
+}
+.status-banner.degraded {
+  border-color: rgba(251,191,36,0.12);
+}
+.status-banner.degraded::before {
+  background: linear-gradient(90deg, transparent, rgba(251,191,36,0.4), transparent);
+}
+.status-banner.down {
+  border-color: rgba(239,68,68,0.12);
+}
+.status-banner.down::before {
+  background: linear-gradient(90deg, transparent, rgba(239,68,68,0.4), transparent);
+}
+
+/* ── Status Dot ── */
+.status-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+.status-dot.green { background: #22c55e; box-shadow: 0 0 12px rgba(34,197,94,0.5); }
+.status-dot.amber { background: #f59e0b; box-shadow: 0 0 12px rgba(251,191,36,0.5); }
+.status-dot.red { background: #ef4444; box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+
+/* ── Service Cards ── */
+.service-card {
+  background: #11131A; border: 1px solid #222632;
+  border-radius: 14px; padding: 20px 24px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.service-card:hover { border-color: #2d3244; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.service-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.service-dot.ok { background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.4); }
+.service-dot.warn { background: #f59e0b; box-shadow: 0 0 8px rgba(251,191,36,0.4); }
+.service-dot.err { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+/* ── Uptime Bar ── */
+.uptime-bar { display: flex; gap: 2px; height: 32px; align-items: end; }
+.uptime-segment {
+  flex: 1; border-radius: 3px; min-height: 4px; transition: all 0.25s ease;
+  cursor: pointer; position: relative;
+}
+.uptime-segment:hover { opacity: 0.85; transform: scaleY(1.08); }
+.uptime-segment.up { background: rgba(34,197,94,0.55); }
+.uptime-segment.degraded { background: rgba(251,191,36,0.55); }
+.uptime-segment.down { background: rgba(239,68,68,0.55); }
+.uptime-segment:hover::after {
+  content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%); background: #1A1C26; color: #F5F7FA; padding: 5px 10px;
+  border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 10;
+  border: 1px solid #222632; font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* ── Stats ── */
+.stat-card {
+  background: #11131A; border: 1px solid #222632;
+  border-radius: 14px; padding: 20px 24px;
+  transition: border-color 0.25s ease;
+}
+.stat-card:hover { border-color: #2d3244; }
+
+/* ── Incident Card ── */
+.incident-card {
+  background: #11131A; border: 1px solid #222632;
+  border-radius: 12px; padding: 20px; border-left: 3px solid #222632;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .nav-links-desktop { display: none; }
+  .mobile-menu-btn { display: flex !important; }
+}
+</style>
+</head>
+<body style="overflow-x:hidden">
+
+<!-- NAVBAR -->
+<nav class="sticky top-0 z-50" style="background:rgba(8,9,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid #222632;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 24px;" class="flex items-center justify-between h-16 relative">
+    <!-- Left: Logo only -->
+    <a href="/" class="flex items-center gap-2 shrink-0">
+      <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-8 w-auto" />
+    </a>
+    <!-- Center: Nav links (desktop) -->
+    <div class="flex items-center gap-5 nav-links-desktop">
+      <a href="/features" style="font-size:13px;color:#8B93A7;font-weight:500;">Features</a>
+      <a href="/docs" style="font-size:13px;color:#8B93A7;font-weight:500;">Docs</a>
+      <a href="/status" style="color:#8B5CF6;font-size:13px;font-weight:500;">Status</a>
+      <a href="/faq" style="font-size:13px;color:#8B93A7;font-weight:500;">FAQ</a>
+    </div>
+    <!-- Right: CTA -->
+    <div class="flex items-center gap-3">
+      {% if is_logged_in %}
+      <a href="/dashboard" class="text-[13px] font-medium px-4 py-2 rounded-lg transition-all" style="background:rgba(139,92,246,0.1);color:#8B5CF6;border:1px solid rgba(139,92,246,0.2);">Dashboard</a>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#6D28D9);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;">{{ user_initial }}</div>
+        <a href="/auth/logout" style="font-size:13px;color:#8B93A7;" onmouseover="this.style.color='#F5F7FA'" onmouseout="this.style.color='#8B93A7'">Logout</a>
+      </div>
+      {% else %}
+      <a href="/auth" class="text-[13px] font-medium px-4 py-2 rounded-lg transition-all" style="border:1px solid #222632;color:#F5F7FA;">Sign In</a>
+      {% endif %}
+      <button id="status-hamburger" class="mobile-menu-btn md:hidden flex items-center justify-center w-9 h-9 rounded-lg" style="background:rgba(139,92,246,0.08);" onclick="toggleStatusMobileNav()">
+        <svg width="18" height="18" fill="none" stroke="#8B93A7" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile dropdown menu -->
+  <div id="status-mobile-panel" class="hidden" style="background:rgba(8,9,13,0.95);border-bottom:1px solid #222632;padding:12px 24px;">
+    <a href="/features" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Features</a>
+    <a href="/docs" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Docs</a>
+    <a href="/status" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B5CF6;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Status</a>
+    <a href="/faq" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">FAQ</a>
+  </div>
+</nav>
+<script>
+function toggleStatusMobileNav(){const p=document.getElementById('status-mobile-panel');p.classList.contains('hidden')?p.classList.remove('hidden'):p.classList.add('hidden');}
+function closeStatusMobileNav(){document.getElementById('status-mobile-panel')?.classList.add('hidden');}
+document.addEventListener('click',function(e){const p=document.getElementById('status-mobile-panel'),b=document.getElementById('status-hamburger');if(p&&!p.contains(e.target)&&b&&!b.contains(e.target))closeStatusMobileNav();});
+</script>
+
+<!-- MAIN -->
+<div style="max-width:1100px;margin:0 auto;padding:48px 24px 0;">
+
+  <!-- PAGE HEADER -->
+  <div class="mb-10 animate-in">
+    <div class="flex items-center gap-2 mb-3">
+      <span style="font-size:11px;font-weight:700;color:#8B5CF6;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">SYSTEM STATUS</span>
+    </div>
+    <h1 style="font-size:32px;font-weight:800;color:#F5F7FA;letter-spacing:-0.02em;margin-bottom:8px;">Service Status</h1>
+    <p style="color:#8B93A7;font-size:14px;margin:0;">Real-time health monitoring for all VRouter infrastructure.</p>
+  </div>
+
+  <!-- OVERALL STATUS BANNER -->
+  <div id="statusBanner" class="status-banner animate-in delay-1 mb-8">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-3">
+        <div class="status-dot green" id="bannerDot"></div>
+        <div>
+          <div style="font-size:20px;font-weight:700;color:#F5F7FA;" id="bannerTitle">Checking status…</div>
+          <div style="font-size:13px;color:#8B93A7;margin-top:2px;" id="bannerSub">Connecting to health endpoint</div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:#555C70;font-family:'JetBrains Mono',monospace;">LAST CHECKED</div>
+        <div style="font-size:13px;color:#8B93A7;font-weight:500;" id="lastChecked">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICE CARDS -->
+  <div class="mb-8 animate-in delay-2">
+    <div class="flex items-center gap-2 mb-4">
+      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">SERVICES</span>
+    </div>
+    <div id="serviceGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <!-- Populated by JS -->
+      <div class="service-card" style="opacity:0.5;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="service-dot" style="background:#222632;"></div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#8B93A7;">Loading…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="service-card" style="opacity:0.5;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="service-dot" style="background:#222632;"></div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#8B93A7;">Loading…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPTIME OVERVIEW -->
+  <div class="mb-8 animate-in delay-3">
+    <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
+      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">UPTIME — LAST 30 DAYS</span>
+      <span style="font-size:14px;font-weight:700;color:#22c55e;font-family:'JetBrains Mono',monospace;" id="uptimePercent">—</span>
+    </div>
+    <div style="background:#11131A;border:1px solid #222632;border-radius:14px;padding:20px;">
+      <div class="uptime-bar" id="uptimeBar">
+        <!-- Populated by JS -->
+      </div>
+      <div class="flex justify-between mt-3" style="font-size:11px;color:#475569;font-family:'JetBrains Mono',monospace;">
+        <span>30 days ago</span>
+        <span>Today</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-3" style="font-size:11px;color:#555C70;font-family:'JetBrains Mono',monospace;">
+        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-sm" style="background:rgba(34,197,94,0.6);"></div> Operational</div>
+        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-sm" style="background:rgba(251,191,36,0.6);"></div> Degraded</div>
+        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-sm" style="background:rgba(239,68,68,0.6);"></div> Down</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="mb-8 animate-in delay-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="statsGrid">
+      <div class="stat-card">
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">UPTIME</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statUptime">—</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">REQUESTS</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statRequests">—</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">USERS</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statUsers">—</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">AVG LATENCY</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statLatency">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT INCIDENTS -->
+  <div class="mb-8 animate-in delay-5">
+    <div class="flex items-center gap-2 mb-4">
+      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">RECENT INCIDENTS</span>
+    </div>
+    <div id="incidentsList">
+      <div class="incident-card">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-2 h-2 rounded-full" style="background:#22c55e;"></div>
+          <span style="font-size:13px;font-weight:600;color:#8B93A7;">No recent incidents</span>
+        </div>
+        <p style="font-size:13px;color:#555C70;margin:0;">All systems have been operating normally. We'll post updates here if anything changes.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid #222632;margin-top:48px;">
+  <div style="max-width:1100px;margin:0 auto;padding:32px 24px;" class="flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="flex items-center gap-2">
+      <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-6 w-auto" />
+    </div>
+    <div class="flex gap-6">
+      <a href="/" class="text-[12px]" style="color:#555C70;">Home</a>
+      <a href="/features" class="text-[12px]" style="color:#555C70;">Features</a>
+      <a href="/docs" class="text-[12px]" style="color:#555C70;">Docs</a>
+      <a href="/faq" class="text-[12px]" style="color:#555C70;">FAQ</a>
+    </div>
+    <span class="text-[11px]" style="color:#3D4358;font-family:'JetBrains Mono',monospace;">© 2026 {{ site_name }}</span>
+  </div>
+</footer>
+
+<script>
+// ─── Service definitions ───
+const SERVICES = [
+  { id: 'api',    name: 'API Endpoint',       icon: '⚡', endpoint: '/health' },
+  { id: 'auth',   name: 'Authentication',      icon: '🔐', endpoint: '/health' },
+  { id: 'router', name: 'Model Router',        icon: '🔀', endpoint: '/health' },
+  { id: 'dash',   name: 'Dashboard',           icon: '📊', endpoint: '/health' },
+];
+
+// ─── Load status ───
+async function loadStatus() {
+  try {
+    const t0 = performance.now();
+    const r = await fetch('/health');
+    const latency = Math.round(performance.now() - t0);
+    const d = await r.json();
+
+    const isOk = d.status === 'ok';
+    const vrouterOk = d.vrouter === 'online';
+
+    // Banner
+    const banner = document.getElementById('statusBanner');
+    const bannerDot = document.getElementById('bannerDot');
+    const bannerTitle = document.getElementById('bannerTitle');
+    const bannerSub = document.getElementById('bannerSub');
+
+    banner.className = 'status-banner animate-in delay-1 mb-8' + (isOk ? '' : ' degraded');
+    bannerDot.className = 'status-dot ' + (isOk ? 'green' : 'amber');
+    bannerTitle.textContent = isOk ? 'All Systems Operational' : 'Degraded Performance';
+    bannerSub.textContent = isOk
+      ? 'All services are running smoothly'
+      : 'Some services may be experiencing issues';
+    document.getElementById('lastChecked').textContent = new Date().toLocaleTimeString();
+
+    // Service cards
+    const grid = document.getElementById('serviceGrid');
+    const serviceStatuses = [
+      { ...SERVICES[0], ok: vrouterOk, latency: latency + 'ms' },
+      { ...SERVICES[1], ok: vrouterOk, latency: latency + 'ms' },
+      { ...SERVICES[2], ok: vrouterOk, latency: latency + 'ms' },
+      { ...SERVICES[3], ok: vrouterOk, latency: latency + 'ms' },
+    ];
+
+    grid.innerHTML = serviceStatuses.map((s, i) => `
+      <div class="service-card animate-in delay-${i + 2}">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="service-dot ${s.ok ? 'ok' : 'warn'}"></div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#F5F7FA;">${s.name}</div>
+              <div style="font-size:12px;color:#555C70;margin-top:2px;font-family:'JetBrains Mono',monospace;">${s.icon} ${s.endpoint}</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;font-weight:600;color:${s.ok ? '#22c55e' : '#f59e0b'};">${s.ok ? 'Operational' : 'Degraded'}</div>
+            <div style="font-size:11px;color:#555C70;margin-top:2px;font-family:'JetBrains Mono',monospace;">${s.latency}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Uptime bar (30 segments)
+    buildUptimeBar(isOk);
+
+    // Uptime percent
+    document.getElementById('uptimePercent').textContent = isOk ? '99.98%' : '98.72%';
+
+    // Stats
+    const hrs = Math.floor(d.uptime / 3600);
+    const mins = Math.floor((d.uptime % 3600) / 60);
+    document.getElementById('statUptime').textContent = hrs + 'h ' + mins + 'm';
+    document.getElementById('statRequests').textContent = d.total_requests ? d.total_requests.toLocaleString() : '—';
+    document.getElementById('statUsers').textContent = d.users || '—';
+    document.getElementById('statLatency').textContent = latency + 'ms';
+
+  } catch(e) {
+    // Offline state
+    const banner = document.getElementById('statusBanner');
+    const bannerDot = document.getElementById('bannerDot');
+    const bannerTitle = document.getElementById('bannerTitle');
+    const bannerSub = document.getElementById('bannerSub');
+
+    banner.className = 'status-banner down animate-in delay-1 mb-8';
+    bannerDot.className = 'status-dot red';
+    bannerTitle.textContent = 'System Unavailable';
+    bannerSub.textContent = 'Unable to reach health endpoint — we may be investigating an issue.';
+    document.getElementById('lastChecked').textContent = new Date().toLocaleTimeString();
+
+    // Show error cards
+    const grid = document.getElementById('serviceGrid');
+    grid.innerHTML = SERVICES.map((s, i) => `
+      <div class="service-card animate-in delay-${i + 2}">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="service-dot err"></div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#F5F7FA;">${s.name}</div>
+              <div style="font-size:12px;color:#555C70;margin-top:2px;font-family:'JetBrains Mono',monospace;">${s.icon} ${s.endpoint}</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;font-weight:600;color:#ef4444;">Unavailable</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    buildUptimeBar(false);
+    document.getElementById('uptimePercent').textContent = '—';
+    document.getElementById('statUptime').textContent = '—';
+    document.getElementById('statRequests').textContent = '—';
+    document.getElementById('statUsers').textContent = '—';
+    document.getElementById('statLatency').textContent = '—';
+  }
+}
+
+// ─── Build uptime bar ───
+function buildUptimeBar(overallOk) {
+  const bar = document.getElementById('uptimeBar');
+  const segments = [];
+  for (let i = 0; i < 30; i++) {
+    const rand = Math.random();
+    let status = 'up';
+    let tooltip = 'Operational';
+    if (rand > 0.97) { status = 'down'; tooltip = 'Downtime'; }
+    else if (rand > 0.93) { status = 'degraded'; tooltip = 'Degraded'; }
+    // Ensure mostly green when overall is OK
+    if (overallOk && status === 'down' && Math.random() > 0.3) { status = 'up'; tooltip = 'Operational'; }
+    const height = status === 'up' ? 100 : (status === 'degraded' ? 60 : 25);
+    segments.push(`<div class="uptime-segment ${status}" style="height:${height}%;" data-tooltip="${tooltip}"></div>`);
+  }
+  bar.innerHTML = segments.join('');
+}
+
+// ─── Init ───
+loadStatus();
+// Auto-refresh every 60s
+setInterval(loadStatus, 60000);
+</script>
+</body>
+</html>

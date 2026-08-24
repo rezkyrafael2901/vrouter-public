@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fair Use Policy — {{ site_name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08090D;
+  --surface: #11131A;
+  --border: #222632;
+  --text: #F5F7FA;
+  --text2: #8B93A7;
+  --accent: #8B5CF6;
+  --accent-dim: rgba(139, 92, 246, 0.12);
+  --accent-border: rgba(139, 92, 246, 0.25);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code, .mono { font-family: 'JetBrains Mono', monospace; }
+a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+a:hover { opacity: 0.85; text-decoration: underline; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8, 9, 13, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.mobile-menu-btn { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 8px; }
+.mobile-menu-btn svg { width: 24px; height: 24px; }
+.nav-inner {
+  max-width: 960px; margin: 0 auto;
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--text); font-weight: 700; font-size: 18px;
+}
+.nav-logo img { height: 28px; width: auto; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  color: var(--text2); font-size: 14px; font-weight: 500;
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); text-decoration: none; opacity: 1; }
+.nav-links a.active { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 10px; font-weight: 500; font-size: 14px;
+  transition: all 0.2s; cursor: pointer; border: none; padding: 8px 18px;
+  text-decoration: none;
+}
+.btn-accent {
+  background: var(--accent-dim); color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+.btn-accent:hover { background: rgba(139, 92, 246, 0.2); text-decoration: none; opacity: 1; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+
+/* PAGE */
+.page { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+.page h1 {
+  font-size: 36px; font-weight: 800; letter-spacing: -0.5px;
+  margin-bottom: 8px; color: var(--text);
+}
+.page .updated {
+  color: var(--text2); font-size: 13px; margin-bottom: 48px;
+  display: flex; align-items: center; gap: 6px;
+}
+.page .updated::before {
+  content: ''; display: inline-block;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+}
+.page h2 {
+  font-size: 18px; font-weight: 700; margin: 40px 0 14px;
+  color: var(--accent); letter-spacing: -0.2px;
+}
+.page p, .page li { color: var(--text2); margin-bottom: 14px; }
+.page p strong { color: var(--text); }
+.page ul { padding-left: 20px; margin-bottom: 14px; }
+.page li { margin-bottom: 10px; }
+.page li strong { color: var(--text); font-weight: 600; }
+
+/* CALLOUT */
+.callout {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.callout p { margin: 0; color: var(--text2); }
+.callout strong { color: var(--text); }
+
+/* DIVIDER */
+.section-divider {
+  border: none; border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+
+/* BACK LINK */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--text2); font-size: 13px; font-weight: 500;
+  margin-bottom: 32px; text-decoration: none;
+}
+.back-link:hover { color: var(--accent); text-decoration: none; opacity: 1; }
+.back-link svg { width: 14px; height: 14px; }
+
+/* FOOTER */
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text2);
+  font-size: 13px;
+}
+.footer a { color: var(--text2); font-weight: 500; }
+.footer a:hover { color: var(--accent); }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(8,9,13,0.95); border-bottom: 1px solid var(--border); flex-direction: column; padding: 12px 16px; gap: 4px; z-index: 100; }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 10px 12px; border-radius: 8px; font-size: 14px; }
+  .mobile-menu-btn { display: flex; background: none; border: none; color: var(--text); cursor: pointer; padding: 8px; }
+  .mobile-menu-btn svg { width: 24px; height: 24px; }
+  .nav-inner { padding: 0 16px; position: relative; }
+  .page { padding: 40px 16px 60px; }
+  .page h1 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-inner">
+    <div style="display:flex;align-items:center;gap:8px;">
+    <a href="/" class="nav-logo">
+      <img src="/static/vrouter-logo.svg" alt="VRouter" />
+    </a>
+    <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('open')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+    <div class="nav-links">
+      <a href="/features">Features</a>
+      <a href="/docs">Docs</a>
+      <a href="/status">Status</a>
+      <a href="/faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      {% if is_logged_in %}
+        <a href="/dashboard" class="btn btn-accent">Dashboard</a>
+        <span class="user-avatar">{{ user_initial }}</span>
+      {% else %}
+        <a href="/auth" class="btn btn-accent">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="page">
+  <a href="/" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to Home
+  </a>
+
+  <h1>Fair Use Policy</h1>
+  <p class="updated">Last updated: August 2026</p>
+
+  <h2>Overview</h2>
+  <p>VRouter provides access to AI models through a shared routing infrastructure. This Fair Use Policy ensures equitable access for all users and protects the stability of the platform.</p>
+
+  <h2>Free Tier Limits</h2>
+  <ul>
+    <li><strong>10,000 tokens/day</strong> on core models (DeepSeek, Qwen, etc.)</li>
+    <li>Standard rate limiting applies (requests per minute)</li>
+    <li>No guaranteed SLA for free tier</li>
+  </ul>
+
+  <div class="callout">
+    <p><strong>Note:</strong> Free tier models include most open-weight models. Premium models (GPT-4o, Claude, Gemini Pro) may require a Pro subscription.</p>
+  </div>
+
+  <h2>Pro Tier Limits</h2>
+  <ul>
+    <li><strong>1,000,000 tokens/day</strong> included</li>
+    <li>Access to all models including gated/premium</li>
+    <li>Priority routing and lower latency</li>
+    <li>Custom provider key support</li>
+  </ul>
+
+  <h2>What Is Not Allowed</h2>
+  <ul>
+    <li><strong>Crypto mining / compute farming:</strong> Do not use the API for cryptocurrency mining, proof-of-work, or any computationally intensive non-AI tasks.</li>
+    <li><strong>Abuse / spam generation:</strong> Bulk generating spam, phishing content, or deceptive material.</li>
+    <li><strong>Automated scraping:</strong> Systematically extracting model capabilities or training data.</li>
+    <li><strong>Resale without authorization:</strong> Reselling API access or building competing services without a Business agreement.</li>
+    <li><strong>Rate limit circumvention:</strong> Creating multiple accounts to bypass rate limits.</li>
+  </ul>
+
+  <h2>Data and Privacy</h2>
+  <ul>
+    <li>We <strong>do not store</strong> your prompts or completions.</li>
+    <li>We collect anonymized metadata: model name, token counts, latency, and status codes.</li>
+    <li>Usage data is retained for 30 days for routing optimization, then purged.</li>
+    <li>We do not use your data to train models.</li>
+  </ul>
+
+  <h2>Enforcement</h2>
+  <p>Violations of this policy may result in:</p>
+  <ul>
+    <li>Temporary rate limiting or throttling</li>
+    <li>Account suspension pending review</li>
+    <li>Permanent account termination for severe or repeated violations</li>
+  </ul>
+
+  <h2>Questions?</h2>
+  <p>If you have questions about what constitutes acceptable use, contact us at <a href="mailto:viresen16@gmail.com">viresen16@gmail.com</a> before proceeding.</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  &copy; 2026 VRouter. All rights reserved. &middot; <a href="/">Home</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/privacy">Privacy</a>
+</footer>
+
+<script>
+document.addEventListener("click",function(e){if(!e.target.closest(".nav-inner")){document.querySelector(".nav-links").classList.remove("open");}});
+</script>
+</body>
+</html>

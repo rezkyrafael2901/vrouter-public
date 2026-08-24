@@ -1,0 +1,25 @@
+# Environment — never commit real secrets
+.env
+
+# Databases — contain user data
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Backups
+*.bak
+*.bak.*
+*.bak-*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Runtime
+*.log
+logs/
+nohup.out

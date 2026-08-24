@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: '#08090D',
+        secondary: '#0C0E13',
+        surface: '#11131A',
+        elevated: '#151821',
+        border: '#222632',
+        primary: '#F5F7FA',
+        secondaryText: '#8B93A7',
+        muted: '#5F6678',
+        accent: '#8B5CF6',
+        'accent-bright': '#A78BFA',
+        'accent-dark': '#7C3AED',
+      },
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #08090D; }
+  ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid rgba(139,92,246,0.5); outline-offset: 2px; border-radius: 4px;
+  }
+  a:active, button:active { transform: scale(0.98); transition: transform 0.1s ease; }
+</style>
+<title>Models — {{ site_name }}</title>
+
+<nav class="border-b border-border bg-[#08090D]/90 backdrop-blur-lg sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/static/vrouter-logo.svg" alt="{{ site_name }}" class="h-6 w-auto" />
+      </a>
+      <div class="flex items-center gap-1 text-muted text-xs font-mono">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>/</span>
+        <span class="text-secondaryText">models</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/" class="text-sm text-muted hover:text-primary transition-colors">Home</a>
+      <a href="/auth?signup=true" class="text-sm font-semibold text-white bg-accent hover:bg-accent-dark px-4 py-2 rounded-lg transition-colors">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<section class="py-16 md:py-24">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="mb-10">
+      <h1 class="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-3">Available Models</h1>
+      <p class="text-secondaryText text-base max-w-xl">All models accessible through the VRouter API. Use the model ID in your requests.</p>
+    </div>
+
+    <!-- Search + Filter -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-8">
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="model-search" placeholder="Search models..." class="w-full bg-surface border border-border rounded-lg pl-10 pr-4 py-2.5 text-sm text-primary placeholder-muted focus:outline-none focus:border-accent/50 transition-colors" oninput="filterModels()">
+      </div>
+      <select id="provider-filter" class="bg-surface border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:outline-none focus:border-accent/50 transition-colors" onchange="filterModels()">
+        <option value="">All providers</option>
+      </select>
+      <select id="tier-filter" class="bg-surface border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:outline-none focus:border-accent/50 transition-colors" onchange="filterModels()">
+        <option value="">All tiers</option>
+        <option value="free">Free</option>
+        <option value="pro">Pro</option>
+      </select>
+    </div>
+
+    <!-- Model count -->
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-muted text-xs font-mono" id="model-count"></p>
+    </div>
+
+    <!-- Models Table -->
+    <div class="bg-surface border border-border rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="px-5 py-3 text-xs font-semibold text-secondaryText uppercase tracking-wider">Model</th>
+              <th class="px-5 py-3 text-xs font-semibold text-secondaryText uppercase tracking-wider">Provider</th>
+              <th class="px-5 py-3 text-xs font-semibold text-secondaryText uppercase tracking-wider">Tier</th>
+              <th class="px-5 py-3 text-xs font-semibold text-secondaryText uppercase tracking-wider">Status</th>
+              <th class="px-5 py-3 text-xs font-semibold text-secondaryText uppercase tracking-wider text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="models-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Usage hint -->
+    <div class="mt-8 bg-surface border border-border rounded-xl p-5">
+      <h3 class="text-primary font-semibold text-sm mb-2">Quick start</h3>
+      <p class="text-secondaryText text-[13px] leading-relaxed mb-3">Use any model ID in your API requests:</p>
+      <div class="bg-base border border-border rounded-lg p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
+        <span class="text-accent-bright">curl</span> <span class="text-muted">{{ site_url }}/v1/chat/completions</span> \<br>
+        &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-emerald-400">"Authorization: Bearer YOUR_KEY"</span> \<br>
+        &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-emerald-400">"Content-Type: application/json"</span> \<br>
+        &nbsp;&nbsp;<span class="text-primary">-d</span> <span class="text-emerald-400">'{ "model": "<span class="text-primary" id="example-model">gpt-4o-latest</span>", "messages": [{"role": "user", "content": "Hello"}] }'</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+var MODELS = {{ models | tojson }};
+var providers = [...new Set(MODELS.map(function(m) { return m.provider; }).filter(Boolean))].sort();
+var pf = document.getElementById('provider-filter');
+providers.forEach(function(p) {
+  var opt = document.createElement('option');
+  opt.value = p; opt.textContent = p;
+  pf.appendChild(opt);
+});
+
+function filterModels() {
+  var q = document.getElementById('model-search').value.toLowerCase();
+  var prov = document.getElementById('provider-filter').value;
+  var tier = document.getElementById('tier-filter').value;
+  var filtered = MODELS.filter(function(m) {
+    var name = (m.display_name || m.model_id).toLowerCase();
+    var mid = m.model_id.toLowerCase();
+    if (q && name.indexOf(q) === -1 && mid.indexOf(q) === -1) return false;
+    if (prov && m.provider !== prov) return false;
+    if (tier && m.tier !== tier) return false;
+    return true;
+  });
+  renderModels(filtered);
+}
+
+function renderModels(models) {
+  var tbody = document.getElementById('models-tbody');
+  document.getElementById('model-count').textContent = models.length + ' model' + (models.length !== 1 ? 's' : '') + ' available';
+  if (models.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-8 text-center text-muted text-sm">No models match your filters.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = models.map(function(m) {
+    var name = m.display_name || m.model_id;
+    var tierBadge = m.tier === 'pro'
+      ? '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-accent/10 text-accent border border-accent/20">PRO</span>'
+      : '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">FREE</span>';
+    return '<tr class="border-b border-border/50 hover:bg-elevated/50 transition-colors">' +
+      '<td class="px-5 py-3.5"><div class="text-primary font-semibold text-sm font-mono">' + escHtml(m.model_id) + '</div>' +
+      (name !== m.model_id ? '<div class="text-muted text-[11px] mt-0.5">' + escHtml(name) + '</div>' : '') + '</td>' +
+      '<td class="px-5 py-3.5 text-secondaryText text-sm">' + escHtml(m.provider || '—') + '</td>' +
+      '<td class="px-5 py-3.5">' + tierBadge + '</td>' +
+      '<td class="px-5 py-3.5"><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-xs">Available</span></span></td>' +
+      '<td class="px-5 py-3.5 text-right"><button onclick="copyModelId(\'' + escHtml(m.model_id) + '\', this)" class="text-[11px] text-muted hover:text-primary bg-surface border border-border rounded px-2.5 py-1 transition-colors">Copy ID</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+function copyModelId(id, btn) {
+  navigator.clipboard.writeText(id).then(function() {
+    btn.textContent = 'Copied!';
+    btn.classList.add('text-emerald-400');
+    setTimeout(function() { btn.textContent = 'Copy ID'; btn.classList.remove('text-emerald-400'); }, 1500);
+  });
+}
+
+function escHtml(s) {
+  var d = document.createElement('div');
+  d.appendChild(document.createTextNode(s));
+  return d.innerHTML;
+}
+
+// Initial render
+filterModels();
+</script>
+</title>

@@ -1,0 +1,22 @@
+{
+  "name": "vrouter-public",
+  "script": "main.py",
+  "interpreter": "python3",
+  "cwd": "/home/ubuntu/vrouter-public",
+  "env": {
+    "VROUTER_URL": "http://127.0.0.1:20129",
+    "VROUTER_KEY": "hermes-router-2026",
+    "PUB_PORT": "20130",
+    "SITE_NAME": "VRouter LLM API",
+    "SITE_TAGLINE": "OpenAI-Compatible API — Free for everyone.",
+    "SITE_URL": "https://vrouter.my.id",
+    "SMTP_USER": "redoaldi34@gmail.com",
+    "SMTP_PASS": "ewps rybz qnff zzeu"
+  },
+  "max_memory_restart": "128M",
+  "autorestart": true,
+  "watch": false,
+  "log_date_format": "YYYY-MM-DD HH:mm:ss",
+  "error_file": "/home/ubuntu/.pm2/logs/vrouter-public-error.log",
+  "out_file": "/home/ubuntu/.pm2/logs/vrouter-public-out.log"
+}

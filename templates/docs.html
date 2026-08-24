@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090D">
+<title>Docs • VRouter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: '#08090D',
+        secondary: '#0C0E13',
+        surface: '#11131A',
+        elevated: '#151821',
+        border: '#222632',
+        primary: '#F5F7FA',
+        secondaryText: '#8B93A7',
+        muted: '#5F6678',
+        accent: '#8B5CF6',
+        'accent-bright': '#A78BFA',
+        'accent-dark': '#7C3AED',
+        green: '#22C55E',
+        red: '#EF4444',
+        amber: '#F59E0B',
+      },
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #08090D;
+  color: #F5F7FA;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+/* Sidebar */
+.sidebar-link {
+  transition: all 0.15s ease;
+  border-left: 2px solid transparent;
+  color: #8B93A7;
+}
+.sidebar-link:hover { color: #F5F7FA; background: rgba(139,92,246,0.06); }
+.sidebar-link.active { color: #A78BFA; background: rgba(139,92,246,0.1); border-left-color: #8B5CF6; }
+
+/* Code blocks */
+.code-tabs-btn {
+  transition: all 0.15s ease;
+  border-bottom: 2px solid transparent;
+}
+.code-tabs-btn.active { color: #A78BFA; border-bottom-color: #8B5CF6; }
+.code-tabs-btn:hover:not(.active) { color: #F5F7FA; }
+.code-panel { display: none; }
+.code-panel.active { display: block; }
+
+/* Copy button */
+.copy-btn { opacity: 0; transition: opacity 0.15s ease; }
+.group:hover .copy-btn { opacity: 1; }
+
+/* Method badges */
+.badge-get { background: rgba(139,92,246,0.12); color: #A78BFA; }
+.badge-post { background: rgba(139,92,246,0.18); color: #C4B5FD; }
+.badge-delete { background: rgba(239,68,68,0.12); color: #EF4444; }
+
+/* Sidebar mobile overlay */
+@media (max-width: 1023px) {
+  .sidebar-mobile-bg { display: none; }
+  .sidebar-mobile-bg.open { display: block; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #08090D; }
+::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #5F6678; }
+
+/* Table */
+.doc-table th { text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+
+/* Grid pattern overlay */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(34,38,50,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,38,50,0.3) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav class="sticky top-0 z-50 border-b border-border" style="background:rgba(8,9,13,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <div class="flex items-center gap-3">
+      <button id="mobile-menu-btn" class="lg:hidden p-2 -ml-2 text-secondaryText hover:text-primary rounded-lg hover:bg-surface">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <a href="/" class="flex items-center gap-2 font-bold text-lg text-primary hover:no-underline">
+        <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-8 w-auto" />
+      </a>
+    </div>
+    <div class="hidden sm:flex items-center gap-6">
+      <a href="/" class="text-sm text-secondaryText hover:text-primary font-medium transition">Home</a>
+      <a href="/docs" class="text-sm text-accent font-medium">Docs</a>
+      <a href="/status" class="text-sm text-secondaryText hover:text-primary font-medium transition">Status</a>
+      <a href="/api-docs" class="text-sm text-secondaryText hover:text-primary font-medium transition">Swagger</a>
+      {% if is_logged_in %}
+      <a href="/dashboard" class="text-sm font-medium px-4 py-2 rounded-lg bg-accent/10 text-accent-bright border border-accent/20 hover:bg-accent/20 transition">Dashboard</a>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-dark flex items-center justify-center text-sm font-bold text-white">{{ user_initial }}</div>
+        <a href="/auth/logout" class="text-sm text-secondaryText hover:text-primary transition">Logout</a>
+      </div>
+      {% else %}
+      <a href="/auth?signup=true" class="text-sm font-medium px-4 py-2 rounded-lg bg-accent hover:bg-accent-dark text-white transition">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="border-b border-border relative overflow-hidden" style="background:linear-gradient(180deg,#11131A 0%,#08090D 100%);">
+  <div class="absolute inset-0 grid-pattern opacity-30 pointer-events-none"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] pointer-events-none" style="background:radial-gradient(ellipse, rgba(139,92,246,0.06) 0%, transparent 70%);"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24 relative z-10">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 text-accent-bright text-xs font-medium mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-green animate-pulse"></span>
+        API v1 — OpenAI Compatible
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-4">
+        Keep your client.<br>
+        <span class="bg-gradient-to-r from-accent-bright to-accent bg-clip-text text-transparent">Change the endpoint.</span>
+      </h1>
+      <p class="text-lg text-secondaryText max-w-xl leading-relaxed mb-8">
+        Drop-in OpenAI-compatible API. Route across 1000+ models, 30+ providers with automatic failover, load balancing, and usage tracking. Zero client code changes.
+      </p>
+
+      <!-- API Overview Panel -->
+      <div class="inline-block bg-surface border border-border rounded-xl p-5 font-mono text-sm max-w-md">
+        <div class="grid grid-cols-2 gap-x-8 gap-y-3">
+          <div><span class="text-muted text-xs">REQUEST PATH</span><div class="text-primary font-medium mt-0.5">/v1/chat/completions</div></div>
+          <div><span class="text-muted text-xs">AUTH</span><div class="text-primary font-medium mt-0.5">Bearer <span class="text-accent-bright">vr-</span>***</div></div>
+          <div><span class="text-muted text-xs">MODEL</span><div class="text-primary font-medium mt-0.5">gpt-4o</div></div>
+          <div><span class="text-muted text-xs">STREAM</span><div class="text-primary font-medium mt-0.5">true / false</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ MAIN LAYOUT ═══════════════════ -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="flex gap-8 lg:gap-12 py-8 lg:py-12">
+
+    <!-- ─── SIDEBAR ─── -->
+    <aside id="sidebar" class="lg:w-64 lg:flex-shrink-0">
+      <!-- Mobile overlay -->
+      <div id="sidebar-overlay" class="sidebar-mobile-bg fixed inset-0 bg-black/60 z-40 lg:hidden" onclick="toggleSidebar()"></div>
+      <nav id="sidebar-nav" class="lg:sticky lg:top-24 lg:self-start space-y-1 lg:block" style="display:none;">
+        <div class="py-4 lg:py-0">
+          <div class="text-xs font-semibold text-muted uppercase tracking-wider mb-3 px-3">Documentation</div>
+          <a href="#quickstart" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium active" data-section="quickstart">
+            <span class="text-xs font-mono text-muted w-6">01</span> Quickstart
+          </a>
+          <a href="#keys" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="keys">
+            <span class="text-xs font-mono text-muted w-6">02</span> Keys
+          </a>
+          <a href="#routes" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="routes">
+            <span class="text-xs font-mono text-muted w-6">03</span> Routes
+          </a>
+          <a href="#streaming" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="streaming">
+            <span class="text-xs font-mono text-muted w-6">04</span> Streaming
+          </a>
+          <a href="#models" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="models">
+            <span class="text-xs font-mono text-muted w-6">05</span> Models
+          </a>
+          <a href="#errors" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="errors">
+            <span class="text-xs font-mono text-muted w-6">06</span> Errors
+          </a>
+          <a href="#typescript" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="typescript">
+            <span class="text-xs font-mono text-muted w-6">07</span> TypeScript
+          </a>
+          <a href="#ides" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="ides">
+            <span class="text-xs font-mono text-muted w-6">08</span> IDEs
+          </a>
+          <a href="#status" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" data-section="status">
+            <span class="text-xs font-mono text-muted w-6">09</span> Status
+          </a>
+          <div class="my-2 border-t border-border"></div>
+          <a href="/models" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-secondaryText hover:text-primary transition">
+            <span class="text-xs font-mono text-muted w-6">↗</span> Browse Models
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ─── CONTENT ─── -->
+    <main class="flex-1 min-w-0 max-w-3xl">
+
+      <!-- ════ 01 QUICKSTART ════ -->
+      <section id="quickstart" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">01</span> Quickstart
+        </h2>
+        <p class="text-secondaryText mb-8">Get from zero to your first API call in under a minute.</p>
+
+        <!-- Step 1 -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent-bright text-xs font-bold">1</span>
+            <h3 class="text-lg font-semibold">Create a key</h3>
+          </div>
+          <p class="text-secondaryText text-sm mb-4 pl-10">Sign up and grab your API key from the dashboard. No credit card required.</p>
+          <div class="pl-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-lg font-mono text-sm">
+              <span class="text-muted">vr-</span><span class="text-primary">••••••••••••••••</span>
+              <button onclick="copyText('vr-...here', this)" class="ml-2 text-muted hover:text-accent-bright transition" title="Copy example key">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent-bright text-xs font-bold">2</span>
+            <h3 class="text-lg font-semibold">Set your base URL</h3>
+          </div>
+          <p class="text-secondaryText text-sm mb-4 pl-10">Point any OpenAI-compatible client at VRouter. Zero code changes needed.</p>
+          <div class="pl-10">
+            <div class="group relative bg-surface border border-border rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2 border-b border-border">
+                <span class="text-xs text-muted">Base URL</span>
+                <button onclick="copyText('https://vrouter.my.id/v1', this)" class="copy-btn text-muted hover:text-accent-bright transition p-1 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/></svg>
+                </button>
+              </div>
+              <pre class="p-4 text-sm overflow-x-auto"><code class="text-green">https://vrouter.my.id/v1</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent-bright text-xs font-bold">3</span>
+            <h3 class="text-lg font-semibold">Send your first request</h3>
+          </div>
+          <p class="text-secondaryText text-sm mb-4 pl-10">Pick your language. The API is fully OpenAI-compatible.</p>
+          <div class="pl-10">
+            <div class="bg-surface border border-border rounded-xl overflow-hidden">
+              <!-- Tabs -->
+              <div class="flex border-b border-border px-4">
+                <button class="code-tabs-btn active px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'qs')">cURL</button>
+                <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'qs')">Python</button>
+                <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'qs')">Node.js</button>
+              </div>
+              <!-- Panels -->
+              <div class="group relative">
+                <div class="code-panel active" data-tab-group="qs">
+                  <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-muted"># cURL</span>
+<span class="text-accent-bright">curl</span> https://vrouter.my.id/v1/chat/completions \
+  -H <span class="text-green">"Content-Type: application/json"</span> \
+  -H <span class="text-green">"Authorization: Bearer ***</span> \
+  -d <span class="text-green">'{
+    "model": "gpt-4o",
+    "messages": [
+      {"role": "user", "content": "Hello, world!"}
+    ]
+  }'</span></code></pre>
+                </div>
+                <div class="code-panel" data-tab-group="qs">
+                  <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-muted"># pip install openai</span>
+<span class="text-accent-bright">from</span> openai <span class="text-accent-bright">import</span> OpenAI
+
+client <span class="text-accent-bright">=</span> OpenAI(
+    base_url<span class="text-accent-bright">=</span><span class="text-green">"https://vrouter.my.id/v1"</span>,
+    api_key<span class="text-accent-bright">=</span><span class="text-green">"***"</span>,
+)
+
+response <span class="text-accent-bright">=</span> client.chat.completions.create(
+    model<span class="text-accent-bright">=</span><span class="text-green">"gpt-4o"</span>,
+    messages<span class="text-accent-bright">=</span>[{<span class="text-green">"role"</span>: <span class="text-green">"user"</span>, <span class="text-green">"content"</span>: <span class="text-green">"Hello, world!"</span>}]
+)
+
+<span class="text-accent-bright">print</span>(response.choices[<span class="amber">0</span>].message.content)</code></pre>
+                </div>
+                <div class="code-panel" data-tab-group="qs">
+                  <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-muted">// npm install openai</span>
+<span class="text-accent-bright">import</span> OpenAI <span class="text-accent-bright">from</span> <span class="text-green">"openai"</span>;
+
+<span class="text-accent-bright">const</span> client <span class="text-accent-bright">=</span> <span class="text-accent-bright">new</span> OpenAI({
+  baseURL: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+  apiKey: <span class="text-green">"***"</span>,
+});
+
+<span class="text-accent-bright">const</span> res <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
+  model: <span class="text-green">"gpt-4o"</span>,
+  messages: [{ role: <span class="text-green">"user"</span>, content: <span class="text-green">"Hello, world!"</span> }],
+});
+
+console.log(res.choices[<span class="amber">0</span>].message.content);</code></pre>
+                </div>
+                <button onclick="copyCodeBlock(this)" class="copy-btn absolute top-12 right-3 text-muted hover:text-accent-bright transition p-1.5 rounded-lg bg-elevated border border-border">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Response preview -->
+        <div class="pl-10">
+          <p class="text-xs font-semibold text-muted uppercase tracking-wider mb-2">Response</p>
+          <div class="bg-surface border border-border rounded-xl p-4 overflow-x-auto">
+            <pre class="text-sm"><code>{
+  <span class="text-green">"id"</span>: <span class="text-green">"chatcmpl-abc123"</span>,
+  <span class="text-green">"object"</span>: <span class="text-green">"chat.completion"</span>,
+  <span class="text-green">"model"</span>: <span class="text-green">"gpt-4o"</span>,
+  <span class="text-green">"choices"</span>: [{
+    <span class="text-green">"index"</span>: <span class="amber">0</span>,
+    <span class="text-green">"message"</span>: { <span class="text-green">"role"</span>: <span class="text-green">"assistant"</span>, <span class="text-green">"content"</span>: <span class="text-green">"Hello! How can I help?"</span> },
+    <span class="text-green">"finish_reason"</span>: <span class="text-green">"stop"</span>
+  }],
+  <span class="text-green">"usage"</span>: { <span class="text-green">"prompt_tokens"</span>: <span class="amber">12</span>, <span class="text-green">"completion_tokens"</span>: <span class="amber">8</span>, <span class="text-green">"total_tokens"</span>: <span class="amber">20</span> }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ 02 KEYS ════ -->
+      <section id="keys" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">02</span> Authentication &amp; Keys
+        </h2>
+        <p class="text-secondaryText mb-6">Every request requires a valid API key in the Authorization header.</p>
+
+        <h3 class="text-base font-semibold mb-3">Key format</h3>
+        <p class="text-secondaryText text-sm mb-4">VRouter keys follow the <code class="text-accent-bright bg-elevated px-1.5 py-0.5 rounded text-xs">vr-</code> prefix convention.</p>
+
+        <div class="bg-surface border border-border rounded-xl overflow-hidden mb-6">
+          <div class="flex border-b border-border px-4">
+            <button class="code-tabs-btn active px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'auth')">Header</button>
+            <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'auth')">Python</button>
+            <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'auth')">Node.js</button>
+          </div>
+          <div class="group relative">
+            <div class="code-panel active" data-tab-group="auth">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-muted"># Include in every request header</span>
+Authorization: <span class="text-green">Bearer vr-...here</span></code></pre>
+            </div>
+            <div class="code-panel" data-tab-group="auth">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">from</span> openai <span class="text-accent-bright">import</span> OpenAI
+
+client <span class="text-accent-bright">=</span> OpenAI(
+    base_url<span class="text-accent-bright">=</span><span class="text-green">"https://vrouter.my.id/v1"</span>,
+    api_key<span class="text-accent-bright">=</span><span class="text-green">"***"</span>,  <span class="text-muted"># set automatically as Bearer</span>
+)</code></pre>
+            </div>
+            <div class="code-panel" data-tab-group="auth">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">import</span> OpenAI <span class="text-accent-bright">from</span> <span class="text-green">"openai"</span>;
+
+<span class="text-accent-bright">const</span> client <span class="text-accent-bright">=</span> <span class="text-accent-bright">new</span> OpenAI({
+  baseURL: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+  apiKey: <span class="text-green">"***"</span>,  <span class="text-muted">// auto-injected as Bearer</span>
+});</code></pre>
+            </div>
+            <button onclick="copyCodeBlock(this)" class="copy-btn absolute top-10 right-3 text-muted hover:text-accent-bright transition p-1.5 rounded-lg bg-elevated border border-border">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <h3 class="text-base font-semibold mb-3">Header reference</h3>
+        <div class="overflow-x-auto mb-6">
+          <table class="doc-table w-full text-sm">
+            <thead>
+              <tr class="border-b border-border">
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Header</th>
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Type</th>
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Required</th>
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Description</th>
+              </tr>
+            </thead>
+            <tbody class="text-secondaryText">
+              <tr class="border-b border-border">
+                <td class="py-3 px-4"><code class="bg-elevated px-1.5 py-0.5 rounded text-xs text-accent-bright">Authorization</code></td>
+                <td class="py-3 px-4 text-xs">string</td>
+                <td class="py-3 px-4"><span class="text-green text-xs font-medium">Required</span></td>
+                <td class="py-3 px-4 text-xs">Bearer token — your VRouter API key</td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-4"><code class="bg-elevated px-1.5 py-0.5 rounded text-xs text-accent-bright">Content-Type</code></td>
+                <td class="py-3 px-4 text-xs">string</td>
+                <td class="py-3 px-4"><span class="text-green text-xs font-medium">Required</span></td>
+                <td class="py-3 px-4 text-xs">Must be <code class="bg-elevated px-1 rounded text-xs">application/json</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-amber/5 border border-amber/20 rounded-xl p-4 flex gap-3">
+          <span class="text-amber text-lg mt-0.5">⚠</span>
+          <div>
+            <p class="text-sm font-semibold text-amber mb-1">Key rotation</p>
+            <p class="text-sm text-secondaryText">Rotate keys regularly from your <a href="/dashboard" class="text-accent-bright hover:underline">dashboard</a>. Old keys are revoked instantly. Never expose keys in client-side code or public repositories.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ 03 ROUTES ════ -->
+      <section id="routes" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">03</span> Routes
+        </h2>
+        <p class="text-secondaryText mb-6">Complete API endpoint reference. All routes are prefixed with <code class="text-accent-bright bg-elevated px-1.5 py-0.5 rounded text-xs">/v1</code>.</p>
+
+        <!-- GET /v1/models -->
+        <div class="bg-surface border border-border rounded-xl mb-6 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-3 border-b border-border">
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-bold badge-get">GET</span>
+            <code class="text-sm font-semibold text-primary">/v1/models</code>
+            <span class="text-xs text-muted ml-auto">No auth required</span>
+          </div>
+          <div class="px-5 py-4">
+            <p class="text-sm text-secondaryText mb-3">List all available models across all providers.</p>
+            <div class="text-xs font-semibold text-muted uppercase tracking-wider mb-2">Response</div>
+            <div class="bg-elevated border border-border rounded-lg p-3 overflow-x-auto">
+              <pre class="text-xs"><code>{
+  <span class="text-green">"object"</span>: <span class="text-green">"list"</span>,
+  <span class="text-green">"total"</span>: <span class="amber">127</span>,
+  <span class="text-green">"data"</span>: [
+    { <span class="text-green">"id"</span>: <span class="text-green">"gpt-4o"</span>, <span class="text-green">"name"</span>: <span class="text-green">"GPT 4O"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"openai"</span> },
+    { <span class="text-green">"id"</span>: <span class="text-green">"claude-3-5-sonnet"</span>, <span class="text-green">"name"</span>: <span class="text-green">"CLAUDE 3 5 SONNET"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"anthropic"</span> },
+    { <span class="text-green">"id"</span>: <span class="text-green">"google/gemini-2.0-flash"</span>, <span class="text-green">"name"</span>: <span class="text-green">"GEMINI 2 0 FLASH"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"google"</span> }
+  ]
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /v1/chat/completions -->
+        <div class="bg-surface border border-border rounded-xl mb-6 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-3 border-b border-border">
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-bold badge-post">POST</span>
+            <code class="text-sm font-semibold text-primary">/v1/chat/completions</code>
+            <span class="text-xs text-muted ml-auto">Auth required</span>
+          </div>
+          <div class="px-5 py-4">
+            <p class="text-sm text-secondaryText mb-4">Create a model response for the given chat conversation. Fully OpenAI-compatible.</p>
+
+            <div class="text-xs font-semibold text-muted uppercase tracking-wider mb-2">Request body</div>
+            <div class="overflow-x-auto mb-4">
+              <table class="doc-table w-full text-sm">
+                <thead>
+                  <tr class="border-b border-border">
+                    <th class="text-left py-2 px-3 text-muted font-semibold text-xs">Parameter</th>
+                    <th class="text-left py-2 px-3 text-muted font-semibold text-xs">Type</th>
+                    <th class="text-left py-2 px-3 text-muted font-semibold text-xs">Required</th>
+                    <th class="text-left py-2 px-3 text-muted font-semibold text-xs">Description</th>
+                  </tr>
+                </thead>
+                <tbody class="text-secondaryText">
+                  <tr class="border-b border-border">
+                    <td class="py-2 px-3"><code class="text-xs text-accent-bright">model</code></td>
+                    <td class="py-2 px-3 text-xs">string</td>
+                    <td class="py-2 px-3"><span class="text-green text-xs">Yes</span></td>
+                    <td class="py-2 px-3 text-xs">Model ID, e.g. <code class="text-xs">gpt-4o</code> or <code class="text-xs">anthropic/claude-3-5-sonnet</code></td>
+                  </tr>
+                  <tr class="border-b border-border">
+                    <td class="py-2 px-3"><code class="text-xs text-accent-bright">messages</code></td>
+                    <td class="py-2 px-3 text-xs">array</td>
+                    <td class="py-2 px-3"><span class="text-green text-xs">Yes</span></td>
+                    <td class="py-2 px-3 text-xs">Chat messages with role and content</td>
+                  </tr>
+                  <tr class="border-b border-border">
+                    <td class="py-2 px-3"><code class="text-xs text-accent-bright">stream</code></td>
+                    <td class="py-2 px-3 text-xs">boolean</td>
+                    <td class="py-2 px-3"><span class="text-muted text-xs">No</span></td>
+                    <td class="py-2 px-3 text-xs">Enable SSE streaming. Default: <code class="text-xs">false</code></td>
+                  </tr>
+                  <tr class="border-b border-border">
+                    <td class="py-2 px-3"><code class="text-xs text-accent-bright">temperature</code></td>
+                    <td class="py-2 px-3 text-xs">number</td>
+                    <td class="py-2 px-3"><span class="text-muted text-xs">No</span></td>
+                    <td class="py-2 px-3 text-xs">Sampling temperature 0–2. Default: <code class="text-xs">1</code></td>
+                  </tr>
+                  <tr class="border-b border-border">
+                    <td class="py-2 px-3"><code class="text-xs text-accent-bright">max_tokens</code></td>
+                    <td class="py-2 px-3 text-xs">integer</td>
+                    <td class="py-2 px-3"><span class="text-muted text-xs">No</span></td>
+                    <td class="py-2 px-3 text-xs">Maximum tokens to generate</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-3"><code class="text-xs text-accent-bright">top_p</code></td>
+                    <td class="py-2 px-3 text-xs">number</td>
+                    <td class="py-2 px-3"><span class="text-muted text-xs">No</span></td>
+                    <td class="py-2 px-3 text-xs">Nucleus sampling. Default: <code class="text-xs">1</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="bg-accent/5 border border-accent/15 rounded-lg p-3 flex gap-2.5 mb-4">
+              <span class="text-accent-bright text-sm mt-0.5">💡</span>
+              <p class="text-xs text-secondaryText">Use <code class="text-accent-bright">provider/model</code> syntax for explicit routing: <code class="text-accent-bright">openai/gpt-4o</code>, <code class="text-accent-bright">anthropic/claude-3-5-sonnet</code>. Or bare <code class="text-accent-bright">gpt-4o</code> for smart auto-routing.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /v1/usage -->
+        <div class="bg-surface border border-border rounded-xl mb-6 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-3 border-b border-border">
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-bold badge-get">GET</span>
+            <code class="text-sm font-semibold text-primary">/v1/usage</code>
+            <span class="text-xs text-muted ml-auto">Auth required</span>
+          </div>
+          <div class="px-5 py-4">
+            <p class="text-sm text-secondaryText">Retrieve your usage stats: total requests, token counts, and per-model breakdown for the last 24 hours.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ 04 STREAMING ════ -->
+      <section id="streaming" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">04</span> Streaming
+        </h2>
+        <p class="text-secondaryText mb-6">Receive responses token-by-token via Server-Sent Events (SSE). Ideal for real-time UIs.</p>
+
+        <div class="bg-surface border border-border rounded-xl overflow-hidden mb-6">
+          <div class="flex border-b border-border px-4">
+            <button class="code-tabs-btn active px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'stream')">cURL</button>
+            <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'stream')">Python</button>
+            <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'stream')">Node.js</button>
+          </div>
+          <div class="group relative">
+            <div class="code-panel active" data-tab-group="stream">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">curl</span> https://vrouter.my.id/v1/chat/completions \
+  -H <span class="text-green">"Content-Type: application/json"</span> \
+  -H <span class="text-green">"Authorization: Bearer ***</span> \
+  -d <span class="text-green">'{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "Count to 5"}],
+    "stream": true
+  }'</span> --no-buffer</code></pre>
+            </div>
+            <div class="code-panel" data-tab-group="stream">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">from</span> openai <span class="text-accent-bright">import</span> OpenAI
+
+client <span class="text-accent-bright">=</span> OpenAI(
+    base_url<span class="text-accent-bright">=</span><span class="text-green">"https://vrouter.my.id/v1"</span>,
+    api_key<span class="text-accent-bright">=</span><span class="text-green">"***"</span>,
+)
+
+<span class="text-accent-bright">with</span> client.chat.completions.create(
+    model<span class="text-accent-bright">=</span><span class="text-green">"gpt-4o"</span>,
+    messages<span class="text-accent-bright">=</span>[{<span class="text-green">"role"</span>: <span class="text-green">"user"</span>, <span class="text-green">"content"</span>: <span class="text-green">"Count to 5"</span>}],
+    stream<span class="text-accent-bright">=</span><span class="text-accent-bright">True</span>,
+) <span class="text-accent-bright">as</span> response:
+    <span class="text-accent-bright">for</span> chunk <span class="text-accent-bright">in</span> response:
+        delta <span class="text-accent-bright">=</span> chunk.choices[<span class="amber">0</span>].delta.content
+        <span class="text-accent-bright">if</span> delta:
+            <span class="text-accent-bright">print</span>(delta, end<span class="text-accent-bright">=</span><span class="text-green">""</span>, flush<span class="text-accent-bright">=</span><span class="text-accent-bright">True</span>)</code></pre>
+            </div>
+            <div class="code-panel" data-tab-group="stream">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">import</span> OpenAI <span class="text-accent-bright">from</span> <span class="text-green">"openai"</span>;
+
+<span class="text-accent-bright">const</span> client <span class="text-accent-bright">=</span> <span class="text-accent-bright">new</span> OpenAI({
+  baseURL: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+  apiKey: <span class="text-green">"***"</span>,
+});
+
+<span class="text-accent-bright">const</span> stream <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
+  model: <span class="text-green">"gpt-4o"</span>,
+  messages: [{ role: <span class="text-green">"user"</span>, content: <span class="text-green">"Count to 5"</span> }],
+  stream: <span class="text-accent-bright">true</span>,
+});
+
+<span class="text-accent-bright">for await</span> (<span class="text-accent-bright">const</span> chunk <span class="text-accent-bright">of</span> stream) {
+  <span class="text-accent-bright">const</span> text <span class="text-accent-bright">=</span> chunk.choices[<span class="amber">0</span>]?.delta?.content;
+  <span class="text-accent-bright">if</span> (text) process.stdout.write(text);
+}</code></pre>
+            </div>
+            <button onclick="copyCodeBlock(this)" class="copy-btn absolute top-10 right-3 text-muted hover:text-accent-bright transition p-1.5 rounded-lg bg-elevated border border-border">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <h3 class="text-base font-semibold mb-3">SSE event format</h3>
+        <p class="text-secondaryText text-sm mb-3">Each chunk is a <code class="text-accent-bright bg-elevated px-1.5 py-0.5 rounded text-xs">data:</code> line. The stream ends with <code class="text-accent-bright bg-elevated px-1.5 py-0.5 rounded text-xs">data: [DONE]</code>.</p>
+        <div class="bg-surface border border-border rounded-xl p-4 overflow-x-auto">
+          <pre class="text-xs"><code><span class="text-green">data:</span> {<span class="text-green">"choices"</span>: [{<span class="text-green">"delta"</span>: {<span class="text-green">"content"</span>: <span class="text-green">"1"</span>}}]}
+<span class="text-green">data:</span> {<span class="text-green">"choices"</span>: [{<span class="text-green">"delta"</span>: {<span class="text-green">"content"</span>: <span class="text-green">" "</span>}}]}
+<span class="text-green">data:</span> {<span class="text-green">"choices"</span>: [{<span class="text-green">"delta"</span>: {<span class="text-green">"content"</span>: <span class="text-green">"2"</span>}}]}
+<span class="text-green">data:</span> {<span class="text-green">"choices"</span>: [{<span class="text-green">"delta"</span>: {<span class="text-green">"content"</span>: <span class="text-green">" "</span>}}]}
+<span class="text-green">data:</span> {<span class="text-green">"choices"</span>: [{<span class="text-green">"delta"</span>: {<span class="text-green">"content"</span>: <span class="text-green">"3"</span>}}]}
+<span class="text-amber">data:</span> <span class="text-amber">[DONE]</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ════ 05 MODELS ════ -->
+      <section id="models" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">05</span> Models
+        </h2>
+        <p class="text-secondaryText mb-6">VRouter provides access to 1000+ models across 30+ providers. Use the model ID directly or prefix with provider for explicit routing.</p>
+
+        <h3 class="text-base font-semibold mb-3">Model routing syntax</h3>
+        <div class="overflow-x-auto mb-6">
+          <table class="doc-table w-full text-sm">
+            <thead>
+              <tr class="border-b border-border">
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Syntax</th>
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Behavior</th>
+                <th class="text-left py-3 px-4 text-muted font-semibold text-xs">Example</th>
+              </tr>
+            </thead>
+            <tbody class="text-secondaryText">
+              <tr class="border-b border-border">
+                <td class="py-3 px-4"><code class="text-xs text-accent-bright">model-name</code></td>
+                <td class="py-3 px-4 text-xs">Auto-route across providers</td>
+                <td class="py-3 px-4"><code class="text-xs text-muted">gpt-4o</code></td>
+              </tr>
+              <tr class="border-b border-border">
+                <td class="py-3 px-4"><code class="text-xs text-accent-bright">provider/model</code></td>
+                <td class="py-3 px-4 text-xs">Force specific provider</td>
+                <td class="py-3 px-4"><code class="text-xs text-muted">openai/gpt-4o</code></td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4"><code class="text-xs text-accent-bright">provider/alias</code></td>
+                <td class="py-3 px-4 text-xs">Provider alias resolution</td>
+                <td class="py-3 px-4"><code class="text-xs text-muted">anthropic/claude-3-5-sonnet</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-base font-semibold mb-3">Popular models</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+          <div class="bg-surface border border-border rounded-lg px-4 py-3 hover:border-accent/30 transition">
+            <div class="text-sm font-mono font-medium text-primary">gpt-4o</div>
+            <div class="text-xs text-muted mt-1">OpenAI · Flagship</div>
+          </div>
+          <div class="bg-surface border border-border rounded-lg px-4 py-3 hover:border-accent/30 transition">
+            <div class="text-sm font-mono font-medium text-primary">gpt-4o-mini</div>
+            <div class="text-xs text-muted mt-1">OpenAI · Fast &amp; affordable</div>
+          </div>
+          <div class="bg-surface border border-border rounded-lg px-4 py-3 hover:border-accent/30 transition">
+            <div class="text-sm font-mono font-medium text-primary">claude-3-5-sonnet</div>
+            <div class="text-xs text-muted mt-1">Anthropic · Reasoning</div>
+          </div>
+          <div class="bg-surface border border-border rounded-lg px-4 py-3 hover:border-accent/30 transition">
+            <div class="text-sm font-mono font-medium text-primary">claude-3-haiku</div>
+            <div class="text-xs text-muted mt-1">Anthropic · Fast</div>
+          </div>
+          <div class="bg-surface border border-border rounded-lg px-4 py-3 hover:border-accent/30 transition">
+            <div class="text-sm font-mono font-medium text-primary">gemini-2.0-flash</div>
+            <div class="text-xs text-muted mt-1">Google · Multimodal</div>
+          </div>
+          <div class="bg-surface border border-border rounded-lg px-4 py-3 hover:border-accent/30 transition">
+            <div class="text-sm font-mono font-medium text-primary">llama-3.1-405b</div>
+            <div class="text-xs text-muted mt-1">Meta · Open-source</div>
+          </div>
+        </div>
+
+        <div class="bg-accent/5 border border-accent/15 rounded-xl p-4 flex gap-3">
+          <span class="text-accent-bright text-sm mt-0.5">ℹ</span>
+          <p class="text-sm text-secondaryText">Run <code class="text-accent-bright text-xs bg-elevated px-1 rounded">GET /v1/models</code> for the complete, up-to-date list of all available models.</p>
+        </div>
+      </section>
+
+      <!-- ════ 06 ERRORS ════ -->
+      <section id="errors" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">06</span> Errors
+        </h2>
+        <p class="text-secondaryText mb-6">VRouter uses standard HTTP status codes. All errors return a consistent JSON structure.</p>
+
+        <div class="bg-surface border border-border rounded-xl overflow-hidden mb-6">
+          <div class="px-5 py-3 border-b border-border">
+            <span class="text-xs font-semibold text-muted uppercase tracking-wider">Error response format</span>
+          </div>
+          <div class="p-5">
+            <pre class="text-sm overflow-x-auto"><code>{
+  <span class="text-green">"error"</span>: {
+    <span class="text-green">"message"</span>: <span class="text-green">"Human-readable error description"</span>,
+    <span class="text-green">"type"</span>: <span class="text-green">"error_type"</span>,
+    <span class="text-green">"code"</span>: <span class="text-green">"machine_readable_code"</span>
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- 400 -->
+          <div class="bg-red/5 border border-red/20 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-red/15 text-red">400</span>
+              <span class="text-sm font-semibold text-primary">Bad Request</span>
+            </div>
+            <p class="text-sm text-secondaryText mb-2">Missing or invalid parameters.</p>
+            <div class="bg-elevated rounded-lg p-3 overflow-x-auto">
+              <pre class="text-xs"><code>{<span class="text-green">"error"</span>: {<span class="text-green">"message"</span>: <span class="text-green">"Missing required parameter: model"</span>, <span class="text-green">"type"</span>: <span class="text-green">"invalid_request_error"</span>}}</code></pre>
+            </div>
+          </div>
+
+          <!-- 401 -->
+          <div class="bg-red/5 border border-red/20 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-red/15 text-red">401</span>
+              <span class="text-sm font-semibold text-primary">Unauthorized</span>
+            </div>
+            <p class="text-sm text-secondaryText mb-2">Invalid or missing API key.</p>
+            <div class="bg-elevated rounded-lg p-3 overflow-x-auto">
+              <pre class="text-xs"><code>{<span class="text-green">"error"</span>: {<span class="text-green">"message"</span>: <span class="text-green">"Invalid API key"</span>, <span class="text-green">"type"</span>: <span class="text-green">"authentication_error"</span>}}</code></pre>
+            </div>
+          </div>
+
+          <!-- 403 -->
+          <div class="bg-red/5 border border-red/20 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-red/15 text-red">403</span>
+              <span class="text-sm font-semibold text-primary">Forbidden</span>
+            </div>
+            <p class="text-sm text-secondaryText mb-2">Account deactivated or key lacks permission.</p>
+          </div>
+
+          <!-- 429 -->
+          <div class="bg-amber/5 border border-amber/20 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-amber/15 text-amber">429</span>
+              <span class="text-sm font-semibold text-primary">Rate Limited</span>
+            </div>
+            <p class="text-sm text-secondaryText mb-2">Too many requests. Implement exponential backoff.</p>
+            <div class="bg-elevated rounded-lg p-3 overflow-x-auto">
+              <pre class="text-xs"><code>{<span class="text-green">"error"</span>: {<span class="text-green">"message"</span>: <span class="text-green">"Rate limit exceeded"</span>, <span class="text-green">"type"</span>: <span class="text-green">"rate_limit_error"</span>, <span class="text-green">"code"</span>: <span class="text-green">"rate_limit"</span>}}</code></pre>
+            </div>
+          </div>
+
+          <!-- 503 -->
+          <div class="bg-red/5 border border-red/20 rounded-xl p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-2 py-0.5 rounded-md text-xs font-bold bg-red/15 text-red">503</span>
+              <span class="text-sm font-semibold text-primary">Service Unavailable</span>
+            </div>
+            <p class="text-sm text-secondaryText">Backend provider temporarily unreachable. VRouter will retry with failover.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ 07 TYPESCRIPT ════ -->
+      <section id="typescript" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">07</span> TypeScript
+        </h2>
+        <p class="text-secondaryText mb-6">Full type support via the official OpenAI SDK. VRouter is a drop-in replacement — just change the base URL.</p>
+
+        <div class="bg-surface border border-border rounded-xl overflow-hidden mb-6">
+          <div class="flex border-b border-border px-4">
+            <button class="code-tabs-btn active px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'ts')">Basic</button>
+            <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'ts')">Streaming</button>
+            <button class="code-tabs-btn px-4 py-2.5 text-xs font-medium text-muted" onclick="switchTab(this, 'ts')">Typed Helpers</button>
+          </div>
+          <div class="group relative">
+            <div class="code-panel active" data-tab-group="ts">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-muted">// install: npm install openai</span>
+<span class="text-accent-bright">import</span> OpenAI, <span class="text-accent-bright">type</span> { ChatCompletion } <span class="text-accent-bright">from</span> <span class="text-green">"openai"</span>;
+
+<span class="text-accent-bright">const</span> client <span class="text-accent-bright">=</span> <span class="text-accent-bright">new</span> OpenAI({
+  baseURL: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+  apiKey: process.env.VROUTER_API_KEY,
+});
+
+<span class="text-accent-bright">const</span> completion: ChatCompletion <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
+  model: <span class="text-green">"gpt-4o"</span>,
+  messages: [
+    { role: <span class="text-green">"system"</span>, content: <span class="text-green">"You are a helpful assistant."</span> },
+    { role: <span class="text-green">"user"</span>,   content: <span class="text-green">"What is the capital of France?"</span> },
+  ],
+  temperature: <span class="amber">0.7</span>,
+});
+
+console.log(completion.choices[<span class="amber">0</span>].message.content);
+<span class="text-muted">// Fully typed — IDE autocomplete works on every field</span></code></pre>
+            </div>
+            <div class="code-panel" data-tab-group="ts">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">import</span> OpenAI <span class="text-accent-bright">from</span> <span class="text-green">"openai"</span>;
+
+<span class="text-accent-bright">const</span> client <span class="text-accent-bright">=</span> <span class="text-accent-bright">new</span> OpenAI({
+  baseURL: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+  apiKey: process.env.VROUTER_API_KEY,
+});
+
+<span class="text-accent-bright">const</span> stream <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
+  model: <span class="text-green">"gpt-4o"</span>,
+  messages: [{ role: <span class="text-green">"user"</span>, content: <span class="text-green">"Write a haiku about code"</span> }],
+  stream: <span class="text-accent-bright">true</span>,
+});
+
+<span class="text-accent-bright">for await</span> (<span class="text-accent-bright">const</span> chunk <span class="text-accent-bright">of</span> stream) {
+  <span class="text-accent-bright">const</span> content <span class="text-accent-bright">=</span> chunk.choices[<span class="amber">0</span>]?.delta?.content;
+  <span class="text-accent-bright">if</span> (content) process.stdout.write(content);
+}</code></pre>
+            </div>
+            <div class="code-panel" data-tab-group="ts">
+              <pre class="p-4 text-sm overflow-x-auto"><code><span class="text-accent-bright">import</span> OpenAI <span class="text-accent-bright">from</span> <span class="text-green">"openai"</span>;
+<span class="text-accent-bright">import type</span> {
+  ChatCompletionMessageParam,
+  ChatCompletionCreateParams,
+} <span class="text-accent-bright">from</span> <span class="text-green">"openai/resources"</span>;
+
+<span class="text-accent-bright">const</span> client <span class="text-accent-bright">=</span> <span class="text-accent-bright">new</span> OpenAI({
+  baseURL: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+  apiKey: process.env.VROUTER_API_KEY,
+});
+
+<span class="text-muted">// Typed helper function</span>
+<span class="text-accent-bright">async function</span> <span class="text-accent-bright">chat</span>(
+  messages: ChatCompletionMessageParam[],
+  model: <span class="text-accent-bright">string</span> <span class="text-accent-bright">=</span> <span class="text-green">"gpt-4o"</span>
+): Promise&lt;<span class="text-accent-bright">string</span>&gt; {
+  <span class="text-accent-bright">const</span> res <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
+    model,
+    messages,
+  });
+  <span class="text-accent-bright">return</span> res.choices[<span class="amber">0</span>].message.content ?? <span class="text-green">""</span>;
+}
+
+<span class="text-muted">// Usage</span>
+<span class="text-accent-bright">const</span> reply <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> chat([
+  { role: <span class="text-green">"user"</span>, content: <span class="text-green">"Hello!"</span> },
+]);
+console.log(reply);</code></pre>
+            </div>
+            <button onclick="copyCodeBlock(this)" class="copy-btn absolute top-10 right-3 text-muted hover:text-accent-bright transition p-1.5 rounded-lg bg-elevated border border-border">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ 08 IDEs ════ -->
+      <section id="ides" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">08</span> IDE Integrations
+        </h2>
+        <p class="text-secondaryText mb-6">Use VRouter as a drop-in backend for your favorite AI coding tools. Just point them at our endpoint.</p>
+
+        <!-- Cursor -->
+        <div class="bg-surface border border-border rounded-xl p-5 mb-4">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-elevated border border-border flex items-center justify-center text-sm font-bold">⚡</div>
+            <div>
+              <h3 class="text-sm font-semibold text-primary">Cursor</h3>
+              <span class="text-xs text-muted">AI code editor</span>
+            </div>
+          </div>
+          <p class="text-sm text-secondaryText mb-3">Settings → Models → Add custom model endpoint:</p>
+          <div class="bg-elevated border border-border rounded-lg p-3 overflow-x-auto">
+            <pre class="text-xs"><code><span class="text-muted">Base URL:</span>  <span class="text-accent-bright">https://vrouter.my.id/v1</span>
+<span class="text-muted">API Key:</span>   <span class="text-accent-bright">***</span>
+<span class="text-muted">Model:</span>     <span class="text-accent-bright">gpt-4o</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Continue -->
+        <div class="bg-surface border border-border rounded-xl p-5 mb-4">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-elevated border border-border flex items-center justify-center text-sm font-bold">🔄</div>
+            <div>
+              <h3 class="text-sm font-semibold text-primary">Continue</h3>
+              <span class="text-xs text-muted">VS Code / JetBrains extension</span>
+            </div>
+          </div>
+          <p class="text-sm text-secondaryText mb-3">Edit <code class="text-xs text-accent-bright bg-elevated px-1 rounded">~/.continue/config.json</code>:</p>
+          <div class="bg-elevated border border-border rounded-lg p-3 overflow-x-auto">
+            <pre class="text-xs"><code>{
+  <span class="text-green">"models"</span>: [{
+    <span class="text-green">"title"</span>: <span class="text-green">"VRouter GPT-4o"</span>,
+    <span class="text-green">"provider"</span>: <span class="text-green">"openai"</span>,
+    <span class="text-green">"model"</span>: <span class="text-green">"gpt-4o"</span>,
+    <span class="text-green">"apiBase"</span>: <span class="text-green">"https://vrouter.my.id/v1"</span>,
+    <span class="text-green">"apiKey"</span>: <span class="text-green">"***"</span>
+  }]
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Cline -->
+        <div class="bg-surface border border-border rounded-xl p-5 mb-4">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-elevated border border-border flex items-center justify-center text-sm font-bold">🤖</div>
+            <div>
+              <h3 class="text-sm font-semibold text-primary">Cline (formerly Claude Dev)</h3>
+              <span class="text-xs text-muted">VS Code extension</span>
+            </div>
+          </div>
+          <p class="text-sm text-secondaryText mb-3">Extension settings → API Provider → OpenAI Compatible:</p>
+          <div class="bg-elevated border border-border rounded-lg p-3 overflow-x-auto">
+            <pre class="text-xs"><code><span class="text-muted">Base URL:</span>  <span class="text-accent-bright">https://vrouter.my.id/v1</span>
+<span class="text-muted">API Key:</span>   <span class="text-accent-bright">***</span>
+<span class="text-muted">Model ID:</span>  <span class="text-accent-bright">gpt-4o</span></code></pre>
+          </div>
+        </div>
+
+        <!-- Open WebUI -->
+        <div class="bg-surface border border-border rounded-xl p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-elevated border border-border flex items-center justify-center text-sm font-bold">🌐</div>
+            <div>
+              <h3 class="text-sm font-semibold text-primary">Open WebUI</h3>
+              <span class="text-xs text-muted">Self-hosted ChatGPT interface</span>
+            </div>
+          </div>
+          <p class="text-sm text-secondaryText mb-3">Admin → Settings → Connections → OpenAI API:</p>
+          <div class="bg-elevated border border-border rounded-lg p-3 overflow-x-auto">
+            <pre class="text-xs"><code><span class="text-muted">OPENAI_API_BASE_URLS:</span>  <span class="text-accent-bright">https://vrouter.my.id/v1</span>
+<span class="text-muted">OPENAI_API_KEYS:</span>       <span class="text-accent-bright">***</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ 09 STATUS ════ -->
+      <section id="status" class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
+          <span class="text-sm font-mono text-accent-bright">09</span> Status
+        </h2>
+        <p class="text-secondaryText mb-6">Check system health and availability.</p>
+
+        <div class="bg-surface border border-border rounded-xl p-5 mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="px-2.5 py-0.5 rounded-md text-xs font-bold badge-get">GET</span>
+            <code class="text-sm font-semibold text-primary">/health</code>
+            <span class="text-xs text-muted ml-auto">No auth required</span>
+          </div>
+          <p class="text-sm text-secondaryText mb-4">Returns system health, user count, uptime, and total requests.</p>
+          <div class="bg-elevated border border-border rounded-lg p-3 overflow-x-auto">
+            <pre class="text-xs"><code>{
+  <span class="text-green">"status"</span>: <span class="text-green">"ok"</span>,
+  <span class="text-green">"vrouter"</span>: <span class="text-green">"online"</span>,
+  <span class="text-green">"users"</span>: <span class="amber">1247</span>,
+  <span class="text-green">"uptime"</span>: <span class="amber">864291</span>,
+  <span class="text-green">"total_requests"</span>: <span class="amber">52841</span>
+}</code></pre>
+          </div>
+        </div>
+
+
+        <div class="mt-6 flex gap-4">
+          <a href="/status" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-accent/10 text-accent-bright border border-accent/20 hover:bg-accent/20 transition text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Live Status Dashboard
+          </a>
+          <a href="/api-docs" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-elevated text-secondaryText border border-border hover:bg-surface transition text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            OpenAPI / Swagger
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="border-t border-border mt-12" style="background:#0C0E13;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <div class="flex items-center gap-2 font-bold text-base text-primary mb-3">
+          <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-7 w-auto" />
+        </div>
+        <p class="text-xs text-muted leading-relaxed">OpenAI-compatible LLM router. 1000+ models, 30+ providers.</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Product</h4>
+        <a href="/features" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Features</a>
+        <a href="/docs" class="block text-sm text-accent-bright mb-2">Docs</a>
+        <a href="/integrations" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Integrations</a>
+        <a href="/pricing" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Pricing</a>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Resources</h4>
+        <a href="/status" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Status</a>
+        <a href="/api-docs" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Swagger</a>
+        <a href="/terms" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Terms</a>
+        <a href="/fair-use" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Fair Use</a>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Connect</h4>
+        <a href="mailto:viresen16@gmail.com" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Contact</a>
+        <a href="https://github.com/rezkyrafael2901/vrouter" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">GitHub</a>
+        <a href="https://t.me/virexagent" class="block text-sm text-secondaryText hover:text-accent-bright transition mb-2">Telegram</a>
+      </div>
+    </div>
+    <div class="border-t border-border pt-6 text-center text-xs text-muted">
+      &copy; 2026 {{ site_name }}. Built with ♥.
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+<script>
+// ─── Sidebar mobile toggle ───
+const sidebar = document.getElementById('sidebar-nav');
+const overlay = document.getElementById('sidebar-overlay');
+const menuBtn = document.getElementById('mobile-menu-btn');
+
+function toggleSidebar() {
+  const isOpen = sidebar.style.display === 'block';
+  sidebar.style.display = isOpen ? 'none' : 'block';
+  overlay.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    sidebar.classList.add('fixed', 'left-0', 'top-16', 'bottom-0', 'w-72', 'z-50', 'p-4', 'overflow-y-auto', 'border-r', 'border-border');
+    sidebar.style.background = '#11131A';
+    sidebar.style.display = 'block';
+  } else {
+    sidebar.classList.remove('fixed', 'left-0', 'top-16', 'bottom-0', 'w-72', 'z-50', 'p-4', 'overflow-y-auto', 'border-r', 'border-border');
+    sidebar.style.background = '';
+  }
+}
+
+// Show sidebar on desktop
+if (window.innerWidth >= 1024) {
+  sidebar.style.display = 'block';
+} else {
+  sidebar.style.display = 'none';
+}
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 1024) {
+    sidebar.style.display = 'block';
+    overlay.classList.remove('open');
+    sidebar.classList.remove('fixed', 'left-0', 'top-16', 'bottom-0', 'w-72', 'z-50', 'p-4', 'overflow-y-auto', 'border-r', 'border-border');
+    sidebar.style.background = '';
+  }
+});
+
+menuBtn.addEventListener('click', toggleSidebar);
+
+// ─── Active section tracking (Intersection Observer) ───
+const sections = document.querySelectorAll('section[id]');
+const sidebarLinks = document.querySelectorAll('.sidebar-link[data-section]');
+
+function setActiveLink(id) {
+  sidebarLinks.forEach(link => {
+    link.classList.toggle('active', link.dataset.section === id);
+  });
+}
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setActiveLink(entry.target.id);
+        // Update URL hash without scroll
+        history.replaceState(null, null, '#' + entry.target.id);
+      }
+    });
+  },
+  { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
+);
+
+sections.forEach(s => observer.observe(s));
+
+// ─── Close sidebar on mobile link click ───
+sidebarLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth < 1024) toggleSidebar();
+  });
+});
+
+// ─── Code tab switching ───
+function switchTab(btn, group) {
+  const container = btn.closest('.bg-surface');
+  const buttons = container.querySelectorAll('.code-tabs-btn');
+  const panels = container.querySelectorAll('.code-panel[data-tab-group="' + group + '"]');
+  const idx = Array.from(btn.parentElement.children).indexOf(btn);
+
+  buttons.forEach(b => b.classList.remove('active'));
+  panels.forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  if (panels[idx]) panels[idx].classList.add('active');
+}
+
+// ─── Copy to clipboard ───
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = '<svg class="w-4 h-4 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+    setTimeout(() => { btn.innerHTML = original; }, 1500);
+  });
+}
+
+function copyCodeBlock(btn) {
+  const code = btn.closest('.group, .code-panel, .bg-surface')
+    ?.querySelector('pre code')?.textContent;
+  if (code) {
+    navigator.clipboard.writeText(code).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = '<svg class="w-4 h-4 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+      setTimeout(() => { btn.innerHTML = original; }, 1500);
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090D">
+<title>{{ site_name }} — One API. Every model.</title>
+<meta name="description" content="Access leading AI models (GPT, Claude, Gemini, DeepSeek and more) through a single OpenAI-compatible API. One endpoint, one key, zero configuration.">
+<link rel="canonical" href="{{ site_url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VRouter LLM API">
+<meta property="og:title" content="VRouter — One API. Every model.">
+<meta property="og:description" content="Access leading AI models through a single, fast and reliable OpenAI-compatible API. One endpoint, zero configuration.">
+<meta property="og:url" content="{{ site_url }}">
+<meta property="og:image" content="{{ site_url }}/static/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VRouter — One API. Every model.">
+<meta name="twitter:description" content="Access leading AI models through a single, fast and reliable OpenAI-compatible API. One endpoint, zero configuration.">
+<meta name="twitter:image" content="{{ site_url }}/static/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+// Theme init before paint (avoid FOUC)
+(function(){
+  try {
+    var saved = localStorage.getItem('vrouter-theme');
+    var dark = saved ? saved === 'dark' : true;
+    document.documentElement.classList.toggle('dark', dark);
+  } catch(e) {}
+})();
+</script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        base: '#08090D',
+        secondary: '#0C0E13',
+        surface: '#11131A',
+        elevated: '#151821',
+        border: '#222632',
+        primary: '#F5F7FA',
+        secondaryText: '#8B93A7',
+        muted: '#5F6678',
+        accent: '#8B5CF6',
+        'accent-bright': '#A78BFA',
+        'accent-dark': '#7C3AED',
+      },
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background: #08090D;
+    color: #F5F7FA;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .dark body { background: #08090D; color: #F5F7FA; }
+
+  /* Light theme overrides */
+  html:not(.dark) body {
+    background: #f8fafc;
+    color: #0f172a;
+  }
+  html:not(.dark) .bg-base, html:not(.dark) .bg-secondary { background: #f8fafc; }
+  html:not(.dark) .bg-surface, html:not(.dark) .bg-elevated { background: #ffffff; }
+  html:not(.dark) .border-border { border-color: #e2e8f0; }
+  html:not(.dark) .text-primary { color: #0f172a; }
+  html:not(.dark) .text-secondaryText { color: #475569; }
+  html:not(.dark) .text-muted { color: #64748b; }
+  html:not(.dark) nav { background: rgba(248,250,252,0.85); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #08090D; }
+  ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
+
+  /* Grid pattern */
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(34,38,50,0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,38,50,0.3) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  /* Hero glow */
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Code tab active */
+  .code-tab-active { color: #A78BFA; border-bottom: 2px solid #8B5CF6; transition: color .2s, border-color .2s; }
+  .code-tab-inactive { color: #5F6678; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+  .code-tab-inactive:hover { color: #8B93A7; }
+
+  /* FAQ accordion */
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .faq-answer.open { max-height: 500px; }
+  .faq-icon { transition: transform 0.3s ease; }
+  .faq-icon.open { transform: rotate(45deg); }
+
+  /* Model status pulse */
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .status-pulse { animation: statusPulse 2s ease-in-out infinite; }
+
+  /* Status badge live dot */
+  @keyframes ping-slow {
+    0% { transform: scale(1); opacity: .8; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  .status-dot { position: relative; }
+  .status-dot::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 9999px;
+    background: currentColor;
+    animation: ping-slow 1.8s cubic-bezier(0,0,.2,1) infinite;
+  }
+
+  /* Subtle gradient border on cards */
+  .card-hover {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card-hover:hover {
+    border-color: #2d3348;
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
+    transform: translateY(-2px);
+  }
+
+  /* Model selector animation */
+  .model-option { transition: background 0.15s ease; }
+  .model-option:hover { background: rgba(139,92,246,0.08); }
+  .model-option.active { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.3); }
+
+  /* Micro-interactions */
+  .btn-interactive { transition: all .2s ease; }
+  .btn-interactive:hover { opacity: .9; }
+  .btn-interactive:active { transform: scale(.98); }
+
+  /* Scroll-reveal (Nodea effect) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s cubic-bezier(0.16,1,0.3,1), transform .6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.reveal-visible { opacity: 1; transform: translateY(0); }
+  .reveal-left { transform: translateX(-16px); }
+  .reveal-right { transform: translateX(16px); }
+  .reveal-left.reveal-visible, .reveal-right.reveal-visible { transform: translateX(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+  .reveal-delay-4 { transition-delay: .4s; }
+
+  /* Hero load animation */
+  .hero-anim { opacity: 0; transform: translateY(24px); animation: heroIn .6s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .hero-anim-delay-1 { animation-delay: .1s; }
+  .hero-anim-delay-2 { animation-delay: .2s; }
+  .hero-anim-delay-3 { animation-delay: .3s; }
+  @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+
+  /* Reduced motion: disable all */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-left, .reveal-right, .hero-anim { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+    .status-pulse, .status-dot::after { animation: none !important; }
+  }
+
+  /* Toast */
+  .toast-container {
+    position: fixed; top: 20px; right: 20px; z-index: 9999;
+    display: flex; flex-direction: column; gap: 8px; max-width: 340px;
+  }
+  .toast-item {
+    background: #11131A; border: 1px solid #222632; border-left: 3px solid #10B981;
+    color: #F5F7FA; padding: 12px 16px; border-radius: 10px; font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    animation: toastIn .3s cubic-bezier(0.16,1,0.3,1) forwards;
+    cursor: pointer;
+  }
+  .toast-item.error { border-left-color: #EF4444; }
+  .toast-item.info { border-left-color: #8B5CF6; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+  @media print { .toast-container { display: none; } }
+</style>
+
+{% if scroll_to %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const el = document.getElementById('{{ scroll_to }}');
+  if (el) setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+});
+</script>
+{% endif %}
+</head>
+<body class="overflow-x-hidden">
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-[#08090D]/80 backdrop-blur-xl border-b border-border">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between relative">
+    <!-- Left: Logo + Hamburger -->
+    <div class="flex items-center gap-2">
+      <a href="/" class="flex items-center gap-2 min-h-[44px]">
+        <img src="/static/vrouter-logo.svg" alt="{{ site_name }}" class="h-5 w-auto" />
+        <span class="font-semibold text-[13px] tracking-tight text-primary hidden sm:inline">{{ site_name }}</span>
+      </a>
+      <button onclick="toggleMobileNav()" class="md:hidden p-2.5 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Menu" id="hamburger-btn">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <!-- Center: Nav links (desktop only) -->
+    <div class="hidden md:flex items-center gap-1">
+      <a href="#models" class="text-muted text-xs font-medium hover:text-primary transition-colors px-3 py-3 inline-flex items-center min-h-[44px]">Models</a>
+      <a href="#features" class="text-muted text-xs font-medium hover:text-primary transition-colors px-3 py-3 inline-flex items-center min-h-[44px]">API</a>
+      <a href="#pricing" class="text-muted text-xs font-medium hover:text-primary transition-colors px-3 py-3 inline-flex items-center min-h-[44px]">Pricing</a>
+      <a href="/docs" class="text-muted text-xs font-medium hover:text-primary transition-colors px-3 py-3 inline-flex items-center min-h-[44px]">Docs</a>
+      <a href="#faq" class="text-muted text-xs font-medium hover:text-primary transition-colors px-3 py-3 inline-flex items-center min-h-[44px]">FAQ</a>
+    </div>
+    <!-- Right: CTA -->
+    <div class="flex items-center gap-2">
+      <button onclick="toggleTheme()" class="p-2.5 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Toggle theme" id="theme-toggle">
+        <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+      {% if is_logged_in %}
+      <a href="/dashboard" class="text-xs font-medium px-3 py-1.5 rounded-md bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20 transition-colors inline-flex items-center min-h-[44px]">Dashboard</a>
+      <div class="flex items-center gap-1.5">
+        <div class="w-6 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[10px] font-semibold text-accent-bright">{{ user_initial }}</div>
+        <a href="/auth/logout" class="text-xs text-muted hover:text-primary transition-colors hidden sm:inline">Logout</a>
+      </div>
+      {% else %}
+      <a href="/auth" class="text-xs font-medium text-muted hover:text-primary transition-colors px-2.5 py-1 hidden sm:inline-flex items-center min-h-[44px]">Sign In</a>
+      <a href="/auth?signup=true" class="text-xs font-semibold text-white bg-accent hover:bg-accent-dark px-3.5 py-2 rounded-md transition-colors inline-flex items-center min-h-[44px]">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+  <!-- Mobile dropdown menu -->
+  <div id="mobile-nav-panel" class="hidden md:hidden bg-[#08090D] border-b border-border px-4 py-3">
+    <div class="flex flex-col gap-1">
+      <a href="#models" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">Models</a>
+      <a href="#features" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">API</a>
+      <a href="#pricing" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">Pricing</a>
+      <a href="/docs" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">Docs</a>
+      <a href="#faq" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">FAQ</a>
+      {% if not is_logged_in %}
+      <a href="/auth" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="relative pt-32 pb-20 md:pt-40 md:pb-28 grid-pattern overflow-hidden">
+  <div class="hero-glow"></div>
+  <div class="relative max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <!-- Left: Copy -->
+    <div>
+      <h1 class="hero-anim text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] tracking-tight text-primary mb-5">
+        One API.<br>Every model.
+      </h1>
+      <p class="hero-anim hero-anim-delay-1 text-secondaryText text-base md:text-lg leading-relaxed max-w-md mb-8">
+        Access leading AI models through a single, fast and reliable API. One endpoint, zero configuration.
+      </p>
+      <div class="hero-anim hero-anim-delay-2 flex flex-wrap gap-3 mb-10">
+        <a href="/auth?signup=true" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg">
+          Get Started
+        </a>
+        <a href="/docs" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm border border-border hover:border-muted text-secondaryText hover:text-primary px-6 py-3 rounded-lg">
+          View Docs
+        </a>
+      </div>
+      <div class="hero-anim hero-anim-delay-3 flex items-center gap-6 text-xs text-muted">
+        <a href="/status" class="flex items-center gap-2 hover:text-primary transition-colors">
+          <span class="w-2 h-2 bg-emerald-500 rounded-full status-dot inline-block status-pulse"></span>
+          <span class="font-medium">API Operational</span>
+        </a>
+        <div class="font-mono">~47ms avg</div>
+      </div>
+    </div>
+
+    <!-- Right: Code Panel -->
+    <div class="hero-anim hero-anim-delay-2 flex justify-end">
+      <div class="w-full max-w-[500px] bg-surface border border-border rounded-xl overflow-x-auto">
+        <!-- Tabs -->
+        <div class="flex items-center gap-0 border-b border-border px-1">
+          <button onclick="switchTab('curl')" id="tab-curl" class="code-tab-active font-mono text-xs px-4 py-3 transition-colors" data-tab="curl">cURL</button>
+          <button onclick="switchTab('python')" id="tab-python" class="code-tab-inactive font-mono text-xs px-4 py-3 transition-colors" data-tab="python">Python</button>
+          <button onclick="switchTab('node')" id="tab-node" class="code-tab-inactive font-mono text-xs px-4 py-3 transition-colors" data-tab="node">Node.js</button>
+        </div>
+        <!-- Model selector -->
+        <div class="px-4 pt-3 pb-2">
+          <div class="flex flex-wrap gap-2">
+            <button class="model-option active text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-accent-bright" onclick="switchModel(this, 'gpt-4o-latest')">gpt-4o-latest</button>
+            <button class="model-option text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" onclick="switchModel(this, 'claude-sonnet-4')">claude-sonnet-4</button>
+            <button class="model-option text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" onclick="switchModel(this, 'gemini-2.5-pro')">gemini-2.5-pro</button>
+            <button class="model-option text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" onclick="switchModel(this, 'deepseek-chat')">deepseek-chat</button>
+          </div>
+        </div>
+        <!-- Code blocks -->
+        <div class="px-4 pb-4">
+          <pre id="code-curl" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto"><span class="text-accent-bright">curl</span> <span class="text-muted">{{ site_url }}/v1/chat/completions</span> <span class="text-secondaryText">\</span>
+  <span class="text-primary">-H</span> <span class="text-emerald-400">"Authorization: Bearer *** <span class="text-secondaryText">\</span>
+  <span class="text-primary">-H</span> <span class="text-emerald-400">"Content-Type: application/json"</span> <span class="text-secondaryText">\</span>
+  <span class="text-primary">-d</span> <span class="text-emerald-400">'{
+    "model": "<span class="text-primary">gpt-4o-latest</span>",
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'</span></pre>
+          <pre id="code-python" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto hidden"><span class="text-accent-bright">from</span> openai <span class="text-accent-bright">import</span> OpenAI
+
+client = <span class="text-primary">OpenAI</span>(
+    <span class="text-primary">base_url</span>=<span class="text-emerald-400">"{{ site_url }}/v1"</span>,
+    <span class="text-primary">api_key</span>=<span class="text-emerald-400">"YOUR_KEY"</span>,
+)
+
+response = client.chat.completions.<span class="text-primary">create</span>(
+    <span class="text-primary">model</span>=<span class="text-emerald-400">"gpt-4o-latest"</span>,
+    <span class="text-primary">messages</span>=[
+        {<span class="text-emerald-400">"role"</span>: <span class="text-emerald-400">"user"</span>, <span class="text-emerald-400">"content"</span>: <span class="text-emerald-400">"Hello!"</span>}
+    ],
+)
+
+<span class="text-accent-bright">print</span>(response.choices[0].message.content)</pre>
+          <pre id="code-node" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto hidden"><span class="text-accent-bright">import</span> <span class="text-primary">OpenAI</span> <span class="text-accent-bright">from</span> <span class="text-emerald-400">'openai'</span>;
+
+<span class="text-accent-bright">const</span> client = <span class="text-accent-bright">new</span> <span class="text-primary">OpenAI</span>({
+  <span class="text-primary">baseURL</span>: <span class="text-emerald-400">'{{ site_url }}/v1'</span>,
+  <span class="text-primary">apiKey</span>: <span class="text-emerald-400">'YOUR_KEY'</span>,
+});
+
+<span class="text-accent-bright">const</span> response = <span class="text-accent-bright">await</span> client.chat.completions.<span class="text-primary">create</span>({
+  <span class="text-primary">model</span>: <span class="text-emerald-400">'gpt-4o-latest'</span>,
+  <span class="text-primary">messages</span>: [{ <span class="text-primary">role</span>: <span class="text-emerald-400">'user'</span>, <span class="text-primary">content</span>: <span class="text-emerald-400">'Hello!'</span> }],
+});
+
+console.<span class="text-primary">log</span>(response.choices[0].message.content);</pre>
+        </div>
+        <!-- Bottom bar -->
+        <div class="border-t border-border px-4 py-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full status-pulse"></span>
+            <span class="text-[11px] text-muted">API ready</span>
+          </div>
+          <span class="text-[11px] text-muted font-mono">{{ site_url }}/v1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SOCIAL PROOF ═══════════════ -->
+<section class="py-12 md:py-16 border-t border-border bg-secondary">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-8 reveal">
+      <p class="text-xs font-semibold uppercase tracking-widest text-muted">Trusted by developers building with AI</p>
+    </div>
+    <!-- Logo bar -->
+    <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 mb-12 reveal reveal-delay-1">
+      <span class="text-secondaryText font-semibold text-sm opacity-60">Acme Corp</span>
+      <span class="text-secondaryText font-semibold text-sm opacity-60">TechNova</span>
+      <span class="text-secondaryText font-semibold text-sm opacity-60">Buildly</span>
+      <span class="text-secondaryText font-semibold text-sm opacity-60">DataForge</span>
+      <span class="text-secondaryText font-semibold text-sm opacity-60">PixelWorks</span>
+      <span class="text-secondaryText font-semibold text-sm opacity-60">CloudNine</span>
+    </div>
+    <!-- Stats strip -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12 reveal reveal-delay-2">
+      <div class="text-center">
+        <div class="text-3xl font-extrabold text-primary">10M+</div>
+        <div class="text-xs text-muted mt-1">Requests served</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-extrabold text-primary">1,000+</div>
+        <div class="text-xs text-muted mt-1">Developers building</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-extrabold text-primary">99.9%</div>
+        <div class="text-xs text-muted mt-1">Uptime</div>
+      </div>
+    </div>
+    <!-- Testimonials -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal">
+        <p class="text-secondaryText text-[13px] leading-relaxed mb-4">"VRouter cut our integration time from days to hours. One key for every model we need."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent-bright">[A]</div>
+          <div>
+            <div class="text-primary text-[13px] font-semibold">[CUSTOMER NAME]</div>
+            <div class="text-muted text-[11px]">CTO, [COMPANY]</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-1">
+        <p class="text-secondaryText text-[13px] leading-relaxed mb-4">"The streaming support and model switching are flawless. Best API router we've used."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent-bright">[B]</div>
+          <div>
+            <div class="text-primary text-[13px] font-semibold">[CUSTOMER NAME]</div>
+            <div class="text-muted text-[11px]">Lead Engineer, [COMPANY]</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-2">
+        <p class="text-secondaryText text-[13px] leading-relaxed mb-4">"We replaced three provider SDKs with one VRouter key. Maintenance went to zero."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent-bright">[C]</div>
+          <div>
+            <div class="text-primary text-[13px] font-semibold">[CUSTOMER NAME]</div>
+            <div class="text-muted text-[11px]">Founder, [COMPANY]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ MODELS / PROVIDERS ═══════════════ -->
+<section class="py-20 md:py-28 border-t border-border bg-secondary" id="models">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">All major providers, one endpoint</h2>
+      <p class="text-secondaryText text-base mt-4 max-w-xl mx-auto">Access models from leading AI labs through a unified API. No per-provider setup required.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- OpenAI -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="1.5"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">OpenAI</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- Anthropic -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-1">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><path d="M13.827 3.52h3.603L24 20.48h-3.603l-6.57-16.96zm-7.258 0h3.767L16.906 20.48h-3.674l-1.632-4.327H5.091l-1.65 4.327H0L6.57 3.52zm1.07 6.427h5.522L10.9 16.237H5.377l1.917-6.29z"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">Anthropic</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- Google -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-2">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">Google</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- DeepSeek -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-3">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><circle cx="12" cy="12" r="10" fill="none" stroke="#F5F7FA" stroke-width="1.5"/><path d="M8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0z" fill="#F5F7FA"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">DeepSeek</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- Meta -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">Meta</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- Mistral -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-1">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">Mistral</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- Cohere -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-2">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">Cohere</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+      <!-- Qwen -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-3">
+        <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>
+        </div>
+        <div>
+          <div class="text-primary font-semibold text-sm">Qwen</div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<section class="py-20 md:py-28" id="features">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">Built for production</h2>
+      <p class="text-secondaryText text-base mt-4 max-w-xl mx-auto">Infrastructure that scales with your application. Every feature designed for reliability.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Unified API -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal">
+        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </div>
+        <h3 class="text-primary font-semibold text-sm mb-2">Unified API</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed">Single endpoint for every model. Change the model name in your request, not your code.</p>
+      </div>
+      <!-- Multiple Providers -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-1">
+        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>
+        </div>
+        <h3 class="text-primary font-semibold text-sm mb-2">Multiple Providers</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed">OpenAI, Anthropic, Google, DeepSeek, Meta, Mistral, and more — all through one key.</p>
+      </div>
+      <!-- OpenAI Compatible -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-2">
+        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3 class="text-primary font-semibold text-sm mb-2">OpenAI Compatible</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed">Drop-in replacement. Change your base URL and every existing SDK works unchanged.</p>
+      </div>
+      <!-- Streaming -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal">
+        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <h3 class="text-primary font-semibold text-sm mb-2">Streaming</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed">Full SSE streaming support. Token-by-token responses for real-time UIs.</p>
+      </div>
+      <!-- Fast Routing -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-1">
+        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3 class="text-primary font-semibold text-sm mb-2">Fast Routing</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed">Sub-50ms routing latency. Automatic failover and load balancing across providers.</p>
+      </div>
+      <!-- Usage Monitoring -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-2">
+        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <h3 class="text-primary font-semibold text-sm mb-2">Usage Monitoring</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed">Real-time dashboards for token usage, costs, and per-model latency breakdowns.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section class="py-20 md:py-28 border-t border-border bg-secondary" id="how-it-works">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">Up and running in 3 steps</h2>
+      <p class="text-secondaryText text-base mt-4">No configuration. No SDK changes. Just set a URL and start building.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Step 1 -->
+      <div class="relative reveal">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-bright font-mono text-sm font-bold">1</div>
+          <div class="text-muted text-xs font-mono uppercase tracking-wider">Sign up</div>
+        </div>
+        <h3 class="text-primary font-semibold text-base mb-2">Create your account</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed mb-5">Free tier included. No credit card required. Get your API key in seconds.</p>
+        <div class="bg-surface border border-border rounded-xl p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
+          <span class="text-muted"># One command to verify</span><br>
+          <span class="text-emerald-400">curl</span> <span class="text-secondaryText">{{ site_url }}/v1/models</span> \<br>
+          &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-emerald-400">"Authorization: Bearer ***
+        </div>
+      </div>
+      <!-- Step 2 -->
+      <div class="relative reveal reveal-delay-1">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-bright font-mono text-sm font-bold">2</div>
+          <div class="text-muted text-xs font-mono uppercase tracking-wider">Get API key</div>
+        </div>
+        <h3 class="text-primary font-semibold text-base mb-2">Set your base URL</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed mb-5">Replace the OpenAI base URL with {{ site_name }}. Existing SDKs work unchanged.</p>
+        <div class="bg-surface border border-border rounded-xl p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
+          <span class="text-muted"># Python</span><br>
+          <span class="text-secondaryText">client = </span><span class="text-primary">OpenAI</span><span class="text-secondaryText">(</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">base_url=</span><span class="text-emerald-400">"{{ site_url }}/v1"</span><span class="text-secondaryText">,</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">api_key=</span><span class="text-emerald-400">"YOUR_KEY"</span><br>
+          <span class="text-secondaryText">)</span>
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="relative reveal reveal-delay-2">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-bright font-mono text-sm font-bold">3</div>
+          <div class="text-muted text-xs font-mono uppercase tracking-wider">Start building</div>
+        </div>
+        <h3 class="text-primary font-semibold text-base mb-2">Make your first request</h3>
+        <p class="text-secondaryText text-[13px] leading-relaxed mb-5">Send a completion request. Switch models by changing the model field.</p>
+        <div class="bg-surface border border-border rounded-xl p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
+          <span class="text-muted"># Switch models instantly</span><br>
+          <span class="text-secondaryText">response = client.chat.completions.</span><span class="text-primary">create</span><span class="text-secondaryText">(</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">model=</span><span class="text-emerald-400">"gpt-4o-latest"</span><span class="text-secondaryText">,</span> <span class="text-muted"># or "claude-sonnet-4", "gemini-2.5-pro", "deepseek-chat"...</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">messages=</span><span class="text-secondaryText">[{</span><span class="text-emerald-400">"role"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"user"</span><span class="text-secondaryText">, </span><span class="text-emerald-400">"content"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"Hello!"</span><span class="text-secondaryText">}]</span><br>
+          <span class="text-secondaryText">)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PRICING ═══════════════ -->
+<section class="py-20 md:py-28" id="pricing">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">Simple, transparent pricing</h2>
+      <p class="text-secondaryText text-base mt-4">Start free. Scale without limits. No hidden fees.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <!-- Free -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-7 flex flex-col reveal">
+        <h3 class="text-primary font-bold text-lg">Free</h3>
+        <p class="text-muted text-[13px] mt-1 mb-6">For hobbyists and testing</p>
+        <div class="mb-7">
+          <span class="text-4xl font-extrabold text-primary">Free</span>
+          <span class="text-muted text-sm">/mo</span>
+        </div>
+        <ul class="space-y-3 mb-8 flex-1">
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> 500 requests / month</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Access to core models</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> OpenAI-compatible API</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Streaming support</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-muted"><span class="text-border text-xs">—</span> Load balancing</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-muted"><span class="text-border text-xs">—</span> Custom provider keys</li>
+        </ul>
+        <a href="/auth?signup=true" class="block text-center font-semibold text-[13px] border border-border hover:border-muted text-secondaryText hover:text-primary px-6 py-3 rounded-lg transition-colors">Start Free</a>
+      </div>
+      <!-- Pro -->
+      <div class="card-hover bg-surface border border-accent/30 rounded-xl p-7 flex flex-col relative reveal reveal-delay-1">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
+        <h3 class="text-primary font-bold text-lg">Pro</h3>
+        <p class="text-muted text-[13px] mt-1 mb-6">For teams and production</p>
+        <div class="mb-7">
+          <span class="text-4xl font-extrabold text-primary">$20</span>
+          <span class="text-muted text-sm">/mo</span>
+        </div>
+        <ul class="space-y-3 mb-8 flex-1">
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> 5,000 requests / month</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> All models + gated access</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Auto load balancing</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Custom provider keys</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Priority support</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Usage analytics</li>
+        </ul>
+        <a href="/auth?signup=true" class="block text-center font-semibold text-[13px] bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg transition-colors">Upgrade to Pro</a>
+      </div>
+      <!-- Enterprise -->
+      <div class="card-hover bg-surface border border-border rounded-xl p-7 flex flex-col reveal reveal-delay-2">
+        <h3 class="text-primary font-bold text-lg">Enterprise</h3>
+        <p class="text-muted text-[13px] mt-1 mb-6">For high-volume production</p>
+        <div class="mb-7">
+          <span class="text-4xl font-extrabold text-primary">Custom</span>
+        </div>
+        <ul class="space-y-3 mb-8 flex-1">
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Unlimited usage</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Dedicated instances</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Custom SLAs</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> SSO / SAML</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> 24/7 priority support</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Volume discounts</li>
+        </ul>
+        <a href="mailto:{{ user_email }}" class="block text-center font-semibold text-[13px] border border-border hover:border-muted text-secondaryText hover:text-primary px-6 py-3 rounded-lg transition-colors">Contact Sales</a>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="mt-16 max-w-5xl mx-auto reveal">
+      <h3 class="text-xl font-bold text-primary text-center mb-6">Compare plans</h3>
+      <div class="bg-surface border border-border rounded-xl overflow-x-auto">
+        <table class="w-full text-left text-[13px]">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="p-4 text-muted font-semibold">Feature</th>
+              <th class="p-4 text-emerald-500 font-semibold text-center">Free</th>
+              <th class="p-4 text-accent-bright font-semibold text-center">Pro</th>
+              <th class="p-4 text-muted font-semibold text-center">Enterprise</th>
+            </tr>
+          </thead>
+          <tbody class="text-secondaryText">
+            <tr class="border-b border-border/50">
+              <td class="p-4">Requests / month</td>
+              <td class="p-4 text-center">500</td>
+              <td class="p-4 text-center">5,000</td>
+              <td class="p-4 text-center">Unlimited</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="p-4">Models available</td>
+              <td class="p-4 text-center">Core</td>
+              <td class="p-4 text-center">All + gated</td>
+              <td class="p-4 text-center">All + custom</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="p-4">Rate limit</td>
+              <td class="p-4 text-center">Standard</td>
+              <td class="p-4 text-center">High</td>
+              <td class="p-4 text-center">Custom</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="p-4">Streaming</td>
+              <td class="p-4 text-center">✓</td>
+              <td class="p-4 text-center">✓</td>
+              <td class="p-4 text-center">✓</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="p-4">Load balancing</td>
+              <td class="p-4 text-center text-muted">—</td>
+              <td class="p-4 text-center">✓</td>
+              <td class="p-4 text-center">✓</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="p-4">Custom provider keys</td>
+              <td class="p-4 text-center text-muted">—</td>
+              <td class="p-4 text-center">✓</td>
+              <td class="p-4 text-center">✓</td>
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="p-4">Support level</td>
+              <td class="p-4 text-center">Community</td>
+              <td class="p-4 text-center">Priority</td>
+              <td class="p-4 text-center">24/7</td>
+            </tr>
+            <tr>
+              <td class="p-4">Usage analytics</td>
+              <td class="p-4 text-center text-muted">—</td>
+              <td class="p-4 text-center">✓</td>
+              <td class="p-4 text-center">✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-center text-[11px] text-muted mt-3">[TO CONFIRM] — Verify exact plan limits before launch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<section class="py-20 md:py-28 border-t border-border bg-secondary" id="faq">
+  <div class="max-w-3xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">Frequently asked questions</h2>
+      <p class="text-secondaryText text-base mt-4">Everything you need before making your first request.</p>
+    </div>
+    <div class="space-y-2">
+      <!-- FAQ 1 -->
+      <div class="faq-item bg-surface border border-border rounded-xl overflow-hidden reveal">
+        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-elevated transition-colors min-h-[44px]">
+          <span class="text-primary font-semibold text-[13px]">What does the free tier include?</span>
+          <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">500 requests per month with access to core models. No credit card required. Sign up and get your API key in seconds.</div>
+        </div>
+      </div>
+      <!-- FAQ 2 -->
+      <div class="faq-item bg-surface border border-border rounded-xl overflow-hidden reveal reveal-delay-1">
+        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-elevated transition-colors min-h-[44px]">
+          <span class="text-primary font-semibold text-[13px]">How many models are available?</span>
+          <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">236+ models from providers including OpenAI, Anthropic, Google, Meta, Mistral, DeepSeek, Qwen, and more. Free tier models are unlimited. Pro tier unlocks the full catalog including gated models.</div>
+        </div>
+      </div>
+      <!-- FAQ 3 -->
+      <div class="faq-item bg-surface border border-border rounded-xl overflow-hidden reveal reveal-delay-2">
+        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-elevated transition-colors min-h-[44px]">
+          <span class="text-primary font-semibold text-[13px]">Does it work with Cursor, Claude Code, or other tools?</span>
+          <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Yes. {{ site_name }} is fully OpenAI-compatible. Any tool that supports OpenAI's Chat Completions API works — Cursor, Claude Code, OpenAI Codex, Continue.dev, Aider, Windsurf, and more. Just set your base URL to <code class="bg-base px-1.5 py-0.5 rounded text-accent-bright font-mono text-xs">{{ site_url }}/v1</code>.</div>
+        </div>
+      </div>
+      <!-- FAQ 4 -->
+      <div class="faq-item bg-surface border border-border rounded-xl overflow-hidden reveal">
+        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-elevated transition-colors min-h-[44px]">
+          <span class="text-primary font-semibold text-[13px]">Do you log prompts or completions?</span>
+          <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">No. We only store usage metadata (model name, token counts, latency). Your prompts and completions are never logged, stored, or shared with third parties.</div>
+        </div>
+      </div>
+      <!-- FAQ 5 -->
+      <div class="faq-item bg-surface border border-border rounded-xl overflow-hidden reveal reveal-delay-1">
+        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-elevated transition-colors min-h-[44px]">
+          <span class="text-primary font-semibold text-[13px]">How does authentication work?</span>
+          <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Use your API key as a Bearer token: <code class="bg-base px-1.5 py-0.5 rounded text-accent-bright font-mono text-xs">Authorization: Bearer *** The API is fully OpenAI-compatible, so existing SDKs work unchanged.</div>
+        </div>
+      </div>
+      <!-- FAQ 6 -->
+      <div class="faq-item bg-surface border border-border rounded-xl overflow-hidden reveal reveal-delay-2">
+        <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-elevated transition-colors min-h-[44px]">
+          <span class="text-primary font-semibold text-[13px]">What happens when my request limit is reached?</span>
+          <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Your access falls back to the free tier models. You can continue using core models without interruption. No downtime, no errors.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ LIVE PLAYGROUND ═══════════════ -->
+<section class="py-20 md:py-28 border-t border-border" id="playground">
+  <div class="max-w-4xl mx-auto px-6">
+    <div class="text-center mb-10 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">Try it live</h2>
+      <p class="text-secondaryText text-base mt-4">No signup needed. Pick a model, type a prompt, hit run.</p>
+    </div>
+    <div class="bg-surface border border-border rounded-xl overflow-hidden reveal reveal-delay-1">
+      <!-- Model + controls -->
+      <div class="p-4 border-b border-border space-y-3">
+        <div class="flex flex-wrap gap-2">
+          <button class="playground-model active text-[11px] font-mono px-3 py-1.5 rounded-md border border-accent/40 text-accent-bright" data-model="gpt-4o-latest">gpt-4o-latest</button>
+          <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="claude-sonnet-4">claude-sonnet-4</button>
+          <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="gemini-2.5-pro">gemini-2.5-pro</button>
+          <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="deepseek-chat">deepseek-chat</button>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button class="sample-chip text-[11px] font-mono px-2.5 py-1 rounded-full border border-border text-muted hover:text-primary hover:border-muted transition-colors" data-prompt="Explain quantum computing in simple terms">Explain quantum computing</button>
+          <button class="sample-chip text-[11px] font-mono px-2.5 py-1 rounded-full border border-border text-muted hover:text-primary hover:border-muted transition-colors" data-prompt="Write a haiku about APIs">Write a haiku about APIs</button>
+          <button class="sample-chip text-[11px] font-mono px-2.5 py-1 rounded-full border border-border text-muted hover:text-primary hover:border-muted transition-colors" data-prompt="Debug this code: function add(a,b){ return a-b; }">Debug this code</button>
+        </div>
+      </div>
+      <!-- Input -->
+      <div class="p-4 border-b border-border">
+        <textarea id="playground-input" rows="3" placeholder="Type your prompt here... (Cmd/Ctrl+Enter to send)" class="w-full bg-base border border-border rounded-lg p-3 text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent/50 font-mono resize-y"></textarea>
+      </div>
+      <!-- Run button -->
+      <div class="px-4 py-3 border-b border-border flex items-center justify-between gap-3">
+        <button id="playground-run" onclick="runPlayground()" class="btn-interactive inline-flex items-center gap-2 font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-lg">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Run
+        </button>
+        <span id="playground-meta" class="text-[11px] text-muted font-mono"></span>
+      </div>
+      <!-- Output -->
+      <div class="p-4">
+        <div id="playground-output" class="bg-base border border-border rounded-lg p-4 min-h-[120px] font-mono text-[13px] text-secondaryText whitespace-pre-wrap">Response will appear here...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="py-20 md:py-28 border-t border-border">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-4 reveal">Start building today</h2>
+    <p class="text-secondaryText text-base mb-8 max-w-md mx-auto reveal reveal-delay-1">Free tier. No credit card. One API key, every model.</p>
+    <div class="bg-surface border border-border rounded-xl max-w-lg mx-auto mb-8 overflow-x-auto reveal reveal-delay-2">
+      <div class="px-4 py-3 border-b border-border flex items-center justify-between">
+        <span class="text-[11px] text-muted font-mono">Quick start</span>
+        <span class="text-[11px] text-accent-bright font-mono">30 seconds</span>
+      </div>
+      <div class="p-4 font-mono text-[11px] leading-relaxed text-left">
+        <span class="text-muted"># Install the OpenAI SDK</span><br>
+        <span class="text-emerald-400">pip</span> <span class="text-secondaryText">install openai</span><br><br>
+        <span class="text-muted"># Set your base URL and key</span><br>
+        <span class="text-secondaryText">client = </span><span class="text-primary">OpenAI</span><span class="text-secondaryText">(</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">base_url=</span><span class="text-emerald-400">"{{ site_url }}/v1"</span><span class="text-secondaryText">,</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">api_key=</span><span class="text-emerald-400">"YOUR_KEY"</span><br>
+        <span class="text-secondaryText">)</span><br><br>
+        <span class="text-muted"># Start chatting with any model</span><br>
+        <span class="text-secondaryText">response = client.chat.completions.</span><span class="text-primary">create</span><span class="text-secondaryText">(</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">model=</span><span class="text-emerald-400">"gpt-4o-latest"</span><span class="text-secondaryText">,</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">messages=[{</span><span class="text-emerald-400">"role"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"user"</span><span class="text-secondaryText">, </span><span class="text-emerald-400">"content"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"Hello!"</span><span class="text-secondaryText">}]</span><br>
+        <span class="text-secondaryText">)</span>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="/auth?signup=true" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-7 py-3 rounded-lg">
+        Get Started — It's Free
+      </a>
+      <a href="/docs" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm border border-border hover:border-muted text-secondaryText hover:text-primary px-7 py-3 rounded-lg">
+        Read the Docs
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="border-t border-border pt-12 pb-8">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+      <div class="col-span-2 md:col-span-1">
+        <div class="flex items-center gap-2 mb-3">
+          <img src="/static/vrouter-logo.svg" alt="{{ site_name }}" class="h-6 w-auto" />
+          <span class="font-bold text-sm text-primary">{{ site_name }}</span>
+        </div>
+        <p class="text-muted text-[13px] leading-relaxed max-w-[260px]">One API. Every model. AI infrastructure for developers.</p>
+      </div>
+      <div>
+        <h4 class="text-secondaryText font-semibold text-xs uppercase tracking-wider mb-3">Product</h4>
+        <a href="#features" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">API</a>
+        <a href="#models" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Models</a>
+        <a href="#pricing" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Pricing</a>
+        <a href="/docs" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Documentation</a>
+      </div>
+      <div>
+        <h4 class="text-secondaryText font-semibold text-xs uppercase tracking-wider mb-3">Resources</h4>
+        <a href="/integrations" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Integrations</a>
+        <a href="https://github.com/rezkyrafael2901/vrouter" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors" target="_blank">GitHub</a>
+        <a href="https://t.me/virexagent" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors" target="_blank">Telegram</a>
+        <a href="mailto:viresen16@gmail.com" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Contact</a>
+      </div>
+      <div>
+        <h4 class="text-secondaryText font-semibold text-xs uppercase tracking-wider mb-3">Legal</h4>
+        <a href="/privacy" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Privacy Policy</a>
+        <a href="/terms" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Terms of Service</a>
+        <a href="/fair-use" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Fair Use Policy</a>
+        <a href="/status" class="block text-muted text-[13px] mb-2 hover:text-primary transition-colors">Status</a>
+      </div>
+    </div>
+    <div class="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-muted text-[11px]">© 2026 {{ site_name }}. Built in Indonesia.</p>
+      <div class="flex items-center gap-5">
+        <a href="/privacy" class="text-muted text-[11px] hover:text-secondaryText transition-colors">Privacy</a>
+        <a href="/terms" class="text-muted text-[11px] hover:text-secondaryText transition-colors">Terms</a>
+        <a href="/fair-use" class="text-muted text-[11px] hover:text-secondaryText transition-colors">Fair Use</a>
+        <a href="/auth" class="text-muted text-[11px] hover:text-secondaryText transition-colors">Sign In</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+// Mobile nav toggle
+function toggleMobileNav() {
+  const panel = document.getElementById('mobile-nav-panel');
+  const isOpen = !panel.classList.contains('hidden');
+  if (isOpen) { closeMobileNav(); } else { panel.classList.remove('hidden'); }
+}
+function closeMobileNav() {
+  const panel = document.getElementById('mobile-nav-panel');
+  if (panel) panel.classList.add('hidden');
+}
+// Close mobile nav on outside click
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('mobile-nav-panel');
+  const btn = document.getElementById('hamburger-btn');
+  if (panel && !panel.contains(e.target) && btn && !btn.contains(e.target)) {
+    closeMobileNav();
+  }
+});
+// Escape closes mobile nav
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeMobileNav();
+});
+
+// Code tab switching
+function switchTab(tab) {
+  document.querySelectorAll('[id^="code-"]').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('[id^="tab-"]').forEach(el => {
+    el.classList.remove('code-tab-active');
+    el.classList.add('code-tab-inactive');
+  });
+  document.getElementById('code-' + tab).classList.remove('hidden');
+  const btn = document.getElementById('tab-' + tab);
+  btn.classList.remove('code-tab-inactive');
+  btn.classList.add('code-tab-active');
+}
+
+// Model switching in code preview
+function switchModel(el, model) {
+  document.querySelectorAll('.model-option').forEach(opt => {
+    opt.classList.remove('active');
+    opt.classList.add('text-muted');
+    opt.classList.remove('text-accent-bright');
+  });
+  el.classList.add('active');
+  el.classList.remove('text-muted');
+  el.classList.add('text-accent-bright');
+
+  // Update model name in all code blocks — handles ALL formats
+  document.querySelectorAll('pre[id^="code-"]').forEach(pre => {
+    let html = pre.innerHTML;
+    // Span-wrapped without quotes
+    html = html.replace(/>(gpt-4o-latest|gpt-4o|claude-sonnet-4|gemini-2\.5-pro|deepseek-chat)<\/span>/gi, function(m, p1) {
+      return '>' + model + '</span>';
+    });
+    // Span-wrapped with double quotes
+    html = html.replace(/<span[^>]*>"(gpt-4o-latest|gpt-4o|claude-sonnet-4|gemini-2\.5-pro|deepseek-chat)"<\/span>/gi, function(m, p1) {
+      return '<span>"' + model + '"</span>';
+    });
+    // Span-wrapped with single quotes
+    html = html.replace(/<span[^>]*>'(gpt-4o-latest|gpt-4o|claude-sonnet-4|gemini-2\.5-pro|deepseek-chat)'<\/span>/gi, function(m, p1) {
+      return "<span>'" + model + "'</span>";
+    });
+    // Plain double quotes
+    html = html.replace(/"(gpt-4o-latest|gpt-4o|claude-sonnet-4|gemini-2\.5-pro|deepseek-chat)"/g, '"' + model + '"');
+    // Plain single quotes
+    html = html.replace(/'(gpt-4o-latest|gpt-4o|claude-sonnet-4|gemini-2\.5-pro|deepseek-chat)'/g, "'" + model + "'");
+    pre.innerHTML = html;
+  });
+}
+
+// FAQ accordion
+function toggleFaq(button) {
+  const answer = button.nextElementSibling;
+  const icon = button.querySelector('.faq-icon');
+  const isOpen = answer.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+
+  // Open if was closed
+  if (!isOpen) {
+    answer.classList.add('open');
+    icon.classList.add('open');
+  }
+}
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ─── THEME TOGGLE ───
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.classList.contains('dark');
+  if (isDark) {
+    html.classList.remove('dark');
+    localStorage.setItem('vrouter-theme', 'light');
+  } else {
+    html.classList.add('dark');
+    localStorage.setItem('vrouter-theme', 'dark');
+  }
+}
+
+// ─── SCROLL-REVEAL (Nodea effect) ───
+(function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('reveal-visible'));
+    return;
+  }
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('reveal-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(el => obs.observe(el));
+})();
+
+// ─── TOAST ───
+function toast(msg, type) {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    container.setAttribute('aria-live', 'polite');
+    document.body.appendChild(container);
+  }
+  const item = document.createElement('div');
+  item.className = 'toast-item' + (type === 'error' ? ' error' : type === 'info' ? ' info' : '');
+  item.textContent = msg;
+  item.onclick = function() { item.remove(); };
+  container.appendChild(item);
+  setTimeout(function() { item.style.opacity = '0'; item.style.transition = 'opacity .3s'; setTimeout(function() { item.remove(); }, 300); }, 3500);
+}
+
+// ─── LIVE PLAYGROUND ───
+let playgroundModel = 'gpt-4o-latest';
+document.querySelectorAll('.playground-model').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.playground-model').forEach(b => {
+      b.classList.remove('active');
+      b.classList.add('text-muted');
+      b.classList.remove('text-accent-bright');
+    });
+    btn.classList.add('active');
+    btn.classList.remove('text-muted');
+    btn.classList.add('text-accent-bright');
+    playgroundModel = btn.dataset.model;
+  });
+});
+document.querySelectorAll('.sample-chip').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    document.getElementById('playground-input').value = chip.dataset.prompt;
+    document.getElementById('playground-input').focus();
+  });
+});
+document.getElementById('playground-input').addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') runPlayground();
+});
+async function runPlayground() {
+  const input = document.getElementById('playground-input');
+  const output = document.getElementById('playground-output');
+  const runBtn = document.getElementById('playground-run');
+  const meta = document.getElementById('playground-meta');
+  const prompt = input.value.trim();
+  if (!prompt) { toast('Please enter a prompt', 'error'); return; }
+
+  runBtn.disabled = true;
+  runBtn.classList.add('opacity-60');
+  output.textContent = 'Thinking...';
+  meta.textContent = '';
+  const start = Date.now();
+
+  try {
+    const r = await fetch('/api/playground', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: playgroundModel, prompt: prompt })
+    });
+    const d = await r.json();
+    const latency = Date.now() - start;
+    if (r.ok && d.content) {
+      output.textContent = d.content;
+      const chars = d.content.length;
+      meta.textContent = chars + ' chars · ' + latency + 'ms' + (d.tokens ? ' · ' + d.tokens + ' tokens' : '');
+    } else {
+      output.textContent = d.detail || d.error || 'Request failed.';
+      toast(d.detail || 'Request failed', 'error');
+    }
+  } catch(e) {
+    output.textContent = 'Network error: ' + e.message;
+    toast('Network error', 'error');
+  }
+  runBtn.disabled = false;
+  runBtn.classList.remove('opacity-60');
+}
+</script>
+
+</body>
+</html>
