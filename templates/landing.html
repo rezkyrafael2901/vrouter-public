@@ -835,47 +835,6 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
   </div>
 </section>
 
-<!-- ═══════════════ LIVE PLAYGROUND ═══════════════ -->
-<section class="py-20 md:py-28 border-t border-border" id="playground">
-  <div class="max-w-4xl mx-auto px-6">
-    <div class="text-center mb-10 reveal">
-      <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">Try it live</h2>
-      <p class="text-secondaryText text-base mt-4">No signup needed. Pick a model, type a prompt, hit run.</p>
-    </div>
-    <div class="bg-surface border border-border rounded-xl overflow-hidden reveal reveal-delay-1">
-      <!-- Model + controls -->
-      <div class="p-4 border-b border-border space-y-3">
-        <div class="flex flex-wrap gap-2">
-          <button class="playground-model active text-[11px] font-mono px-3 py-1.5 rounded-md border border-accent/40 text-accent-bright" data-model="JEROUTER/f/deepseek-v4-flash">deepseek-v4-flash</button>
-          <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="JEROUTER/f/mimo-v2.5-free">mimo-v2.5</button>
-          <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="JEROUTER/f/x-preview-f-free">x-preview-f</button>
-          <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="JEROUTER/f/nemotron-3-ultra-free">nemotron-3-ultra</button>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button class="sample-chip text-[11px] font-mono px-2.5 py-1 rounded-full border border-border text-muted hover:text-primary hover:border-muted transition-colors" data-prompt="Explain quantum computing in simple terms">Explain quantum computing</button>
-          <button class="sample-chip text-[11px] font-mono px-2.5 py-1 rounded-full border border-border text-muted hover:text-primary hover:border-muted transition-colors" data-prompt="Write a haiku about APIs">Write a haiku about APIs</button>
-          <button class="sample-chip text-[11px] font-mono px-2.5 py-1 rounded-full border border-border text-muted hover:text-primary hover:border-muted transition-colors" data-prompt="Debug this code: function add(a,b){ return a-b; }">Debug this code</button>
-        </div>
-      </div>
-      <!-- Input -->
-      <div class="p-4 border-b border-border">
-        <textarea id="playground-input" rows="3" placeholder="Type your prompt here... (Cmd/Ctrl+Enter to send)" class="w-full bg-base border border-border rounded-lg p-3 text-sm text-primary placeholder:text-muted focus:outline-none focus:border-accent/50 font-mono resize-y"></textarea>
-      </div>
-      <!-- Run button -->
-      <div class="px-4 py-3 border-b border-border flex items-center justify-between gap-3">
-        <button id="playground-run" onclick="runPlayground()" class="btn-interactive inline-flex items-center gap-2 font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-lg">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Run
-        </button>
-        <span id="playground-meta" class="text-[11px] text-muted font-mono"></span>
-      </div>
-      <!-- Output -->
-      <div class="p-4">
-        <div id="playground-output" class="bg-base border border-border rounded-lg p-4 min-h-[120px] font-mono text-[13px] text-secondaryText whitespace-pre-wrap">Response will appear here...</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══════════════ CTA ═══════════════ -->
 <section class="py-20 md:py-28 border-t border-border">
@@ -1104,67 +1063,6 @@ function toast(msg, type) {
   setTimeout(function() { item.style.opacity = '0'; item.style.transition = 'opacity .3s'; setTimeout(function() { item.remove(); }, 300); }, 3500);
 }
 
-// ─── LIVE PLAYGROUND ───
-let playgroundModel = 'JEROUTER/f/deepseek-v4-flash';
-document.querySelectorAll('.playground-model').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.playground-model').forEach(b => {
-      b.classList.remove('active');
-      b.classList.add('text-muted');
-      b.classList.remove('text-accent-bright');
-    });
-    btn.classList.add('active');
-    btn.classList.remove('text-muted');
-    btn.classList.add('text-accent-bright');
-    playgroundModel = btn.dataset.model;
-  });
-});
-document.querySelectorAll('.sample-chip').forEach(function(chip) {
-  chip.addEventListener('click', function() {
-    document.getElementById('playground-input').value = chip.dataset.prompt;
-    document.getElementById('playground-input').focus();
-  });
-});
-document.getElementById('playground-input').addEventListener('keydown', function(e) {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') runPlayground();
-});
-async function runPlayground() {
-  const input = document.getElementById('playground-input');
-  const output = document.getElementById('playground-output');
-  const runBtn = document.getElementById('playground-run');
-  const meta = document.getElementById('playground-meta');
-  const prompt = input.value.trim();
-  if (!prompt) { toast('Please enter a prompt', 'error'); return; }
-
-  runBtn.disabled = true;
-  runBtn.classList.add('opacity-60');
-  output.textContent = 'Thinking...';
-  meta.textContent = '';
-  const start = Date.now();
-
-  try {
-    const r = await fetch('/api/playground', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: playgroundModel, prompt: prompt })
-    });
-    const d = await r.json();
-    const latency = Date.now() - start;
-    if (r.ok && d.content) {
-      output.textContent = d.content;
-      const chars = d.content.length;
-      meta.textContent = chars + ' chars · ' + latency + 'ms' + (d.tokens ? ' · ' + d.tokens + ' tokens' : '');
-    } else {
-      output.textContent = d.detail || d.error || 'Request failed.';
-      toast(d.detail || 'Request failed', 'error');
-    }
-  } catch(e) {
-    output.textContent = 'Network error: ' + e.message;
-    toast('Network error', 'error');
-  }
-  runBtn.disabled = false;
-  runBtn.classList.remove('opacity-60');
-}
 </script>
 
 </body>

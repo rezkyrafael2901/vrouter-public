@@ -279,7 +279,6 @@ def log_usage(email: str, model: str, tokens_in: int, tokens_out: int, latency_m
 # VROUTER PROXY
 # ═══════════════════════════════════════════════════════════════════
 http_client: Optional[httpx.AsyncClient] = None
-pg_last_used_hits: dict[str, list[float]] = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -593,86 +592,6 @@ async def sitemap_xml():
 </urlset>
 """
     return Response(content=content, media_type="application/xml")
-
-
-@app.post("/api/playground")
-async def playground_chat(request: Request):
-    """Playground endpoint — requires login session + per-IP rate limit."""
-    # Auth gate: must have a valid session cookie
-    email = request.cookies.get("vrouter_email")
-    session_id = request.cookies.get("vrouter_session")
-    if not email or not session_id:
-        raise HTTPException(401, "Login required to use the playground")
-    db = get_db()
-    sess = db.execute("SELECT id FROM users WHERE email=? AND id=?", (email, session_id)).fetchone()
-    db.close()
-    if not sess:
-        raise HTTPException(401, "Invalid session — please log in again")
-
-    try:
-        body = await request.json()
-    except Exception:
-        raise HTTPException(400, "Invalid JSON body")
-
-    model = (body.get("model") or "").strip()
-    prompt = (body.get("prompt") or "").strip()
-    if not model:
-        raise HTTPException(400, "Missing model")
-    if not prompt:
-        raise HTTPException(400, "Missing prompt")
-    if len(prompt) > 4000:
-        raise HTTPException(400, "Prompt too long (max 4000 chars)")
-
-    # Rate-limit playground per-IP: 5 requests/minute
-    ip = _client_ip(request)
-    now = time.time()
-    key = f"pg:{ip}"
-    window_start = now - 60
-    hits = [t for t in pg_last_used_hits.get(key, []) if t > window_start]
-    if len(hits) >= 5:
-        raise HTTPException(429, "Playground rate limit — 5 requests/minute. Try again shortly.")
-    hits.append(now)
-    pg_last_used_hits[key] = hits
-
-    # Model access gate (respect enabled/hidden config)
-    db_check = get_db()
-    cfg = db_check.execute("SELECT enabled, hidden FROM models_config WHERE model_id=?", (model,)).fetchone()
-    db_check.close()
-    if cfg is None:
-        raise HTTPException(400, f"Model '{model}' is not available")
-    if not cfg["enabled"] or cfg["hidden"]:
-        raise HTTPException(403, f"Model '{model}' is currently disabled")
-
-    payload = {
-        "model": model,
-        "messages": [{"role": "user", "content": prompt}],
-        "stream": False,
-    }
-    try:
-        resp = await http_client.post("/v1/chat/completions", json=payload)
-        data = resp.json()
-    except httpx.ConnectError:
-        raise HTTPException(503, "Backend unavailable — try again in a moment")
-    except Exception as e:
-        raise HTTPException(500, f"Proxy error: {str(e)[:200]}")
-
-    if resp.status_code != 200:
-        err = data.get("error", {})
-        msg = err.get("message") if isinstance(err, dict) else str(data)[:300]
-        raise HTTPException(resp.status_code, detail=msg or "Request failed")
-
-    try:
-        content = data["choices"][0]["message"]["content"]
-    except Exception:
-        raise HTTPException(502, "Unexpected upstream response")
-
-    usage = data.get("usage", {})
-    return {
-        "content": content,
-        "model": model,
-        "tokens": usage.get("completion_tokens", 0),
-        "tokens_in": usage.get("prompt_tokens", 0),
-    }
 
 
 # ═══════════════════════════════════════════════════════════════════
