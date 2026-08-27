@@ -15,40 +15,48 @@
     </div>
 
     <!-- RIGHT: actions -->
-    <div class="flex items-center gap-2">
-      <!-- theme toggle -->
+    <div class="flex items-center gap-1.5">
+      <!-- theme toggle (icon only, all sizes — sits next to hamburger on mobile) -->
       <button onclick="toggleTheme()" class="p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Toggle theme">
         <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
       </button>
 
-      {% if is_logged_in %}
-      <a href="/dashboard" class="text-xs font-medium px-4 py-2 rounded-md bg-accent/10 text-accent-bright border border-accent/30 hover:bg-accent/20 transition-colors">Dashboard</a>
-      <a href="/auth/logout" class="text-xs text-muted hover:text-red-400 transition-colors px-2 py-2">Logout</a>
-      {% else %}
-      <a href="/auth" class="text-xs font-medium px-3 py-2 text-muted hover:text-primary transition-colors">Sign In</a>
-      <a href="/auth?signup=true" class="text-xs font-medium px-4 py-2 rounded-md bg-accent text-white hover:opacity-90 transition-opacity">Get Started</a>
-      {% endif %}
-    </div>
+      <!-- desktop actions -->
+      <div class="hidden md:flex items-center gap-2">
+        {% if is_logged_in %}
+        <a href="/dashboard" class="text-xs font-medium px-4 py-2 rounded-md bg-accent/10 text-accent-bright border border-accent/30 hover:bg-accent/20 transition-colors">Dashboard</a>
+        <a href="/auth/logout" class="text-xs text-muted hover:text-red-400 transition-colors px-2 py-2">Logout</a>
+        {% else %}
+        <a href="/auth" class="text-xs font-medium px-3 py-2 text-muted hover:text-primary transition-colors">Sign In</a>
+        <a href="/auth?signup=true" class="text-xs font-medium px-4 py-2 rounded-md bg-accent text-white hover:opacity-90 transition-opacity">Get Started</a>
+        {% endif %}
+      </div>
 
-    <!-- MOBILE hamburger -->
-    <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Menu" id="hamburger-btn">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
+      <!-- MOBILE hamburger -->
+      <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Menu" id="hamburger-btn">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
   </nav>
 
-  <!-- MOBILE MENU -->
+  <!-- MOBILE MENU (all navigation + actions live here on mobile) -->
   <div id="mobile-nav-panel" class="vrouter-mobile-menu hidden md:hidden border-t border-border bg-[#08090D] px-4 py-3">
     <a href="/#features" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Features</a>
     <a href="/docs" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Docs</a>
     <a href="/status" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Status</a>
     <a href="/#faq" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">FAQ</a>
-    {% if is_logged_in %}
-    <a href="/dashboard" onclick="closeMobileNav()" class="block py-2.5 text-sm text-accent-bright">Dashboard</a>
-    <a href="/auth/logout" onclick="closeMobileNav()" class="block py-2.5 text-sm text-red-400">Logout</a>
-    {% else %}
-    <a href="/auth" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Sign In</a>
-    {% endif %}
+
+    <!-- Auth actions -->
+    <div class="mt-2 pt-3 border-t border-border">
+      {% if is_logged_in %}
+      <a href="/dashboard" onclick="closeMobileNav()" class="block py-2.5 text-sm text-accent-bright font-medium">Dashboard</a>
+      <a href="/auth/logout" onclick="closeMobileNav()" class="block py-2.5 text-sm text-red-400">Logout</a>
+      {% else %}
+      <a href="/auth" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Sign In</a>
+      <a href="/auth?signup=true" onclick="closeMobileNav()" class="block py-2.5 text-sm font-medium text-white bg-accent rounded-lg text-center mt-1">Get Started</a>
+      {% endif %}
+    </div>
   </div>
 </header>
 
@@ -89,4 +97,7 @@ html:not(.dark) .vrouter-mobile-menu .text-muted { color: #4a4540 !important; }
 html:not(.dark) .vrouter-mobile-menu .text-muted:hover { color: #1a1715 !important; }
 html:not(.dark) .vrouter-mobile-menu .text-accent-bright { color: #806040 !important; }
 html:not(.dark) .vrouter-mobile-menu .hover\:text-primary:hover { color: #1a1715 !important; }
+html:not(.dark) .vrouter-mobile-menu .bg-accent { background: #a08060 !important; }
+html:not(.dark) .vrouter-mobile-menu a.bg-accent { background: #a08060 !important; }
+html:not(.dark) .vrouter-mobile-menu .bg-accent.rounded-lg { background: #a08060 !important; }
 </style>
