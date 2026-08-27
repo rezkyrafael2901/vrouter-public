@@ -1,16 +1,17 @@
 /* ═══════════════════════════════════════════════════════════════
    VROUTER DARK AMBIENT — shared dark-mode visual upgrade
-   Applied to ALL pages via <link>. Light mode untouched.
+   Light mode RESTORED to original warm brown (never touched).
+   All effects scoped to .dark exclusively.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Base body bg (dark) */
+/* Base body bg — ONLY in dark mode (fixed leak to light) */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background: #08090D;
+  background: transparent;
 }
 .dark body::before {
   background:
@@ -75,8 +76,7 @@ body::before {
 /* Light mode hides aurora entirely */
 html:not(.dark) .aurora { display: none; }
 
-/* Grid glow dots at intersections */
-.grid-pattern { position: relative; }
+/* Grid glow dots at intersections — dark only */
 .grid-pattern::after {
   content: '';
   position: absolute;
@@ -110,15 +110,14 @@ html:not(.dark) .aurora { display: none; }
   color: transparent;
 }
 
-/* Card hover glow (dark mode) */
+/* Card hover glow (dark mode only) */
 .dark .card-hover:hover {
   border-color: rgba(139,92,246,0.4);
   box-shadow: 0 0 0 1px rgba(139,92,246,0.12), 0 12px 40px -8px rgba(139,92,246,0.18);
 }
 
-/* Subtle section separators glow */
+/* Subtle section separators glow — dark only */
 .dark .border-border { border-color: rgba(139,92,246,0.12); }
-html:not(.dark) .border-border { border-color: #e8e4de; }
 
 /* Particles canvas */
 #particle-network {
@@ -128,6 +127,46 @@ html:not(.dark) .border-border { border-color: #e8e4de; }
   pointer-events: none;
   opacity: .35;
 }
+
+/* ─── LIGHT MODE SAFETY: restore original warm-brown palette ───
+   Overrides any dark-only colors that leak into light mode.   */
+html:not(.dark) body::before {
+  background: transparent;
+}
+html:not(.dark) .bg-base { background: #faf9f7; }
+html:not(.dark) .bg-secondary { background: #f3f0ec; }
+html:not(.dark) .bg-surface { background: #ffffff; }
+html:not(.dark) .bg-elevated { background: #f5f3f0; }
+html:not(.dark) .border-border { border-color: #e8e4de; }
+html:not(.dark) .text-primary { color: #1a1715; }
+html:not(.dark) .text-secondaryText { color: #6b6560; }
+html:not(.dark) .text-muted { color: #9c9590; }
+html:not(.dark) .text-accent { color: #806040; }
+html:not(.dark) .bg-accent { background: #a08060; }
+html:not(.dark) .text-emerald-400 { color: #2d8a4e; }
+html:not(.dark) .text-emerald-500 { color: #2d8a4e; }
+html:not(.dark) .bg-emerald-500 { background: #2d8a4e; }
+html:not(.dark) .text-emerald-300 { color: #2d8a4e; }
+html:not(.dark) .text-accent-bright { color: #806040; }
+html:not(.dark) .text-accent-dark { color: #6b4f2e; }
+
+/* Inline-style leak fixes: white text (F5F7FA) hardcoded for dark mode */
+html:not(.dark) [style*="color:#F5F7FA"] { color: #1a1715 !important; }
+html:not(.dark) [style*="color: #F5F7FA"] { color: #1a1715 !important; }
+html:not(.dark) [style*="color:#8B93A7"] { color: #6b6560 !important; }
+html:not(.dark) [style*="color: #8B93A7"] { color: #6b6560 !important; }
+html:not(.dark) [style*="color:#555C70"] { color: #9c9590 !important; }
+html:not(.dark) [style*="color: #555C70"] { color: #9c9590 !important; }
+html:not(.dark) [style*="color:#10B981"] { color: #2d8a4e !important; }
+html:not(.dark) [style*="color: #10B981"] { color: #2d8a4e !important; }
+html:not(.dark) [style*="color:#22c55e"] { color: #2d8a4e !important; }
+html:not(.dark) [style*="color: #22c55e"] { color: #2d8a4e !important; }
+
+/* Button text on accent bg — ensure white in light mode */
+html:not(.dark) .bg-accent { color: #ffffff !important; }
+html:not(.dark) .bg-accent:hover { color: #ffffff !important; }
+html:not(.dark) a.bg-accent { color: #ffffff !important; }
+html:not(.dark) button.bg-accent { color: #ffffff !important; }
 
 /* Reduced motion: disable aurora */
 @media (prefers-reduced-motion: reduce) {

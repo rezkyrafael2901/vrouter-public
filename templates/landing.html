@@ -123,7 +123,7 @@ tailwind.config = {
     inset: 0;
     z-index: -2;
     pointer-events: none;
-    background: #08090D;
+    background: transparent;
   }
   .dark body::before {
     background:
@@ -132,6 +132,7 @@ tailwind.config = {
       radial-gradient(ellipse 45% 30% at 50% 100%, rgba(99,102,241,0.08), transparent 70%),
       #08090D;
   }
+  html:not(.dark) body::before { background: transparent; }
 
   /* Animated aurora orbs */
   .aurora {
