@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#08090D">
+<meta name="theme-color" content="#0F172A">
 <title>{{ site_name }} — One API. Every model.</title>
 <meta name="description" content="Access leading AI models (GPT, Claude, Gemini, DeepSeek and more) through a single OpenAI-compatible API. One endpoint, one key, zero configuration.">
 <link rel="canonical" href="{{ site_url }}">
@@ -38,17 +38,17 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        base: '#08090D',
-        secondary: '#0C0E13',
-        surface: '#11131A',
-        elevated: '#151821',
-        border: '#222632',
-        primary: '#F5F7FA',
-        secondaryText: '#8B93A7',
-        muted: '#5F6678',
+        base: '#0F172A',
+        secondary: '#16213B',
+        surface: 'rgba(24,32,64,0.8)',
+        elevated: 'rgba(32,44,80,0.85)',
+        border: '#24334F',
+        primary: '#ffffff',
+        secondaryText: '#94A3B8',
+        muted: '#64748B',
         accent: '#10B981',
-        'accent-bright': '#34D399',
-        'accent-dark': '#059669',
+        'accent-bright': '#10B981',
+        'accent-dark': '#3B7AE8',
       },
       fontFamily: {
         sans: ['JetBrains Mono', 'monospace'],
@@ -61,15 +61,15 @@ tailwind.config = {
 <style>
   html { scroll-behavior: smooth; }
   body {
-    background: #08090D;
-    color: #F5F7FA;
+    background: #0F172A;
+    color: #ffffff;
     font-family: 'JetBrains Mono', monospace;
     font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .dark body { background: #08090D; color: #F5F7FA; }
+  .dark body { background: #0F172A; color: #ffffff; }
 
   /* Light theme overrides — Warm Brown (UCEL Classic) */
   html:not(.dark) body {
@@ -85,24 +85,24 @@ tailwind.config = {
   html:not(.dark) .text-secondaryText { color: #6b6560; }
   html:not(.dark) .text-muted { color: #9c9590; }
   html:not(.dark) nav { background: rgba(250,249,247,0.92); border-color: #e8e4de; }
-  html:not(.dark) .text-accent { color: #806040; }
-  html:not(.dark) .bg-accent { background: #a08060; }
-  html:not(.dark) .hover\:bg-accent-dark:hover { background: #806040; }
-  html:not(.dark) .bg-accent\/10 { background: rgba(160,128,96,0.10); }
-  html:not(.dark) .bg-accent\/20 { background: rgba(160,128,96,0.20); }
+  html:not(.dark) .text-emerald-400 { color: #806040; }
+  html:not(.dark) .bg-emerald-500 { background: #a08060; }
+  html:not(.dark) .hover\:bg-emerald-500-dark:hover { background: #806040; }
+  html:not(.dark) .bg-emerald-500\/10 { background: rgba(160,128,96,0.10); }
+  html:not(.dark) .bg-emerald-500\/20 { background: rgba(160,128,96,0.20); }
   html:not(.dark) .border-accent\/20 { border-color: rgba(160,128,96,0.20); }
-  html:not(.dark) .text-accent-bright { color: #806040; }
+  html:not(.dark) .text-emerald-400-bright { color: #806040; }
   html:not(.dark) .text-white { color: #ffffff; }
   html:not(.dark) .border-accent { border-color: #a08060; }
   html:not(.dark) .border-primary\/5 { border-color: rgba(26,23,21,0.05); }
-  html:not(.dark) .text-emerald-400 { color: #2d8a4e; }
-  html:not(.dark) .bg-emerald-500 { background: #2d8a4e; }
+  html:not(.dark) .text-blue-400 { color: #2d8a4e; }
+  html:not(.dark) .bg-blue-500 { background: #2d8a4e; }
   html:not(.dark) .hover\:border-muted:hover { border-color: #9c9590; }
 
   /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #08090D; }
-  ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: #0F172A; }
+  ::-webkit-scrollbar-thumb { background: #24334F; border-radius: 3px; }
 
   /* Grid pattern */
   .grid-pattern {
@@ -126,9 +126,9 @@ tailwind.config = {
   }
 
   /* Code tab active */
-  .code-tab-active { color: #34D399; border-bottom: 2px solid #10B981; transition: color .2s, border-color .2s; }
-  .code-tab-inactive { color: #5F6678; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
-  .code-tab-inactive:hover { color: #8B93A7; }
+  .code-tab-active { color: #10B981; border-bottom: 2px solid #10B981; transition: color .2s, border-color .2s; }
+  .code-tab-inactive { color: #64748B; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+  .code-tab-inactive:hover { color: #94A3B8; }
   html:not(.dark) .code-tab-active { color: #806040; border-bottom-color: #a08060; }
   html:not(.dark) .code-tab-inactive { color: #9c9590; }
   html:not(.dark) .code-tab-inactive:hover { color: #6b6560; }
@@ -236,8 +236,8 @@ tailwind.config = {
     display: flex; flex-direction: column; gap: 8px; max-width: 340px;
   }
   .toast-item {
-    background: #11131A; border: 1px solid #222632; border-left: 3px solid #10B981;
-    color: #F5F7FA; padding: 12px 16px; border-radius: 10px; font-size: 13px;
+    background: rgba(24,32,64,0.8); border: 1px solid #24334F; border-left: 3px solid #10B981;
+    color: #ffffff; padding: 12px 16px; border-radius: 10px; font-size: 13px;
     display: flex; align-items: center; gap: 8px;
     box-shadow: 0 8px 32px rgba(0,0,0,.4);
     animation: toastIn .3s cubic-bezier(0.16,1,0.3,1) forwards;
@@ -269,7 +269,7 @@ tailwind.config = {
     border-color: #a08060; outline: none;
   }
   /* Light pricing card highlight */
-  html:not(.dark) .bg-accent { background: #a08060; }
+  html:not(.dark) .bg-emerald-500 { background: #a08060; }
   /* Light footer */
   html:not(.dark) footer { background: #f3f0ec; border-color: #e8e4de; }
   /* Light test run button */
@@ -284,21 +284,21 @@ tailwind.config = {
      Comprehensive light overrides for hardcoded dark colors
      ═══════════════════════════════════════════════════════════════ */
 
-  /* (1) SVG fill/stroke #F5F7FA → dark text in light mode (model icons) */
-  html:not(.dark) svg[fill="#F5F7FA"] { fill: #1a1715; }
-  html:not(.dark) svg[fill="#F5F7FA"][stroke="#F5F7FA"] { fill: #1a1715; stroke: #1a1715; }
-  html:not(.dark) svg[stroke="#F5F7FA"]:not([fill="#F5F7FA"]) { stroke: #1a1715; }
+  /* (1) SVG fill/stroke #ffffff → dark text in light mode (model icons) */
+  html:not(.dark) svg[fill="#ffffff"] { fill: #1a1715; }
+  html:not(.dark) svg[fill="#ffffff"][stroke="#ffffff"] { fill: #1a1715; stroke: #1a1715; }
+  html:not(.dark) svg[stroke="#ffffff"]:not([fill="#ffffff"]) { stroke: #1a1715; }
   /* Fallback for nested elements */
-  html:not(.dark) .bg-surface svg[fill="#F5F7FA"] { fill: #1a1715; }
-  html:not(.dark) .bg-surface svg[stroke="#F5F7FA"] { stroke: #1a1715; }
-  html:not(.dark) .bg-surface path[fill="#F5F7FA"] { fill: #1a1715; }
-  html:not(.dark) .bg-surface circle[fill="#F5F7FA"] { fill: #1a1715; }
-  html:not(.dark) .bg-surface circle[stroke="#F5F7FA"] { stroke: #1a1715; }
-  html:not(.dark) .bg-surface path[stroke="#F5F7FA"] { stroke: #1a1715; }
+  html:not(.dark) .bg-surface svg[fill="#ffffff"] { fill: #1a1715; }
+  html:not(.dark) .bg-surface svg[stroke="#ffffff"] { stroke: #1a1715; }
+  html:not(.dark) .bg-surface path[fill="#ffffff"] { fill: #1a1715; }
+  html:not(.dark) .bg-surface circle[fill="#ffffff"] { fill: #1a1715; }
+  html:not(.dark) .bg-surface circle[stroke="#ffffff"] { stroke: #1a1715; }
+  html:not(.dark) .bg-surface path[stroke="#ffffff"] { stroke: #1a1715; }
 
   /* (2) SVG stroke #10B981 → accent brown in light mode (feature icons) */
   html:not(.dark) svg[stroke="#10B981"] { stroke: #a08060; }
-  html:not(.dark) .bg-accent\/10 svg { stroke: #a08060; }
+  html:not(.dark) .bg-emerald-500\/10 svg { stroke: #a08060; }
 
   /* (3) bg-primary/5 icon containers — invisible on white, make visible */
   html:not(.dark) .bg-primary\/5 { background: rgba(160,128,96,0.08); }
@@ -325,18 +325,18 @@ tailwind.config = {
   html:not(.dark) .bg-elevated { background: #f5f3f0; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
 
   /* (10) Model status / badges — green needs dark bg override */
-  html:not(.dark) .bg-emerald-500\/20 { background: rgba(45,138,78,0.12); }
+  html:not(.dark) .bg-blue-500\/20 { background: rgba(45,138,78,0.12); }
 
   /* (11) Gradient borders on cards in light mode */
   html:not(.dark) .card-hover { border-color: #e8e4de; }
 
   /* (12) Text that appears inside accent containers */
-  html:not(.dark) .bg-accent\/10 .text-accent-bright { color: #806040; }
-  html:not(.dark) .bg-accent\/10 .text-accent { color: #a08060; }
+  html:not(.dark) .bg-emerald-500\/10 .text-emerald-400-bright { color: #806040; }
+  html:not(.dark) .bg-emerald-500\/10 .text-emerald-400 { color: #a08060; }
 
   /* (13) CTA / action button accents */
-  html:not(.dark) .bg-accent { background: #a08060; color: #ffffff; }
-  html:not(.dark) .bg-accent:hover { background: #806040; }
+  html:not(.dark) .bg-emerald-500 { background: #a08060; color: #ffffff; }
+  html:not(.dark) .bg-emerald-500:hover { background: #806040; }
 </style>
 
 {% if scroll_to %}
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Access leading AI models through a single, fast and reliable API. One endpoint, zero configuration.
       </p>
       <div class="hero-anim hero-anim-delay-2 flex flex-wrap gap-3 mb-10">
-        <a href="/auth?signup=true" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg">
+        <a href="/auth?signup=true" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm bg-emerald-500 hover:bg-emerald-500-dark text-white px-6 py-3 rounded-lg">
           Get Started
         </a>
         <a href="/docs" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm border border-border hover:border-muted text-secondaryText hover:text-primary px-6 py-3 rounded-lg">
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
       <div class="hero-anim hero-anim-delay-3 flex items-center gap-6 text-xs text-muted">
         <a href="/status" class="flex items-center gap-2 hover:text-primary transition-colors">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full status-dot inline-block status-pulse"></span>
+          <span class="w-2 h-2 bg-blue-500 rounded-full status-dot inline-block status-pulse"></span>
           <span class="font-medium">API Operational</span>
         </a>
         <div class="font-mono">~47ms avg</div>
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Model selector -->
         <div class="px-4 pt-3 pb-2">
           <div class="flex flex-wrap gap-2">
-            <button class="model-option active text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-accent-bright" onclick="switchModel(this, 'JEROUTER/f/deepseek-v4-flash')">deepseek-v4-flash</button>
+            <button class="model-option active text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-emerald-400-bright" onclick="switchModel(this, 'JEROUTER/f/deepseek-v4-flash')">deepseek-v4-flash</button>
             <button class="model-option text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" onclick="switchModel(this, 'JEROUTER/f/mimo-v2.5-free')">mimo-v2.5</button>
             <button class="model-option text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" onclick="switchModel(this, 'JEROUTER/f/x-preview-f-free')">x-preview-f</button>
             <button class="model-option text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" onclick="switchModel(this, 'JEROUTER/f/nemotron-3-ultra-free')">nemotron-3-ultra</button>
@@ -402,40 +402,40 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         <!-- Code blocks -->
         <div class="px-4 pb-4">
-          <pre id="code-curl" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto"><span class="text-accent-bright">curl</span> <span class="text-muted">{{ site_url }}/v1/chat/completions</span> <span class="text-secondaryText">\</span>
-  <span class="text-primary">-H</span> <span class="text-emerald-400">"Authorization: Bearer *** <span class="text-secondaryText">\</span>
-  <span class="text-primary">-H</span> <span class="text-emerald-400">"Content-Type: application/json"</span> <span class="text-secondaryText">\</span>
-  <span class="text-primary">-d</span> <span class="text-emerald-400">'{
+          <pre id="code-curl" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto"><span class="text-emerald-400-bright">curl</span> <span class="text-muted">{{ site_url }}/v1/chat/completions</span> <span class="text-secondaryText">\</span>
+  <span class="text-primary">-H</span> <span class="text-blue-400">"Authorization: Bearer *** <span class="text-secondaryText">\</span>
+  <span class="text-primary">-H</span> <span class="text-blue-400">"Content-Type: application/json"</span> <span class="text-secondaryText">\</span>
+  <span class="text-primary">-d</span> <span class="text-blue-400">'{
     "model": "<span class="text-primary">JEROUTER/f/deepseek-v4-flash</span>",
     "messages": [
       {"role": "user", "content": "Hello!"}
     ]
   }'</span></pre>
-          <pre id="code-python" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto hidden"><span class="text-accent-bright">from</span> openai <span class="text-accent-bright">import</span> OpenAI
+          <pre id="code-python" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto hidden"><span class="text-emerald-400-bright">from</span> openai <span class="text-emerald-400-bright">import</span> OpenAI
 
 client = <span class="text-primary">OpenAI</span>(
-    <span class="text-primary">base_url</span>=<span class="text-emerald-400">"{{ site_url }}/v1"</span>,
-    <span class="text-primary">api_key</span>=<span class="text-emerald-400">"YOUR_KEY"</span>,
+    <span class="text-primary">base_url</span>=<span class="text-blue-400">"{{ site_url }}/v1"</span>,
+    <span class="text-primary">api_key</span>=<span class="text-blue-400">"YOUR_KEY"</span>,
 )
 
 response = client.chat.completions.<span class="text-primary">create</span>(
-    <span class="text-primary">model</span>=<span class="text-emerald-400">"JEROUTER/f/deepseek-v4-flash"</span>,
+    <span class="text-primary">model</span>=<span class="text-blue-400">"JEROUTER/f/deepseek-v4-flash"</span>,
     <span class="text-primary">messages</span>=[
-        {<span class="text-emerald-400">"role"</span>: <span class="text-emerald-400">"user"</span>, <span class="text-emerald-400">"content"</span>: <span class="text-emerald-400">"Hello!"</span>}
+        {<span class="text-blue-400">"role"</span>: <span class="text-blue-400">"user"</span>, <span class="text-blue-400">"content"</span>: <span class="text-blue-400">"Hello!"</span>}
     ],
 )
 
-<span class="text-accent-bright">print</span>(response.choices[0].message.content)</pre>
-          <pre id="code-node" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto hidden"><span class="text-accent-bright">import</span> <span class="text-primary">OpenAI</span> <span class="text-accent-bright">from</span> <span class="text-emerald-400">'openai'</span>;
+<span class="text-emerald-400-bright">print</span>(response.choices[0].message.content)</pre>
+          <pre id="code-node" class="font-mono text-[11px] leading-relaxed text-secondaryText whitespace-pre-wrap overflow-x-auto hidden"><span class="text-emerald-400-bright">import</span> <span class="text-primary">OpenAI</span> <span class="text-emerald-400-bright">from</span> <span class="text-blue-400">'openai'</span>;
 
-<span class="text-accent-bright">const</span> client = <span class="text-accent-bright">new</span> <span class="text-primary">OpenAI</span>({
-  <span class="text-primary">baseURL</span>: <span class="text-emerald-400">'{{ site_url }}/v1'</span>,
-  <span class="text-primary">apiKey</span>: <span class="text-emerald-400">'YOUR_KEY'</span>,
+<span class="text-emerald-400-bright">const</span> client = <span class="text-emerald-400-bright">new</span> <span class="text-primary">OpenAI</span>({
+  <span class="text-primary">baseURL</span>: <span class="text-blue-400">'{{ site_url }}/v1'</span>,
+  <span class="text-primary">apiKey</span>: <span class="text-blue-400">'YOUR_KEY'</span>,
 });
 
-<span class="text-accent-bright">const</span> response = <span class="text-accent-bright">await</span> client.chat.completions.<span class="text-primary">create</span>({
-  <span class="text-primary">model</span>: <span class="text-emerald-400">'JEROUTER/f/deepseek-v4-flash'</span>,
-  <span class="text-primary">messages</span>: [{ <span class="text-primary">role</span>: <span class="text-emerald-400">'user'</span>, <span class="text-primary">content</span>: <span class="text-emerald-400">'Hello!'</span> }],
+<span class="text-emerald-400-bright">const</span> response = <span class="text-emerald-400-bright">await</span> client.chat.completions.<span class="text-primary">create</span>({
+  <span class="text-primary">model</span>: <span class="text-blue-400">'JEROUTER/f/deepseek-v4-flash'</span>,
+  <span class="text-primary">messages</span>: [{ <span class="text-primary">role</span>: <span class="text-blue-400">'user'</span>, <span class="text-primary">content</span>: <span class="text-blue-400">'Hello!'</span> }],
 });
 
 console.<span class="text-primary">log</span>(response.choices[0].message.content);</pre>
@@ -443,7 +443,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
         <!-- Bottom bar -->
         <div class="border-t border-border px-4 py-2.5 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full status-pulse"></span>
+            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full status-pulse"></span>
             <span class="text-[11px] text-muted">API ready</span>
           </div>
           <span class="text-[11px] text-muted font-mono">{{ site_url }}/v1</span>
@@ -488,7 +488,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal">
         <p class="text-secondaryText text-[13px] leading-relaxed mb-4">"VRouter cut our integration time from days to hours. One key for every model we need."</p>
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent-bright">[A]</div>
+          <div class="w-9 h-9 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400-bright">[A]</div>
           <div>
             <div class="text-primary text-[13px] font-semibold">[CUSTOMER NAME]</div>
             <div class="text-muted text-[11px]">CTO, [COMPANY]</div>
@@ -498,7 +498,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-1">
         <p class="text-secondaryText text-[13px] leading-relaxed mb-4">"The streaming support and model switching are flawless. Best API router we've used."</p>
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent-bright">[B]</div>
+          <div class="w-9 h-9 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400-bright">[B]</div>
           <div>
             <div class="text-primary text-[13px] font-semibold">[CUSTOMER NAME]</div>
             <div class="text-muted text-[11px]">Lead Engineer, [COMPANY]</div>
@@ -508,7 +508,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-2">
         <p class="text-secondaryText text-[13px] leading-relaxed mb-4">"We replaced three provider SDKs with one VRouter key. Maintenance went to zero."</p>
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent-bright">[C]</div>
+          <div class="w-9 h-9 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400-bright">[C]</div>
           <div>
             <div class="text-primary text-[13px] font-semibold">[CUSTOMER NAME]</div>
             <div class="text-muted text-[11px]">Founder, [COMPANY]</div>
@@ -530,21 +530,21 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       <!-- OpenAI -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="1.5"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">OpenAI</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- Anthropic -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-1">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><path d="M13.827 3.52h3.603L24 20.48h-3.603l-6.57-16.96zm-7.258 0h3.767L16.906 20.48h-3.674l-1.632-4.327H5.091l-1.65 4.327H0L6.57 3.52zm1.07 6.427h5.522L10.9 16.237H5.377l1.917-6.29z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M13.827 3.52h3.603L24 20.48h-3.603l-6.57-16.96zm-7.258 0h3.767L16.906 20.48h-3.674l-1.632-4.327H5.091l-1.65 4.327H0L6.57 3.52zm1.07 6.427h5.522L10.9 16.237H5.377l1.917-6.29z"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">Anthropic</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- Google -->
@@ -554,57 +554,57 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">Google</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- DeepSeek -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-3">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><circle cx="12" cy="12" r="10" fill="none" stroke="#F5F7FA" stroke-width="1.5"/><path d="M8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0z" fill="#F5F7FA"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="10" fill="none" stroke="#ffffff" stroke-width="1.5"/><path d="M8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0z" fill="#ffffff"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">DeepSeek</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- Meta -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">Meta</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- Mistral -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-1">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#F5F7FA"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">Mistral</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- Cohere -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-2">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">Cohere</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
       <!-- Qwen -->
       <div class="card-hover bg-surface border border-border rounded-xl p-5 flex items-center gap-4 reveal reveal-delay-3">
         <div class="w-10 h-10 rounded-lg bg-primary/5 border border-border flex items-center justify-center">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>
         </div>
         <div>
           <div class="text-primary font-semibold text-sm">Qwen</div>
-          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span><span class="text-muted text-[11px]">Active</span></div>
         </div>
       </div>
     </div>
@@ -621,7 +621,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       <!-- Unified API -->
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal">
-        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-accent/20 flex items-center justify-center mb-4">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </div>
         <h3 class="text-primary font-semibold text-sm mb-2">Unified API</h3>
@@ -629,7 +629,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- Multiple Providers -->
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-1">
-        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-accent/20 flex items-center justify-center mb-4">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>
         </div>
         <h3 class="text-primary font-semibold text-sm mb-2">Multiple Providers</h3>
@@ -637,7 +637,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- OpenAI Compatible -->
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-2">
-        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-accent/20 flex items-center justify-center mb-4">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         </div>
         <h3 class="text-primary font-semibold text-sm mb-2">OpenAI Compatible</h3>
@@ -645,7 +645,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- Streaming -->
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal">
-        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-accent/20 flex items-center justify-center mb-4">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
         <h3 class="text-primary font-semibold text-sm mb-2">Streaming</h3>
@@ -653,7 +653,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- Fast Routing -->
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-1">
-        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-accent/20 flex items-center justify-center mb-4">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
         <h3 class="text-primary font-semibold text-sm mb-2">Fast Routing</h3>
@@ -661,7 +661,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- Usage Monitoring -->
       <div class="card-hover bg-surface border border-border rounded-xl p-6 reveal reveal-delay-2">
-        <div class="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-accent/20 flex items-center justify-center mb-4">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
         </div>
         <h3 class="text-primary font-semibold text-sm mb-2">Usage Monitoring</h3>
@@ -682,21 +682,21 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       <!-- Step 1 -->
       <div class="relative reveal">
         <div class="flex items-center gap-3 mb-5">
-          <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-bright font-mono text-sm font-bold">1</div>
+          <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-accent/20 flex items-center justify-center text-emerald-400-bright font-mono text-sm font-bold">1</div>
           <div class="text-muted text-xs font-mono uppercase tracking-wider">Sign up</div>
         </div>
         <h3 class="text-primary font-semibold text-base mb-2">Create your account</h3>
         <p class="text-secondaryText text-[13px] leading-relaxed mb-5">Free tier included. No credit card required. Get your API key in seconds.</p>
         <div class="bg-surface border border-border rounded-xl p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
           <span class="text-muted"># One command to verify</span><br>
-          <span class="text-emerald-400">curl</span> <span class="text-secondaryText">{{ site_url }}/v1/models</span> \<br>
-          &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-emerald-400">"Authorization: Bearer ***
+          <span class="text-blue-400">curl</span> <span class="text-secondaryText">{{ site_url }}/v1/models</span> \<br>
+          &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-blue-400">"Authorization: Bearer ***
         </div>
       </div>
       <!-- Step 2 -->
       <div class="relative reveal reveal-delay-1">
         <div class="flex items-center gap-3 mb-5">
-          <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-bright font-mono text-sm font-bold">2</div>
+          <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-accent/20 flex items-center justify-center text-emerald-400-bright font-mono text-sm font-bold">2</div>
           <div class="text-muted text-xs font-mono uppercase tracking-wider">Get API key</div>
         </div>
         <h3 class="text-primary font-semibold text-base mb-2">Set your base URL</h3>
@@ -704,15 +704,15 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
         <div class="bg-surface border border-border rounded-xl p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
           <span class="text-muted"># Python</span><br>
           <span class="text-secondaryText">client = </span><span class="text-primary">OpenAI</span><span class="text-secondaryText">(</span><br>
-          &nbsp;&nbsp;<span class="text-secondaryText">base_url=</span><span class="text-emerald-400">"{{ site_url }}/v1"</span><span class="text-secondaryText">,</span><br>
-          &nbsp;&nbsp;<span class="text-secondaryText">api_key=</span><span class="text-emerald-400">"YOUR_KEY"</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">base_url=</span><span class="text-blue-400">"{{ site_url }}/v1"</span><span class="text-secondaryText">,</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">api_key=</span><span class="text-blue-400">"YOUR_KEY"</span><br>
           <span class="text-secondaryText">)</span>
         </div>
       </div>
       <!-- Step 3 -->
       <div class="relative reveal reveal-delay-2">
         <div class="flex items-center gap-3 mb-5">
-          <div class="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-bright font-mono text-sm font-bold">3</div>
+          <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-accent/20 flex items-center justify-center text-emerald-400-bright font-mono text-sm font-bold">3</div>
           <div class="text-muted text-xs font-mono uppercase tracking-wider">Start building</div>
         </div>
         <h3 class="text-primary font-semibold text-base mb-2">Make your first request</h3>
@@ -720,8 +720,8 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
         <div class="bg-surface border border-border rounded-xl p-4 font-mono text-[11px] leading-relaxed overflow-x-auto">
           <span class="text-muted"># Switch models instantly</span><br>
           <span class="text-secondaryText">response = client.chat.completions.</span><span class="text-primary">create</span><span class="text-secondaryText">(</span><br>
-          &nbsp;&nbsp;<span class="text-secondaryText">model=</span><span class="text-emerald-400">"JEROUTER/f/deepseek-v4-flash"</span><span class="text-secondaryText">,</span> <span class="text-muted"># or "JEROUTER/f/mimo-v2.5-free", "JEROUTER/f/x-preview-f-free", "JEROUTER/f/nemotron-3-ultra-free"...</span><br>
-          &nbsp;&nbsp;<span class="text-secondaryText">messages=</span><span class="text-secondaryText">[{</span><span class="text-emerald-400">"role"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"user"</span><span class="text-secondaryText">, </span><span class="text-emerald-400">"content"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"Hello!"</span><span class="text-secondaryText">}]</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">model=</span><span class="text-blue-400">"JEROUTER/f/deepseek-v4-flash"</span><span class="text-secondaryText">,</span> <span class="text-muted"># or "JEROUTER/f/mimo-v2.5-free", "JEROUTER/f/x-preview-f-free", "JEROUTER/f/nemotron-3-ultra-free"...</span><br>
+          &nbsp;&nbsp;<span class="text-secondaryText">messages=</span><span class="text-secondaryText">[{</span><span class="text-blue-400">"role"</span><span class="text-secondaryText">: </span><span class="text-blue-400">"user"</span><span class="text-secondaryText">, </span><span class="text-blue-400">"content"</span><span class="text-secondaryText">: </span><span class="text-blue-400">"Hello!"</span><span class="text-secondaryText">}]</span><br>
           <span class="text-secondaryText">)</span>
         </div>
       </div>
@@ -746,10 +746,10 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
           <span class="text-muted text-sm">/mo</span>
         </div>
         <ul class="space-y-3 mb-8 flex-1">
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> 500 requests / month</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Access to core models</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> OpenAI-compatible API</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Streaming support</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> 500 requests / month</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Access to core models</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> OpenAI-compatible API</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Streaming support</li>
           <li class="flex items-center gap-2.5 text-[13px] text-muted"><span class="text-border text-xs">—</span> Load balancing</li>
           <li class="flex items-center gap-2.5 text-[13px] text-muted"><span class="text-border text-xs">—</span> Custom provider keys</li>
         </ul>
@@ -757,7 +757,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- Pro -->
       <div class="card-hover bg-surface border border-accent/30 rounded-xl p-7 flex flex-col relative reveal reveal-delay-1">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
         <h3 class="text-primary font-bold text-lg">Pro</h3>
         <p class="text-muted text-[13px] mt-1 mb-6">For teams and production</p>
         <div class="mb-7">
@@ -765,14 +765,14 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
           <span class="text-muted text-sm">/mo</span>
         </div>
         <ul class="space-y-3 mb-8 flex-1">
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> 5,000 requests / month</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> All models + gated access</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Auto load balancing</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Custom provider keys</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Priority support</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Usage analytics</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> 5,000 requests / month</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> All models + gated access</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Auto load balancing</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Custom provider keys</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Priority support</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Usage analytics</li>
         </ul>
-        <a href="/auth?signup=true" class="block text-center font-semibold text-[13px] bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-lg transition-colors">Upgrade to Pro</a>
+        <a href="/auth?signup=true" class="block text-center font-semibold text-[13px] bg-emerald-500 hover:bg-emerald-500-dark text-white px-6 py-3 rounded-lg transition-colors">Upgrade to Pro</a>
       </div>
       <!-- Enterprise -->
       <div class="card-hover bg-surface border border-border rounded-xl p-7 flex flex-col reveal reveal-delay-2">
@@ -782,12 +782,12 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
           <span class="text-4xl font-extrabold text-primary">Custom</span>
         </div>
         <ul class="space-y-3 mb-8 flex-1">
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Unlimited usage</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Dedicated instances</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Custom SLAs</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> SSO / SAML</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> 24/7 priority support</li>
-          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-emerald-500 text-xs">✓</span> Volume discounts</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Unlimited usage</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Dedicated instances</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Custom SLAs</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> SSO / SAML</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> 24/7 priority support</li>
+          <li class="flex items-center gap-2.5 text-[13px] text-secondaryText"><span class="text-blue-500 text-xs">✓</span> Volume discounts</li>
         </ul>
         <a href="mailto:{{ user_email }}" class="block text-center font-semibold text-[13px] border border-border hover:border-muted text-secondaryText hover:text-primary px-6 py-3 rounded-lg transition-colors">Contact Sales</a>
       </div>
@@ -801,8 +801,8 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
           <thead>
             <tr class="border-b border-border">
               <th class="p-4 text-muted font-semibold">Feature</th>
-              <th class="p-4 text-emerald-500 font-semibold text-center">Free</th>
-              <th class="p-4 text-accent-bright font-semibold text-center">Pro</th>
+              <th class="p-4 text-blue-500 font-semibold text-center">Free</th>
+              <th class="p-4 text-emerald-400-bright font-semibold text-center">Pro</th>
               <th class="p-4 text-muted font-semibold text-center">Enterprise</th>
             </tr>
           </thead>
@@ -898,7 +898,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
           <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
         </button>
         <div class="faq-answer">
-          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Yes. {{ site_name }} is fully OpenAI-compatible. Any tool that supports OpenAI's Chat Completions API works — Cursor, Claude Code, OpenAI Codex, Continue.dev, Aider, Windsurf, and more. Just set your base URL to <code class="bg-base px-1.5 py-0.5 rounded text-accent-bright font-mono text-xs">{{ site_url }}/v1</code>.</div>
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Yes. {{ site_name }} is fully OpenAI-compatible. Any tool that supports OpenAI's Chat Completions API works — Cursor, Claude Code, OpenAI Codex, Continue.dev, Aider, Windsurf, and more. Just set your base URL to <code class="bg-base px-1.5 py-0.5 rounded text-emerald-400-bright font-mono text-xs">{{ site_url }}/v1</code>.</div>
         </div>
       </div>
       <!-- FAQ 4 -->
@@ -918,7 +918,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
           <span class="faq-icon text-muted text-base font-light ml-4 flex-shrink-0">+</span>
         </button>
         <div class="faq-answer">
-          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Use your API key as a Bearer token: <code class="bg-base px-1.5 py-0.5 rounded text-accent-bright font-mono text-xs">Authorization: Bearer *** The API is fully OpenAI-compatible, so existing SDKs work unchanged.</div>
+          <div class="px-5 pb-4 text-secondaryText text-[13px] leading-relaxed">Use your API key as a Bearer token: <code class="bg-base px-1.5 py-0.5 rounded text-emerald-400-bright font-mono text-xs">Authorization: Bearer *** The API is fully OpenAI-compatible, so existing SDKs work unchanged.</div>
         </div>
       </div>
       <!-- FAQ 6 -->
@@ -946,7 +946,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       <!-- Model + controls -->
       <div class="p-4 border-b border-border space-y-3">
         <div class="flex flex-wrap gap-2">
-          <button class="playground-model active text-[11px] font-mono px-3 py-1.5 rounded-md border border-accent/40 text-accent-bright" data-model="JEROUTER/f/deepseek-v4-flash">deepseek-v4-flash</button>
+          <button class="playground-model active text-[11px] font-mono px-3 py-1.5 rounded-md border border-accent/40 text-emerald-400-bright" data-model="JEROUTER/f/deepseek-v4-flash">deepseek-v4-flash</button>
           <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="JEROUTER/f/mimo-v2.5-free">mimo-v2.5</button>
           <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="JEROUTER/f/x-preview-f-free">x-preview-f</button>
           <button class="playground-model text-[11px] font-mono px-3 py-1.5 rounded-md border border-border text-muted" data-model="JEROUTER/f/nemotron-3-ultra-free">nemotron-3-ultra</button>
@@ -963,7 +963,7 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
       </div>
       <!-- Run button -->
       <div class="px-4 py-3 border-b border-border flex items-center justify-between gap-3">
-        <button id="playground-run" onclick="runPlayground()" class="btn-interactive inline-flex items-center gap-2 font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-lg">
+        <button id="playground-run" onclick="runPlayground()" class="btn-interactive inline-flex items-center gap-2 font-semibold text-sm bg-emerald-500 hover:bg-emerald-500-dark text-white px-5 py-2.5 rounded-lg">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Run
         </button>
@@ -985,25 +985,25 @@ console.<span class="text-primary">log</span>(response.choices[0].message.conten
     <div class="bg-surface border border-border rounded-xl max-w-lg mx-auto mb-8 overflow-x-auto reveal reveal-delay-2">
       <div class="px-4 py-3 border-b border-border flex items-center justify-between">
         <span class="text-[11px] text-muted font-mono">Quick start</span>
-        <span class="text-[11px] text-accent-bright font-mono">30 seconds</span>
+        <span class="text-[11px] text-emerald-400-bright font-mono">30 seconds</span>
       </div>
       <div class="p-4 font-mono text-[11px] leading-relaxed text-left">
         <span class="text-muted"># Install the OpenAI SDK</span><br>
-        <span class="text-emerald-400">pip</span> <span class="text-secondaryText">install openai</span><br><br>
+        <span class="text-blue-400">pip</span> <span class="text-secondaryText">install openai</span><br><br>
         <span class="text-muted"># Set your base URL and key</span><br>
         <span class="text-secondaryText">client = </span><span class="text-primary">OpenAI</span><span class="text-secondaryText">(</span><br>
-        &nbsp;&nbsp;<span class="text-secondaryText">base_url=</span><span class="text-emerald-400">"{{ site_url }}/v1"</span><span class="text-secondaryText">,</span><br>
-        &nbsp;&nbsp;<span class="text-secondaryText">api_key=</span><span class="text-emerald-400">"YOUR_KEY"</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">base_url=</span><span class="text-blue-400">"{{ site_url }}/v1"</span><span class="text-secondaryText">,</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">api_key=</span><span class="text-blue-400">"YOUR_KEY"</span><br>
         <span class="text-secondaryText">)</span><br><br>
         <span class="text-muted"># Start chatting with any model</span><br>
         <span class="text-secondaryText">response = client.chat.completions.</span><span class="text-primary">create</span><span class="text-secondaryText">(</span><br>
-        &nbsp;&nbsp;<span class="text-secondaryText">model=</span><span class="text-emerald-400">"JEROUTER/f/deepseek-v4-flash"</span><span class="text-secondaryText">,</span><br>
-        &nbsp;&nbsp;<span class="text-secondaryText">messages=[{</span><span class="text-emerald-400">"role"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"user"</span><span class="text-secondaryText">, </span><span class="text-emerald-400">"content"</span><span class="text-secondaryText">: </span><span class="text-emerald-400">"Hello!"</span><span class="text-secondaryText">}]</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">model=</span><span class="text-blue-400">"JEROUTER/f/deepseek-v4-flash"</span><span class="text-secondaryText">,</span><br>
+        &nbsp;&nbsp;<span class="text-secondaryText">messages=[{</span><span class="text-blue-400">"role"</span><span class="text-secondaryText">: </span><span class="text-blue-400">"user"</span><span class="text-secondaryText">, </span><span class="text-blue-400">"content"</span><span class="text-secondaryText">: </span><span class="text-blue-400">"Hello!"</span><span class="text-secondaryText">}]</span><br>
         <span class="text-secondaryText">)</span>
       </div>
     </div>
     <div class="flex flex-wrap justify-center gap-3">
-      <a href="/auth?signup=true" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm bg-accent hover:bg-accent-dark text-white px-7 py-3 rounded-lg">
+      <a href="/auth?signup=true" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm bg-emerald-500 hover:bg-emerald-500-dark text-white px-7 py-3 rounded-lg">
         Get Started — It's Free
       </a>
       <a href="/docs" class="btn-interactive inline-flex items-center justify-center font-semibold text-sm border border-border hover:border-muted text-secondaryText hover:text-primary px-7 py-3 rounded-lg">
@@ -1101,11 +1101,11 @@ function switchModel(el, model) {
   document.querySelectorAll('.model-option').forEach(opt => {
     opt.classList.remove('active');
     opt.classList.add('text-muted');
-    opt.classList.remove('text-accent-bright');
+    opt.classList.remove('text-emerald-400-bright');
   });
   el.classList.add('active');
   el.classList.remove('text-muted');
-  el.classList.add('text-accent-bright');
+  el.classList.add('text-emerald-400-bright');
 
   // Update model name in all code blocks — handles ALL formats
   document.querySelectorAll('pre[id^="code-"]').forEach(pre => {
@@ -1211,11 +1211,11 @@ document.querySelectorAll('.playground-model').forEach(function(btn) {
     document.querySelectorAll('.playground-model').forEach(b => {
       b.classList.remove('active');
       b.classList.add('text-muted');
-      b.classList.remove('text-accent-bright');
+      b.classList.remove('text-emerald-400-bright');
     });
     btn.classList.add('active');
     btn.classList.remove('text-muted');
-    btn.classList.add('text-accent-bright');
+    btn.classList.add('text-emerald-400-bright');
     playgroundModel = btn.dataset.model;
   });
 });

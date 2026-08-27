@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Comparison — VRouter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- All fonts loaded -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Figtree:wght@300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700;800&family=Cabinet+Grotesk:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { background: #0e0e0e; color: #e4e4e7; min-height: 100vh; padding: 32px; }
+
+/* Theme toggle */
+.theme-toggle { position:fixed; top:16px; right:16px; z-index:100; background:#1e1e1e; border:1px solid #333; border-radius:10px; padding:8px 16px; color:#e4e4e7; cursor:pointer; font-size:14px; font-family: 'JetBrains Mono', monospace; }
+.theme-toggle:hover { background:#2a2a2a; border-color:#4F8CFF; }
+html:not(.dark) body { background:#faf9f7; color:#1a1715; }
+html:not(.dark) .theme-toggle { background:#fff; border-color:#e8e4de; color:#1a1715; }
+html:not(.dark) .card { background:#fff; border-color:#e8e4de; }
+html:not(.dark) .subtitle { color:#3a3530; }
+html:not(.dark) .body-sample { color:#3a3530; }
+html:not(.dark) .code-sample { background:#f5f3f0; color:#1a1715; border-color:#e8e4de; }
+html:not(.dark) .meta { color:#4a4540; }
+
+.header { text-align:center; margin-bottom:48px; }
+.header h1 { font-size:32px; font-weight:700; margin-bottom:8px; }
+.header p { color:#a0a0a0; font-size:14px; }
+html:not(.dark) .header p { color:#3a3530; }
+
+.subtitle { color:#a0a0a0; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; }
+.meta { color:#6b6b6b; font-size:11px; font-family:'JetBrains Mono',monospace; margin-bottom:6px; }
+
+.grid { display:grid; grid-template-columns: 1fr; gap:24px; max-width:900px; margin:0 auto; }
+
+.card {
+  background: #0F172A;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover { border-color: #4F8CFF; box-shadow: 0 0 30px rgba(79,140,255,0.08); }
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.card-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #4F8CFF;
+}
+.card-combo {
+  font-size: 11px;
+  color: #6b6b6b;
+  font-family: 'JetBrains Mono', monospace;
+  background: #1e1e1e;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #2a2a2a;
+}
+html:not(.dark) .card-combo { background:#f5f3f0; color:#4a4540; border-color:#e8e4de; }
+
+.heading-sample {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: #ededed;
+}
+html:not(.dark) .heading-sample { color:#1a1715; }
+
+.body-sample {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #a0a0a0;
+  margin-bottom: 12px;
+}
+
+.code-sample {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #4F8CFF;
+  margin-bottom: 12px;
+  overflow-x: auto;
+}
+
+.weights {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.weight-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  color: #a0a0a0;
+  font-family: 'JetBrains Mono', monospace;
+}
+html:not(.dark) .weight-tag { background:#f5f3f0; color:#3a3530; border-color:#e8e4de; }
+
+.used-by {
+  font-size: 12px;
+  color: #6b6b6b;
+  margin-top: 8px;
+}
+.used-by span { color: #4F8CFF; font-weight: 600; }
+html:not(.dark) .used-by { color:#4a4540; }
+html:not(.dark) .used-by span { color:#a08060; }
+
+.pick-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 20px;
+  background: #4F8CFF;
+  color: #0e0e0e;
+  border: none;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pick-btn:hover { background: #00D4FF; }
+html:not(.dark) .pick-btn { background:#a08060; color:#fff; }
+html:not(.dark) .pick-btn:hover { background:#806040; }
+
+.current { border-color: #4F8CFF !important; box-shadow: 0 0 20px rgba(79,140,255,0.15); }
+.current::after { content:'CURRENT'; font-size:10px; font-family:'JetBrains Mono',monospace; color:#4F8CFF; background:rgba(79,140,255,0.1); padding:3px 8px; border-radius:4px; margin-left:8px; vertical-align:middle; }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
+
+<div class="header">
+  <h1>Font Pairing Comparison</h1>
+  <p>Code font: <strong>JetBrains Mono</strong> (fixed) · Click "Apply" to switch</p>
+</div>
+
+<div class="grid">
+
+  <!-- A: Outfit + DM Sans -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option A — Clean & Warm</div>
+        <div class="card-name" style="font-family:'Outfit',sans-serif">Outfit + DM Sans</div>
+      </div>
+      <div class="card-combo">Outfit · DM Sans · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Outfit',sans-serif">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'DM Sans',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Outfit',sans-serif;font-weight:300">Outfit 300</span>
+      <span class="weight-tag" style="font-family:'Outfit',sans-serif;font-weight:500">Outfit 500</span>
+      <span class="weight-tag" style="font-family:'Outfit',sans-serif;font-weight:700">Outfit 700</span>
+      <span class="weight-tag" style="font-family:'Outfit',sans-serif;font-weight:800">Outfit 800</span>
+    </div>
+    <div class="used-by">Used by: <span>Framer, Vercel Ship</span> · Geometric, rounded, friendly</div>
+  </div>
+
+  <!-- B: Manrope -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option B — Techy & Bold</div>
+        <div class="card-name" style="font-family:'Manrope',sans-serif">Manrope</div>
+      </div>
+      <div class="card-combo">Manrope · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Manrope',sans-serif;font-weight:800">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Manrope',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Manrope',sans-serif;font-weight:400">Manrope 400</span>
+      <span class="weight-tag" style="font-family:'Manrope',sans-serif;font-weight:600">Manrope 600</span>
+      <span class="weight-tag" style="font-family:'Manrope',sans-serif;font-weight:800">Manrope 800</span>
+    </div>
+    <div class="used-by">Used by: <span>Supabase, Grafana</span> · Geometric, tight, developer feel</div>
+  </div>
+
+  <!-- C: Sora -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option C — Futuristic & Minimal</div>
+        <div class="card-name" style="font-family:'Sora',sans-serif">Sora</div>
+      </div>
+      <div class="card-combo">Sora · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Sora',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Sora',sans-serif;font-weight:300">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Sora',sans-serif;font-weight:300">Sora 300</span>
+      <span class="weight-tag" style="font-family:'Sora',sans-serif;font-weight:600">Sora 600</span>
+      <span class="weight-tag" style="font-family:'Sora',sans-serif;font-weight:800">Sora 800</span>
+    </div>
+    <div class="used-by">Used by: <span>OpenAI, Vercel</span> · Futuristic, wide, clean geometry</div>
+  </div>
+
+  <!-- D: Plus Jakarta Sans -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option D — Modern SaaS</div>
+        <div class="card-name" style="font-family:'Plus Jakarta Sans',sans-serif">Plus Jakarta Sans</div>
+      </div>
+      <div class="card-combo">Plus Jakarta Sans · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Plus Jakarta Sans',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:400">PlusJakarta 400</span>
+      <span class="weight-tag" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:600">PlusJakarta 600</span>
+      <span class="weight-tag" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800">PlusJakarta 800</span>
+    </div>
+    <div class="used-by">Used by: <span>Stripe, Shadcn</span> · Warm, readable, premium SaaS feel</div>
+  </div>
+
+  <!-- E: Figtree -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option E — Friendly & Clean</div>
+        <div class="card-name" style="font-family:'Figtree',sans-serif">Figtree</div>
+      </div>
+      <div class="card-combo">Figtree · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Figtree',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Figtree',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Figtree',sans-serif;font-weight:400">Figtree 400</span>
+      <span class="weight-tag" style="font-family:'Figtree',sans-serif;font-weight:600">Figtree 600</span>
+      <span class="weight-tag" style="font-family:'Figtree',sans-serif;font-weight:800">Figtree 800</span>
+    </div>
+    <div class="used-by">Used by: <span>GitHub, Linear</span> · Geometric, friendly, variable font</div>
+  </div>
+
+  <!-- F: Geist -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option F — Vercel DNA</div>
+        <div class="card-name" style="font-family:'Geist',sans-serif">Geist</div>
+      </div>
+      <div class="card-combo">Geist · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Geist',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Geist',sans-serif;font-weight:400">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Geist',sans-serif;font-weight:400">Geist 400</span>
+      <span class="weight-tag" style="font-family:'Geist',sans-serif;font-weight:600">Geist 600</span>
+      <span class="weight-tag" style="font-family:'Geist',sans-serif;font-weight:800">Geist 800</span>
+    </div>
+    <div class="used-by">Used by: <span>Vercel, Next.js docs</span> · Neo-grotesque, developer-native</div>
+  </div>
+
+  <!-- Current: Space Grotesk -->
+  <div class="card current">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Current</div>
+        <div class="card-name" style="font-family:'Space Grotesk',sans-serif">Space Grotesk</div>
+      </div>
+      <div class="card-combo">Space Grotesk · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Space Grotesk',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Space Grotesk',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">Authorization: Bearer vr-***<br>POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="weight-tag" style="font-family:'Space Grotesk',sans-serif;font-weight:400">SpaceGrotesk 400</span>
+      <span class="weight-tag" style="font-family:'Space Grotesk',sans-serif;font-weight:600">SpaceGrotesk 600</span>
+      <span class="weight-tag" style="font-family:'Space Grotesk',sans-serif;font-weight:700">SpaceGrotesk 700</span>
+    </div>
+    <div class="used-by">Used by: <span>Vercel Ship, devtools</span> · Monospace-inspired sans</div>
+  </div>
+
+</div>
+
+<div style="text-align:center; margin:48px 0 24px; color:#6b6b6b; font-size:13px; font-family:'JetBrains Mono',monospace;">
+  All pairings use JetBrains Mono for code blocks
+</div>
+
+<script>
+function toggleTheme() {
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('vrouter-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+}
+(function() {
+  const saved = localStorage.getItem('vrouter-theme');
+  if (saved === 'light') document.documentElement.classList.remove('dark');
+})();
+</script>
+</body>
+</html>

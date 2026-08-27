@@ -1,30 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ site_name }} — OpenAI-Compatible API</title>
-<script src="https://cdn.tailwindcss.com"></script>
 <script>
-tailwind.config = {
-  darkMode: 'class',
-  theme: {
-    extend: {
-      fontFamily: { sans: ['JetBrains Mono', 'monospace'], mono: ['JetBrains Mono', 'monospace'] },
-      colors: {
-        bg: '#0a0f1a',
-        surface: '#111827',
-        card: '#1e293b',
-        accent: '#0ea5e9',
-        accentLight: '#38bdf8',
-        accentDim: '#0c4a6e',
-        muted: '#64748b',
-        subtle: '#94a3b8',
-      }
-    }
-  }
-}
+(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
+function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 </script>
+<link rel="stylesheet" href="/static/tailwind.css">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 *, *::before, *::after { box-sizing: border-box; }
@@ -34,6 +19,15 @@ body { background: #0a0f1a; color: #e2e8f0; font-family: 'JetBrains Mono', monos
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.15); border-radius: 3px; }
+
+/* LIGHT MODE — Warm Brown UCEL */
+html:not(.dark) body { background: #faf9f7; color: #1a1715; }
+html:not(.dark) ::selection { background: rgba(160,128,96,0.3); }
+html:not(.dark) ::-webkit-scrollbar-thumb { background: #e8e4de; }
+html:not(.dark) .nav { background: rgba(250,249,247,0.92); border-bottom-color: #e8e4de; }
+html:not(.dark) .nav-link { color: #6b6560; }
+html:not(.dark) .nav-link:hover { color: #1a1715; }
+html:not(.dark) .hero-badge { border-color: rgba(160,128,96,0.2); background: rgba(160,128,96,0.06); color: #806040; }
 
 /* NAV */
 .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,15,26,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(148,163,184,0.06); }
@@ -143,7 +137,7 @@ body { background: #0a0f1a; color: #e2e8f0; font-family: 'JetBrains Mono', monos
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted">
         <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-accent"></span> 236+ models</span>
         <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-green-400"></span> Streaming supported</span>
-        <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-violet-400"></span> OpenAI-compatible</span>
+        <span class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-emerald-400"></span> OpenAI-compatible</span>
       </div>
     </div>
 
@@ -171,7 +165,7 @@ curl {{ site_url }}/v1/chat/completions \
         </div>
         <div id="tab-python" class="hidden">
 <span class="text-muted"># pip install openai</span>
-<span class="text-violet-400">from</span> openai <span class="text-violet-400">import</span> OpenAI
+<span class="text-emerald-400">from</span> openai <span class="text-emerald-400">import</span> OpenAI
 
 client = OpenAI(
     api_key=<span class="text-green-400">"your-key"</span>,
@@ -186,14 +180,14 @@ resp = client.chat.completions.create(
         </div>
         <div id="tab-node" class="hidden">
 <span class="text-muted">// npm install openai</span>
-<span class="text-violet-400">import</span> OpenAI <span class="text-violet-400">from</span> <span class="text-green-400">'openai'</span>;
+<span class="text-emerald-400">import</span> OpenAI <span class="text-emerald-400">from</span> <span class="text-green-400">'openai'</span>;
 
-<span class="text-violet-400">const</span> client = <span class="text-violet-400">new</span> OpenAI({
+<span class="text-emerald-400">const</span> client = <span class="text-emerald-400">new</span> OpenAI({
   apiKey: <span class="text-green-400">'your-key'</span>,
   baseURL: <span class="text-green-400">'{{ site_url }}/v1'</span>,
 });
 
-<span class="text-violet-400">const</span> resp = <span class="text-violet-400">await</span> client.chat.completions.create({
+<span class="text-emerald-400">const</span> resp = <span class="text-emerald-400">await</span> client.chat.completions.create({
   model: <span class="text-green-400">'deepseek-v4-flash'</span>,
   messages: [{ role: <span class="text-green-400">'user'</span>,
                content: <span class="text-green-400">'Hello'</span> }],
@@ -235,8 +229,8 @@ resp = client.chat.completions.create(
       <p class="text-subtle text-[13px] leading-relaxed">Core models available for free. No credit card, no deposit. Sign in with your email, get a key, start building.</p>
     </div>
     <div class="feature-card">
-      <div class="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center mb-4">
-        <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
       </div>
       <h3 class="text-white font-semibold text-[15px] mb-2">Smart Routing</h3>
       <p class="text-subtle text-[13px] leading-relaxed">Automatic failover, circuit breaker, key rotation, and health-scored routing. If one provider is down, traffic shifts seamlessly.</p>

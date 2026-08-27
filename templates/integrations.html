@@ -7,6 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
+function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
+</script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondary:'#0C0E13',surface:'#11131A',elevated:'#151821',border:'#222632',primary:'#F5F7FA',secondaryText:'#8B93A7',muted:'#5F6678',accent:'#10B981','accent-bright':'#34D399','accent-dark':'#059669'}}}}
+</script>
 <style>
 :root {
   --bg: #08090D;
@@ -15,13 +23,28 @@
   --text: #F5F7FA;
   --text2: #8B93A7;
   --text3: #525868;
-  --accent: #8B5CF6;
-  --accent-hover: #A78BFA;
+  --accent: #10B981;
+  --accent-hover: #34D399;
   --accent-dim: rgba(139, 92, 246, 0.12);
   --accent-border: rgba(139, 92, 246, 0.25);
   --green: #34D399;
   --teal: #2DD4BF;
   --amber: #FBBF24;
+}
+html:not(.dark) {
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --border: #e8e4de;
+  --text: #1a1715;
+  --text2: #4a4540;
+  --text3: #6b6560;
+  --accent: #a08060;
+  --accent-hover: #8c6e52;
+  --accent-dim: rgba(160, 128, 96, 0.12);
+  --accent-border: rgba(160, 128, 96, 0.25);
+  --green: #2d8a4e;
+  --teal: #2d8a4e;
+  --amber: #b8860b;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -88,7 +111,7 @@ a:hover { opacity: 0.85; text-decoration: underline; }
 }
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  background: linear-gradient(135deg, #10B981, #059669);
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 700; color: #fff;
 }
@@ -220,30 +243,7 @@ a:hover { opacity: 0.85; text-decoration: underline; }
 <body>
 
 <!-- NAVBAR -->
-<div class="navbar">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <img src="/static/vrouter-logo.svg" alt="VRouter" />
-    </a>
-    <div class="nav-center">
-      <div class="nav-links">
-        <a href="/features">Features</a>
-        <a href="/docs">Docs</a>
-        <a href="/status">Status</a>
-        <a href="/faq">FAQ</a>
-        <a href="/integrations" class="active">Integrations</a>
-      </div>
-    </div>
-    <div class="nav-right">
-      {% if is_logged_in %}
-        <a href="/dashboard" class="btn btn-ghost">Dashboard</a>
-        <span class="user-avatar">{{ user_initial }}</span>
-      {% else %}
-        <a href="/auth" class="btn btn-accent">Sign In</a>
-      {% endif %}
-    </div>
-  </div>
-</div>
+{% include 'partials/header.html' %}
 
 <!-- PAGE HEADER -->
 <div class="container" style="display:block;">

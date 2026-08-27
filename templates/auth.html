@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,37 +7,101 @@
 <title>Sign in — VRouter</title>
 <meta name="description" content="Sign in to VRouter to manage your API keys, models, and usage.">
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/static/tailwind.css">
 <script>
-tailwind.config = {
-  darkMode: 'class',
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['JetBrains Mono', 'monospace'],
-        mono: ['JetBrains Mono', 'monospace']
-      },
-      colors: {
-        bg: '#08090D',
-        bgSecondary: '#0C0E13',
-        surface: '#11131A',
-        border: '#222632',
-        textPrimary: '#F5F7FA',
-        textSecondary: '#8B93A7',
-        accent: '#8B5CF6',
-        accentLight: '#A78BFA',
-        accentDim: '#6D28D9',
-      }
-    }
-  }
-}
+(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
+function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 </script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; margin: 0; min-height: 100vh; }
-::selection { background: rgba(139,92,246,0.3); }
+::selection { background: rgba(16,185,129,0.3); }
+
+/* ═══════════════════════════════════════════
+   LIGHT MODE OVERRIDES — html:not(.dark)
+   ═══════════════════════════════════════════ */
+  html:not(.dark) body {
+    background: #faf9f7 !important;
+    color: #1a1715 !important;
+  }
+  html:not(.dark) ::selection {
+    background: rgba(160,128,96,0.2) !important;
+    color: #1a1715 !important;
+  }
+  /* ── AUTH CARD ── */
+  html:not(.dark) .auth-card {
+    background: #ffffff !important;
+    border-color: #e8e4de !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06) !important;
+  }
+  html:not(.dark) .auth-card::before {
+    background: radial-gradient(ellipse 600px 300px at 50% 0%, rgba(160,128,96,0.08), transparent 70%) !important;
+  }
+  /* ── INPUTS ── */
+  html:not(.dark) .input-field {
+    background: #f5f3f0 !important;
+    border-color: #e8e4de !important;
+    color: #1a1715 !important;
+  }
+  html:not(.dark) .input-field:focus {
+    border-color: rgba(160,128,96,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(160,128,96,0.1) !important;
+  }
+  html:not(.dark) .input-field::placeholder {
+    color: #9c9590 !important;
+  }
+  html:not(.dark) .input-label {
+    color: #6b6560 !important;
+  }
+  /* ── TABS ── */
+  html:not(.dark) .tab-btn {
+    color: #9c9590 !important;
+  }
+  html:not(.dark) .tab-btn.active {
+    color: #1a1715 !important;
+    border-bottom-color: #a08060 !important;
+  }
+  html:not(.dark) .tab-btn:hover:not(.active) {
+    color: #6b6560 !important;
+  }
+  /* ── BUTTONS ── */
+  html:not(.dark) .btn-primary {
+    background: #a08060 !important;
+    color: #ffffff !important;
+  }
+  html:not(.dark) .btn-primary:hover {
+    background: #8c6e52 !important;
+    box-shadow: 0 0 20px rgba(160,128,96,0.2) !important;
+  }
+  html:not(.dark) .btn-google {
+    background: #f5f3f0 !important;
+    border-color: #e8e4de !important;
+    color: #1a1715 !important;
+  }
+  html:not(.dark) .btn-google:hover {
+    border-color: #d8d4ce !important;
+    background: #eae7e2 !important;
+  }
+  /* ── TOAST ── */
+  html:not(.dark) .toast {
+    background: #ffffff !important;
+    border-color: #e8e4de !important;
+    color: #1a1715 !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+  }
+  /* ── INLINE STYLE OVERRIDES ── */
+  html:not(.dark) div[style*="background:rgba(16,185,129,0.1)"] {
+    background: rgba(160,128,96,0.1) !important;
+    border-color: rgba(160,128,96,0.15) !important;
+  }
+  html:not(.dark) h1[style*="color:#F5F7FA"],
+  html:not(.dark) h3[style*="color:#F5F7FA"],
+  html:not(.dark) p[style*="color:#F5F7FA"] {
+    color: #1a1715 !important;
+  }
 
 /* ── AUTH CARD ── */
 .auth-card {
@@ -56,7 +120,7 @@ body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monos
   right: -1px;
   bottom: -1px;
   border-radius: 21px;
-  background: radial-gradient(ellipse 600px 300px at 50% 0%, rgba(139,92,246,0.12), transparent 70%);
+  background: radial-gradient(ellipse 600px 300px at 50% 0%, rgba(16,185,129,0.12), transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -76,8 +140,8 @@ body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monos
   outline: none;
 }
 .input-field:focus {
-  border-color: rgba(139,92,246,0.5);
-  box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+  border-color: rgba(16,185,129,0.5);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
 }
 .input-field::placeholder { color: #475569; }
 .input-label {
@@ -104,12 +168,12 @@ body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monos
   text-align: center;
   font-family: inherit;
 }
-.tab-btn.active { color: #F5F7FA; border-bottom-color: #8B5CF6; }
+.tab-btn.active { color: #F5F7FA; border-bottom-color: #10B981; }
 .tab-btn:hover:not(.active) { color: #8B93A7; }
 
 /* ── BUTTONS ── */
 .btn-primary {
-  background: #8B5CF6;
+  background: #10B981;
   color: white;
   font-weight: 600;
   transition: all 0.2s;
@@ -121,7 +185,7 @@ body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monos
   cursor: pointer;
   letter-spacing: 0.01em;
 }
-.btn-primary:hover { background: #7C3AED; box-shadow: 0 0 20px rgba(139,92,246,0.3); }
+.btn-primary:hover { background: #059669; box-shadow: 0 0 20px rgba(16,185,129,0.3); }
 .btn-primary:active { transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary:disabled:hover { box-shadow: none; }
@@ -189,41 +253,11 @@ body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monos
 <body style="overflow-x:hidden">
 
 <!-- ═══════════════ NAV ═══════════════ -->
-<nav style="position:sticky;top:0;z-index:50;background:rgba(8,9,13,0.85);backdrop-filter:blur(16px);border-bottom:1px solid #222632;">
-  <div style="max-width:1100px;margin:0 auto;padding:0 24px;" class="flex items-center justify-between h-14 relative">
-    <!-- Left: Logo -->
-    <a href="/" class="flex items-center gap-2.5 no-underline shrink-0">
-      <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-6 sm:h-7 w-auto" />
-      <span style="color:#F5F7FA;font-weight:700;font-size:14px sm:15px;letter-spacing:-0.01em;">VRouter</span>
-    </a>
-    <!-- Center: Nav links (desktop) -->
-    <div class="hidden md:flex items-center gap-4">
-      <a href="/features" style="font-size:13px;color:#8B93A7;text-decoration:none;font-weight:500;">Features</a>
-      <a href="/docs" style="font-size:13px;color:#8B93A7;text-decoration:none;font-weight:500;">Docs</a>
-      <a href="/status" style="font-size:13px;color:#8B93A7;text-decoration:none;font-weight:500;">Status</a>
-      <a href="/faq" style="font-size:13px;color:#8B93A7;text-decoration:none;font-weight:500;">FAQ</a>
-    </div>
-    <!-- Right: Hamburger + CTA grouped -->
-    <div class="flex items-center gap-2 shrink-0">
-      <a href="/" class="hidden md:inline-flex items-center text-xs sm:text-sm font-medium text-muted hover:text-primary transition-colors px-3 py-1.5 rounded-lg border border-border hover:border-muted">Dashboard</a>
-      <button id="auth-hamburger" onclick="toggleAuthMobileNav()" class="md:hidden p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" style="background:none;border:none;cursor:pointer;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
-  </div>
-  <!-- Mobile dropdown menu -->
-  <div id="auth-mobile-panel" class="hidden" style="background:rgba(8,9,13,0.95);border-bottom:1px solid #222632;padding:12px 24px;">
-    <a href="/features" onclick="closeAuthMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Features</a>
-    <a href="/docs" onclick="closeAuthMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Docs</a>
-    <a href="/status" onclick="closeAuthMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Status</a>
-    <a href="/faq" onclick="closeAuthMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">FAQ</a>
-    <a href="/" onclick="closeAuthMobileNav()" style="display:block;font-size:14px;color:#F5F7FA;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Dashboard</a>
-  </div>
-</nav>
+{% include 'partials/header.html' %}
 <script>
-function toggleAuthMobileNav(){const p=document.getElementById('auth-mobile-panel');p.classList.contains('hidden')?p.classList.remove('hidden'):p.classList.add('hidden');}
-function closeAuthMobileNav(){document.getElementById('auth-mobile-panel')?.classList.add('hidden');}
-document.addEventListener('click',function(e){const p=document.getElementById('auth-mobile-panel'),b=document.getElementById('auth-hamburger');if(p&&!p.contains(e.target)&&b&&!b.contains(e.target))closeAuthMobileNav();});
+function toggleMobileNav(){const p=document.getElementById('auth-mobile-panel');p.classList.contains('hidden')?p.classList.remove('hidden'):p.classList.add('hidden');}
+function closeMobileNav(){document.getElementById('auth-mobile-panel')?.classList.add('hidden');}
+document.addEventListener('click',function(e){const p=document.getElementById('auth-mobile-panel'),b=document.getElementById('auth-hamburger');if(p&&!p.contains(e.target)&&b&&!b.contains(e.target))closeMobileNav();});
 </script>
 
 <!-- ═══════════════ MAIN ═══════════════ -->
@@ -234,7 +268,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('a
 
     <!-- LOGO -->
     <div style="text-align:center;margin-bottom:28px;">
-      <div style="width:52px;height:52px;border-radius:14px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
         <img src="/static/vrouter-logo.svg" alt="VRouter" style="height:28px;width:auto;" />
       </div>
       <h1 style="font-size:20px;font-weight:700;color:#F5F7FA;margin:0 0 4px;letter-spacing:-0.02em;">Welcome to VRouter LLM API</h1>
@@ -300,10 +334,10 @@ document.addEventListener('click',function(e){const p=document.getElementById('a
     <!-- ═══ STEP 2: VERIFICATION CODE ═══ -->
     <div id="step-code" class="hidden">
       <div style="margin-bottom:4px;">
-        <span style="font-size:11px;font-weight:600;color:#8B5CF6;letter-spacing:0.08em;text-transform:uppercase;">Verification</span>
+        <span style="font-size:11px;font-weight:600;color:#10B981;letter-spacing:0.08em;text-transform:uppercase;">Verification</span>
       </div>
       <h3 style="font-size:18px;font-weight:700;color:#F5F7FA;margin:6px 0 4px;">Enter your code</h3>
-      <p style="font-size:13px;color:#8B93A7;margin-bottom:24px;">We sent a 6-digit code to <span id="code-email-display" style="color:#A78BFA;font-weight:500;"></span></p>
+      <p style="font-size:13px;color:#8B93A7;margin-bottom:24px;">We sent a 6-digit code to <span id="code-email-display" style="color:#34D399;font-weight:500;"></span></p>
 
       <div style="margin-bottom:20px;">
         <label class="input-label">Verification code</label>
@@ -315,7 +349,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('a
 
       <div class="flex items-center justify-between" style="margin-top:16px;">
         <button onclick="backToEmail()" style="font-size:12px;color:#8B93A7;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;transition:color 0.15s;" onmouseover="this.style.color='#F5F7FA'" onmouseout="this.style.color='#8B93A7'">← different email</button>
-        <button onclick="resendOtp()" id="resend-btn" style="font-size:12px;color:#8B5CF6;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:500;transition:color 0.15s;" disabled>Resend code</button>
+        <button onclick="resendOtp()" id="resend-btn" style="font-size:12px;color:#10B981;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;font-weight:500;transition:color 0.15s;" disabled>Resend code</button>
       </div>
     </div>
 

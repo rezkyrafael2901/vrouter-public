@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Comparison v2 — Distinct Styles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Zilla+Slab:wght@400;500;600;700&family=Lexend:wght@300;400;500;600;700&family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#0e0e0e;color:#e4e4e7;min-height:100vh;padding:24px 16px}
+html:not(.dark) body{background:#faf9f7;color:#1a1715}
+html:not(.dark) .card{background:#fff;border-color:#e8e4de}
+html:not(.dark) .heading-sample{color:#1a1715}
+html:not(.dark) .body-sample{color:#3a3530}
+html:not(.dark) .code-sample{background:#f5f3f0;color:#1a1715;border-color:#e8e4de}
+html:not(.dark) .meta{color:#4a4540}
+html:not(.dark) .tag{background:#f5f3f0;color:#3a3530;border-color:#e8e4de}
+html:not(.dark) .pick-btn{background:#a08060;color:#fff}
+html:not(.dark) .pick-btn:hover{background:#806040}
+html:not(.dark) .used-by{color:#4a4540}
+html:not(.dark) .used-by span{color:#a08060}
+html:not(.dark) .theme-toggle{background:#fff;border-color:#e8e4de;color:#1a1715}
+
+.theme-toggle{position:fixed;top:12px;right:12px;z-index:100;background:#1e1e1e;border:1px solid #333;border-radius:10px;padding:8px 14px;color:#e4e4e7;cursor:pointer;font-size:13px;font-family:'JetBrains Mono',monospace}
+.theme-toggle:hover{background:#2a2a2a;border-color:#4F8CFF}
+
+.header{text-align:center;margin:16px 0 36px}
+.header h1{font-size:28px;font-weight:700;margin-bottom:6px}
+.header p{color:#a0a0a0;font-size:13px}
+html:not(.dark) .header p{color:#3a3530}
+
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  color:#4F8CFF;margin-bottom:16px;padding-left:4px;
+  font-family:'JetBrains Mono',monospace;
+}
+html:not(.dark) .section-label{color:#a08060}
+
+.grid{display:grid;gap:20px;max-width:720px;margin:0 auto 40px}
+
+.card{
+  background:#0F172A;border:1px solid #2a2a2a;border-radius:14px;padding:24px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.card:hover{border-color:#4F8CFF;box-shadow:0 0 24px rgba(79,140,255,.06)}
+
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:8px;flex-wrap:wrap}
+.card-name{font-size:18px;font-weight:700;color:#4F8CFF}
+html:not(.dark) .card-name{color:#a08060}
+.subtitle{color:#6b6b6b;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;font-family:'JetBrains Mono',monospace}
+html:not(.dark) .subtitle{color:#4a4540}
+.tag{font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace;background:#1a1a1a;padding:3px 8px;border-radius:5px;border:1px solid #2a2a2a;white-space:nowrap}
+
+.heading-sample{font-size:26px;font-weight:700;line-height:1.2;margin-bottom:8px;color:#ededed}
+.body-sample{font-size:15px;line-height:1.7;color:#a0a0a0;margin-bottom:12px}
+.code-sample{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#4F8CFF;margin-bottom:10px;overflow-x:auto}
+html:not(.dark) .code-sample{color:#2d8a4e}
+
+.weights{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tag-sm{font-size:10px;padding:2px 7px;border-radius:4px;background:#1a1a1a;border:1px solid #2a2a2a;color:#a0a0a0;font-family:'JetBrains Mono',monospace}
+
+.used-by{font-size:12px;color:#6b6b6b}
+.used-by span{color:#4F8CFF;font-weight:600}
+html:not(.dark) .used-by{color:#4a4540}
+html:not(.dark) .used-by span{color:#a08060}
+
+.style-desc{
+  font-size:12px;color:#6b6b6b;margin-top:8px;padding:8px 10px;
+  background:#1a1a1a;border-radius:6px;border-left:3px solid #4F8CFF;
+  font-family:'JetBrains Mono',monospace;line-height:1.5;
+}
+html:not(.dark) .style-desc{background:#f5f3f0;color:#4a4540;border-left-color:#a08060}
+
+.footer{text-align:center;margin:32px 0;color:#6b6b6b;font-size:12px;font-family:'JetBrains Mono',monospace}
+html:not(.dark) .footer{color:#4a4540}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
+
+<div class="header">
+  <h1>Font Comparison v2</h1>
+  <p>Font dengan karakter unik — bukan geometric sans biasa</p>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<div class="section-label">🔥 Bold & Experimental</div>
+<div class="grid">
+
+  <!-- Syne -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option A — Experimental Tech</div>
+        <div class="card-name" style="font-family:'Syne',sans-serif">Syne</div>
+      </div>
+      <div class="tag">Syne · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Syne',sans-serif;font-weight:800">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Syne',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Syne',sans-serif;font-weight:400">400</span>
+      <span class="tag-sm" style="font-family:'Syne',sans-serif;font-weight:600">600</span>
+      <span class="tag-sm" style="font-family:'Syne',sans-serif;font-weight:800">800</span>
+    </div>
+    <div class="used-by">Dipake: <span>Milanote, digital art platforms</span></div>
+    <div class="style-desc">→ Geometric tp edgy, huruf 'R' & 'a' punya character kuat. Cocok buat product yang mau beda dari crowd. Headings only recommended, body pake font lain.</div>
+  </div>
+
+  <!-- Bricolage Grotesque -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option B — Quirky Grotesk</div>
+        <div class="card-name" style="font-family:'Bricolage Grotesque',sans-serif">Bricolage Grotesque</div>
+      </div>
+      <div class="tag">Bricolage · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Bricolage Grotesque',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:400">400</span>
+      <span class="tag-sm" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600">600</span>
+      <span class="tag-sm" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800">800</span>
+    </div>
+    <div class="used-by">Dipake: <span>Vercel, modern startups</span></div>
+    <div class="style-desc">→ Variable font, optical size. Di size besar keliatan bold & quirky, di size kecil jadi clean & readable. Versatile banget — bisa headings + body sekaligus.</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<div class="section-label">📰 Serif & Elegant</div>
+<div class="grid">
+
+  <!-- Newsreader -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option C — Editorial Serif</div>
+        <div class="card-name" style="font-family:'Newsreader',serif">Newsreader</div>
+      </div>
+      <div class="tag">Newsreader · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Newsreader',serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Newsreader',serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Newsreader',serif;font-weight:400">400</span>
+      <span class="tag-sm" style="font-family:'Newsreader',serif;font-weight:600">600</span>
+      <span class="tag-sm" style="font-family:'Newsreader',serif;font-weight:700">700</span>
+    </div>
+    <div class="used-by">Dipake: <span>The Verge, editorial sites</span></div>
+    <div class="style-desc">→ Serif modern, editorial feel. Kontras kuat dengan code blocks monospace. Bikin tech product keliatan "established" & premium. Rare di API docs — very distinctive.</div>
+  </div>
+
+  <!-- Fraunces (serif display) -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option D — Display Serif</div>
+        <div class="card-name" style="font-family:'Newsreader',serif;font-style:italic">Newsreader Italic (display)</div>
+      </div>
+      <div class="tag">Newsreader Italic · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Newsreader',serif;font-style:italic;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Newsreader',serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Newsreader',serif;font-style:italic;font-weight:400">Italic 400</span>
+      <span class="tag-sm" style="font-family:'Newsreader',serif;font-style:italic;font-weight:600">Italic 600</span>
+    </div>
+    <div class="used-by">Dipake: <span>Harper's Bazaar, premium editorial</span></div>
+    <div class="style-desc">→ Heading pakai italic untuk kesan "elegant tech". Body tetap regular serif. Kontras tinggi, memorable. Think: Stripe docs meets fashion house.</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<div class="section-label">🔧 Slab & Technical</div>
+<div class="grid">
+
+  <!-- Zilla Slab -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option E — Slab Serif</div>
+        <div class="card-name" style="font-family:'Zilla Slab',serif">Zilla Slab</div>
+      </div>
+      <div class="tag">Zilla Slab · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Zilla Slab',serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Zilla Slab',serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Zilla Slab',serif;font-weight:400">400</span>
+      <span class="tag-sm" style="font-family:'Zilla Slab',serif;font-weight:600">600</span>
+      <span class="tag-sm" style="font-family:'Zilla Slab',serif;font-weight:700">700</span>
+    </div>
+    <div class="used-by">Dipake: <span>Mozilla, Linux distros</span></div>
+    <div class="style-desc">→ Slab serif = tekanan kuat di horizontal strokes. Technical & authoritative. Mozilla pake ini — langsung keliatan "open source infrastructure" vibes.</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<div class="section-label">✨ Modern Variable</div>
+<div class="grid">
+
+  <!-- Instrument Sans -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option F — Refined Sans</div>
+        <div class="card-name" style="font-family:'Instrument Sans',sans-serif">Instrument Sans</div>
+      </div>
+      <div class="tag">Instrument Sans · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Instrument Sans',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Instrument Sans',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Instrument Sans',sans-serif;font-weight:400">400</span>
+      <span class="tag-sm" style="font-family:'Instrument Sans',sans-serif;font-weight:600">600</span>
+      <span class="tag-sm" style="font-family:'Instrument Sans',sans-serif;font-weight:700">700</span>
+    </div>
+    <div class="used-by">Dipake: <span>Vercel, Linear, modern tools</span></div>
+    <div class="style-desc">→ Bukan generic geometric. Ada warmth & refine yang beda dari Inter/Space Grotesk. Modern tanpa trendy. Paling versatile dari semua opsi.</div>
+  </div>
+
+  <!-- Lexend -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option G — Optimized Readability</div>
+        <div class="card-name" style="font-family:'Lexend',sans-serif">Lexend</div>
+      </div>
+      <div class="tag">Lexend · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Lexend',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Lexend',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Lexend',sans-serif;font-weight:300">300</span>
+      <span class="tag-sm" style="font-family:'Lexend',sans-serif;font-weight:500">500</span>
+      <span class="tag-sm" style="font-family:'Lexend',sans-serif;font-weight:700">700</span>
+    </div>
+    <div class="used-by">Dipake: <span>Google, accessibility-first products</span></div>
+    <div class="style-desc">→ Dirancang khusus buat readability — spacing & proportions optimized. Clean, modern, tapi bukan generic. Cocok buat docs-heavy site kayak VRouter.</div>
+  </div>
+
+  <!-- Onest -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="subtitle">Option H — Fresh & Friendly</div>
+        <div class="card-name" style="font-family:'Onest',sans-serif">Onest</div>
+      </div>
+      <div class="tag">Onest · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Onest',sans-serif;font-weight:800">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Onest',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="weights">
+      <span class="tag-sm" style="font-family:'Onest',sans-serif;font-weight:400">400</span>
+      <span class="tag-sm" style="font-family:'Onest',sans-serif;font-weight:600">600</span>
+      <span class="tag-sm" style="font-family:'Onest',sans-serif;font-weight:800">800</span>
+    </div>
+    <div class="used-by">Dipake: <span>Emerging SaaS, Notion-style tools</span></div>
+    <div class="style-desc">→ Geometric tp punya warmth. Letters punya personality — huruf 'a' & 'e' punya detail yang bikin beda dari generic sans. Fresh & approachable.</div>
+  </div>
+
+</div>
+
+<!-- Current -->
+<div class="section-label">📌 Current</div>
+<div class="grid">
+  <div class="card" style="border-color:#4F8CFF;box-shadow:0 0 20px rgba(79,140,255,.12)">
+    <div class="card-head">
+      <div>
+        <div class="subtitle" style="color:#4F8CFF">Current — Space Grotesk</div>
+        <div class="card-name" style="font-family:'Space Grotesk',sans-serif">Space Grotesk</div>
+      </div>
+      <div class="tag">Space Grotesk · JetBrains Mono</div>
+    </div>
+    <div class="heading-sample" style="font-family:'Space Grotesk',sans-serif;font-weight:700">Smart API routing for every model</div>
+    <div class="body-sample" style="font-family:'Space Grotesk',sans-serif">One endpoint, every provider. VRouter intelligently routes your requests across multiple LLM providers for the best latency, uptime, and cost — so you can focus on building.</div>
+    <div class="code-sample">POST /v1/chat/completions</div>
+    <div class="style-desc">→ Monospace-inspired sans-serif. Character '1', 'l', 'I' gampang bedain. Developer-oriented tapi tetap readable buat body text.</div>
+  </div>
+</div>
+
+<div class="footer">All options use JetBrains Mono for code blocks · Toggle theme ☀️/🌙</div>
+
+<script>
+function toggleTheme(){document.documentElement.classList.toggle('dark');localStorage.setItem('vrouter-theme',document.documentElement.classList.contains('dark')?'dark':'light')}
+(function(){if(localStorage.getItem('vrouter-theme')==='light')document.documentElement.classList.remove('dark')})();
+</script>
+</body>
+</html>
