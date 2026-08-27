@@ -116,7 +116,95 @@ tailwind.config = {
     background-size: 64px 64px;
   }
 
-  /* Hero glow */
+  /* ─── Dark mode animated background ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background: #08090D;
+  }
+  .dark body::before {
+    background:
+      radial-gradient(ellipse 60% 40% at 15% 0%, rgba(139,92,246,0.14), transparent 70%),
+      radial-gradient(ellipse 50% 35% at 85% 20%, rgba(16,185,129,0.10), transparent 70%),
+      radial-gradient(ellipse 45% 30% at 50% 100%, rgba(99,102,241,0.08), transparent 70%),
+      #08090D;
+  }
+
+  /* Animated aurora orbs */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .6s ease;
+  }
+  .dark .aurora { opacity: 1; }
+  .aurora .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .aurora .orb-1 {
+    width: 520px; height: 520px;
+    top: -140px; left: -80px;
+    background: radial-gradient(circle, rgba(139,92,246,0.35), transparent 65%);
+    animation: aurora-drift-1 26s ease-in-out infinite alternate;
+  }
+  .aurora .orb-2 {
+    width: 460px; height: 460px;
+    top: 8%; right: -120px;
+    background: radial-gradient(circle, rgba(16,185,129,0.28), transparent 65%);
+    animation: aurora-drift-2 32s ease-in-out infinite alternate;
+  }
+  .aurora .orb-3 {
+    width: 560px; height: 560px;
+    bottom: -160px; left: 30%;
+    background: radial-gradient(circle, rgba(99,102,241,0.22), transparent 65%);
+    animation: aurora-drift-3 38s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-drift-1 {
+    0%   { transform: translate(0,0) scale(1); }
+    50%  { transform: translate(120px, 60px) scale(1.15); }
+    100% { transform: translate(-60px, 140px) scale(0.95); }
+  }
+  @keyframes aurora-drift-2 {
+    0%   { transform: translate(0,0) scale(1); }
+    50%  { transform: translate(-140px, -70px) scale(1.1); }
+    100% { transform: translate(80px, -120px) scale(0.9); }
+  }
+  @keyframes aurora-drift-3 {
+    0%   { transform: translate(0,0) scale(1); }
+    50%  { transform: translate(-100px, 80px) scale(1.2); }
+    100% { transform: translate(140px, -60px) scale(0.95); }
+  }
+
+  /* Light mode hides aurora entirely */
+  html:not(.dark) .aurora { display: none; }
+
+  /* Grid glow dots at intersections */
+  .grid-pattern {
+    position: relative;
+  }
+  .grid-pattern::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(139,92,246,0.35) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: 32px 32px;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .dark .grid-pattern::after { opacity: .5; }
+
+  /* Hero glow (upgraded, dark only) */
   .hero-glow {
     position: absolute;
     top: -200px;
@@ -127,6 +215,29 @@ tailwind.config = {
     background: radial-gradient(ellipse, rgba(16,185,129,0.08) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
+  }
+  .dark .hero-glow {
+    background: radial-gradient(ellipse, rgba(139,92,246,0.16) 0%, rgba(16,185,129,0.06) 45%, transparent 70%);
+  }
+
+  /* Gradient text for hero heading (dark mode only) */
+  .dark .text-gradient-hero {
+    background: linear-gradient(100deg, #A78BFA 0%, #34D399 55%, #818CF8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Card hover glow (dark mode) */
+  .dark .card-hover:hover {
+    border-color: rgba(139,92,246,0.4);
+    box-shadow: 0 0 0 1px rgba(139,92,246,0.12), 0 12px 40px -8px rgba(139,92,246,0.18);
+  }
+
+  /* Reduced motion: disable aurora */
+  @media (prefers-reduced-motion: reduce) {
+    .aurora .orb { animation: none !important; }
   }
 
   /* Code tab active */
@@ -360,6 +471,12 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endif %}
 </head>
 <body class="overflow-x-hidden">
+<!-- Dark mode animated aurora background -->
+<div class="aurora" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
 
 <!-- ═══════════════ NAVBAR ═══════════════ -->
 {% include 'partials/header.html' %}
@@ -371,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <!-- Left: Copy -->
     <div>
       <h1 class="hero-anim text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] tracking-tight text-primary mb-5">
-        One API.<br>Every model.
+        One API.<br><span class="text-gradient-hero">Every model.</span>
       </h1>
       <p class="hero-anim hero-anim-delay-1 text-secondaryText text-base md:text-lg leading-relaxed max-w-md mb-8">
         Access leading AI models through a single, fast and reliable API. One endpoint, zero configuration.
@@ -1062,6 +1179,98 @@ function toast(msg, type) {
   container.appendChild(item);
   setTimeout(function() { item.style.opacity = '0'; item.style.transition = 'opacity .3s'; setTimeout(function() { item.remove(); }, 300); }, 3500);
 }
+
+// ─── Particle Network Background ───
+(function() {
+  const isDark = document.documentElement.classList.contains('dark');
+  if (!isDark) return;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'particle-network';
+  canvas.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35;';
+  document.body.prepend(canvas);
+
+  let ctx = canvas.getContext('2d');
+  let particles = [];
+  let mouse = { x: 0, y: 0 };
+  let animId;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const count = Math.min(70, Math.floor(canvas.width * canvas.height / 16000));
+  const colors = ['rgba(139,92,246,', 'rgba(16,185,129,', 'rgba(99,102,241,'];
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 2 + 1.5,
+      color: colors[i % 3],
+    });
+  }
+
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + '0.5)';
+      ctx.fill();
+
+      // connections
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x;
+        const dy = p.y - q.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 140) {
+          const alpha = (1 - dist / 140) * 0.25;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = p.color + alpha + ')';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+
+      // mouse interaction
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 180) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.strokeStyle = 'rgba(139,92,246,' + (1 - dist / 180) * 0.15 + ')';
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
 </script>
 
