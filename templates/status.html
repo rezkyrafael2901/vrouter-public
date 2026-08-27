@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Status — {{ site_name }}</title>
+<link rel="stylesheet" href="/static/dark-ambient.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 (function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
@@ -134,6 +135,12 @@ html:not(.dark) .text-emerald-300 { color: #2d8a4e; }
 </style>
 </head>
 <body style="overflow-x:hidden">
+<div class="aurora" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
 
 <!-- NAVBAR -->
 {% include 'partials/header.html' %}
@@ -419,5 +426,6 @@ loadStatus();
 // Auto-refresh every 60s
 setInterval(loadStatus, 60000);
 </script>
+<script src="/static/particles.js" defer></script>
 </body>
 </html>

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fair Use Policy — {{ site_name }}</title>
+<link rel="stylesheet" href="/static/dark-ambient.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -129,6 +130,12 @@ a:hover { opacity: 0.85; text-decoration: underline; }
 </style>
 </head>
 <body>
+<div class="aurora" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
 
 <!-- NAVBAR -->
 {% include 'partials/header.html' %}
@@ -202,5 +209,6 @@ a:hover { opacity: 0.85; text-decoration: underline; }
 <script>
 document.addEventListener("click",function(e){if(!e.target.closest(".nav-inner")){document.querySelector(".nav-links").classList.remove("open");}});
 </script>
+<script src="/static/particles.js" defer></script>
 </body>
 </html>

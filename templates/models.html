@@ -57,7 +57,11 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
   html:not(.dark) td, html:not(.dark) th { border-color: #e8e4de; color: #1a1715; }
   html:not(.dark) tr:hover { background: #f5f3f0; }
 </style>
+<link rel="stylesheet" href="/static/dark-ambient.css">
+</head><body>
+<div class="aurora" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
 <title>Models — {{ site_name }}</title>
+</html>
 
 {% include 'partials/header.html' %}
 
@@ -187,4 +191,6 @@ function escHtml(s) {
 // Initial render
 filterModels();
 </script>
-</title>
+<script src="/static/particles.js" defer></script>
+</body>
+</html>

@@ -13,6 +13,7 @@
 function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 </script>
 <title>Admin — {{ site_name }}</title>
+<link rel="stylesheet" href="/static/dark-ambient.css">
 <style>
     h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
     code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
@@ -213,6 +214,12 @@ kbd{background:var(--elevated);border:1px solid var(--border);border-radius:4px;
 </style>
 </head>
 <body>
+<div class="aurora" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
 
 <!-- HEADER -->
 <div class="header">
@@ -711,5 +718,6 @@ function showToast(msg, type) {
 // Init
 loadModels();
 </script>
+<script src="/static/particles.js" defer></script>
 </body>
 </html>

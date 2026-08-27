@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#08090D">
 <title>Sign in — VRouter</title>
+<link rel="stylesheet" href="/static/dark-ambient.css">
 <meta name="description" content="Sign in to VRouter to manage your API keys, models, and usage.">
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
 <link rel="stylesheet" href="/static/tailwind.css">
@@ -253,6 +254,12 @@ body { background: #08090D; color: #F5F7FA; font-family: 'Inter', sans-serif; ma
 </style>
 </head>
 <body style="overflow-x:hidden">
+<div class="aurora" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
 
 <!-- ═══════════════ NAV ═══════════════ -->
 {% include 'partials/header.html' %}
@@ -667,5 +674,6 @@ function toast(msg) {
   setTimeout(() => t.style.display = 'none', 2500);
 }
 </script>
-<script>if(location.search.includes('next=')){localStorage.setItem('vrouter_next',new URLSearchParams(location.search).get('next'))}</script></body>
+<script>if(location.search.includes('next=')){localStorage.setItem('vrouter_next',new URLSearchParams(location.search).get('next'))}</script><script src="/static/particles.js" defer></script>
+</body>
 </html>

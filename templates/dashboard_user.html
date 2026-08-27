@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#08090D" id="theme-color-meta">
     <title>Dashboard — {{ site_name }}</title>
+<link rel="stylesheet" href="/static/dark-ambient.css">
     <script src="https://cdn.tailwindcss.com"></script>
 <script>
 (function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);var m=document.getElementById('theme-color-meta');if(m)m.setAttribute('content',d?'#08090D':'#faf9f7');}catch(e){}}());
@@ -195,6 +196,12 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
+<div class="aurora" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
 
     <!-- Mobile Overlay -->
     <div class="sidebar-overlay fixed inset-0 bg-black/60 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
@@ -1632,5 +1639,6 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
     });
     </script>
 
+<script src="/static/particles.js" defer></script>
 </body>
 </html>
