@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ site_name }} — OpenAI-Compatible API</title>
+<link rel="stylesheet" href="/static/tailwind.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
 (function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
 function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 </script>
-<link rel="stylesheet" href="/static/tailwind.css">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
+    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: #0a0f1a; color: #e2e8f0; font-family: 'JetBrains Mono', monospace; margin: 0; }
+body { background: #0a0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; }
 ::selection { background: rgba(14,165,233,0.3); }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -123,7 +125,7 @@ html:not(.dark) .hero-badge { border-color: rgba(160,128,96,0.2); background: rg
         <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
         Free &middot; Unlimited core models
       </div>
-      <h1 class="text-4xl md:text-[52px] font-bold text-white leading-[1.1] tracking-tight mb-5">
+      <h1 class="text-4xl md:text-[52px] font-bold text-white leading-[1.1] tracking-tight mb-5 font-mono">
         Unlimited tokens.<br>
         <span class="text-accent">Every model.</span>
       </h1>

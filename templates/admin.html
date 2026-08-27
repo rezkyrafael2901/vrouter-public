@@ -7,18 +7,20 @@
   <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
 (function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}})();
 function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 </script>
 <title>Admin — {{ site_name }}</title>
 <style>
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
+    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#08090D;--surface:#11131A;--elevated:#151821;--border:#222632;--text:#F5F7FA;--text2:#8B93A7;--muted:#5F6678;--accent:#10B981;--accent-b:#34D399;--accent-d:#059669;--green:#10B981;--red:#EF4444;--amber:#F59E0B;--radius:12px}
 html:not(.dark) :root{--bg:#faf9f7;--surface:#ffffff;--elevated:#f5f3f0;--border:#e8e4de;--text:#1a1715;--text2:#3a3530;--muted:#4a4540;--accent:#a08060;--accent-b:#806040;--accent-d:#806040;--green:#2d8a4e}
-body{font-family:'JetBrains Mono',monospace;line-height:1.5;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text);min-height:100vh}
-code,pre,kbd,.mono{font-family:'JetBrains Mono',monospace}
+body{font-family: 'Inter', sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text);min-height:100vh}
+code,pre,kbd,.mono{font-family: 'Inter', sans-serif}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#222632;border-radius:3px}

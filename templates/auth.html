@@ -12,12 +12,14 @@
 (function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
 function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
+    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; margin: 0; min-height: 100vh; }
+body { background: #08090D; color: #F5F7FA; font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; }
 ::selection { background: rgba(16,185,129,0.3); }
 
 /* ═══════════════════════════════════════════
@@ -341,7 +343,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('a
 
       <div style="margin-bottom:20px;">
         <label class="input-label">Verification code</label>
-        <input type="text" id="otp-code" class="input-field" placeholder="000000" maxlength="6" style="text-align:center;font-size:24px;letter-spacing:0.3em;font-family:'JetBrains Mono',monospace;padding:14px;" onkeydown="if(event.key==='Enter')verifyOtp()">
+        <input type="text" id="otp-code" class="input-field" placeholder="000000" maxlength="6" style="text-align:center;font-size:24px;letter-spacing:0.3em;font-family: 'Inter', sans-serif;padding:14px;" onkeydown="if(event.key==='Enter')verifyOtp()">
       </div>
 
       <button onclick="verifyOtp()" id="verify-btn" class="btn-primary w-full py-3 rounded-xl text-sm" style="height:44px;">Verify &amp; get API key</button>

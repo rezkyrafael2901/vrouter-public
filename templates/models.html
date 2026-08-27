@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#08090D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 (function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
@@ -17,8 +17,10 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
 </script>
 
 <style>
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
+    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
   html { scroll-behavior: smooth; }
-  body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; -webkit-font-smoothing: antialiased; }
+  body { background: #08090D; color: #F5F7FA; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #08090D; }
   ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
