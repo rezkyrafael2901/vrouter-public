@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
       {% if is_logged_in %}
       <a href="/auth/logout" class="text-xs text-muted hover:text-primary transition-colors hidden sm:inline">Logout</a>
       {% else %}
-      <a href="/auth?signup=true" class="text-xs font-semibold text-white bg-accent hover:bg-accent-dark px-3.5 py-2 rounded-md transition-colors inline-flex items-center min-h-[44px]">Get Started</a>
+      <a href="/auth?signup=true" class="hidden md:inline-flex text-xs font-semibold text-white bg-accent hover:bg-accent-dark px-3.5 py-2 rounded-md transition-colors items-center min-h-[44px]">Get Started</a>
       {% endif %}
       <button onclick="toggleMobileNav()" class="md:hidden p-2.5 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Menu" id="hamburger-btn">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a href="/dashboard" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">Dashboard</a>
       {% endif %}
       {% if not is_logged_in %}
-      <a href="/auth" onclick="closeMobileNav()" class="text-muted text-sm font-medium py-3 px-3 rounded-lg hover:text-primary hover:bg-surface transition-colors">Sign In</a>
+      <a href="/auth?signup=true" onclick="closeMobileNav()" class="text-sm font-semibold text-white bg-accent hover:bg-accent-dark py-3 px-4 rounded-lg text-center transition-colors mt-2">Get Started</a>
       {% endif %}
     </div>
   </div>
