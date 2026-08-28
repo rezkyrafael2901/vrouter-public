@@ -4,21 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Integrations & Tools — {{ site_name }}</title>
-<link rel="stylesheet" href="/static/dark-ambient.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
-function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
-</script>
-<script>
-tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondary:'#0C0E13',surface:'#11131A',elevated:'#151821',border:'#222632',primary:'#F5F7FA',secondaryText:'#8B93A7',muted:'#5F6678',accent:'#10B981','accent-bright':'#34D399','accent-dark':'#059669'}}}}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
-    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
 :root {
   --bg: #08090D;
   --surface: #11131A;
@@ -26,41 +15,26 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
   --text: #F5F7FA;
   --text2: #8B93A7;
   --text3: #525868;
-  --accent: #10B981;
-  --accent-hover: #34D399;
+  --accent: #8B5CF6;
+  --accent-hover: #A78BFA;
   --accent-dim: rgba(139, 92, 246, 0.12);
   --accent-border: rgba(139, 92, 246, 0.25);
   --green: #34D399;
   --teal: #2DD4BF;
   --amber: #FBBF24;
 }
-html:not(.dark) {
-  --bg: #faf9f7;
-  --surface: #ffffff;
-  --border: #e8e4de;
-  --text: #1a1715;
-  --text2: #4a4540;
-  --text3: #6b6560;
-  --accent: #a08060;
-  --accent-hover: #8c6e52;
-  --accent-dim: rgba(160, 128, 96, 0.12);
-  --accent-border: rgba(160, 128, 96, 0.25);
-  --green: #2d8a4e;
-  --teal: #2d8a4e;
-  --amber: #b8860b;
-}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 15px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-code, .mono { font-family: 'Inter', sans-serif; }
+code, .mono { font-family: 'JetBrains Mono', monospace; }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
 a:hover { opacity: 0.85; text-decoration: underline; }
@@ -114,7 +88,7 @@ a:hover { opacity: 0.85; text-decoration: underline; }
 }
 .user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg, #10B981, #059669);
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 700; color: #fff;
 }
@@ -186,7 +160,7 @@ a:hover { opacity: 0.85; text-decoration: underline; }
   padding: 16px 18px;
   font-size: 12px; line-height: 1.75;
   overflow-x: auto;
-  font-family: 'Inter', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   color: var(--text2); white-space: pre;
 }
 .int-code .key { color: var(--accent-hover); }
@@ -244,15 +218,32 @@ a:hover { opacity: 0.85; text-decoration: underline; }
 </style>
 </head>
 <body>
-<div class="aurora" aria-hidden="true">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-
 
 <!-- NAVBAR -->
-{% include 'partials/header.html' %}
+<div class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <img src="/static/vrouter-logo.svg" alt="VRouter" />
+    </a>
+    <div class="nav-center">
+      <div class="nav-links">
+        <a href="/features">Features</a>
+        <a href="/docs">Docs</a>
+        <a href="/status">Status</a>
+        <a href="/faq">FAQ</a>
+        <a href="/integrations" class="active">Integrations</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      {% if is_logged_in %}
+        <a href="/dashboard" class="btn btn-ghost">Dashboard</a>
+        <span class="user-avatar">{{ user_initial }}</span>
+      {% else %}
+        <a href="/auth" class="btn btn-accent">Sign In</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
 
 <!-- PAGE HEADER -->
 <div class="container" style="display:block;">
@@ -399,6 +390,5 @@ a:hover { opacity: 0.85; text-decoration: underline; }
   </div>
 </footer>
 
-<script src="/static/particles.js" defer></script>
 </body>
 </html>

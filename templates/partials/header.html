@@ -1,4 +1,4 @@
-<header class="vrouter-header sticky top-0 z-50 border-b border-border bg-[#08090D]/80 backdrop-blur-xl">
+<header class="sticky top-0 z-50 border-b border-border bg-[#08090D]/80 backdrop-blur-xl">
   <nav class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
     <!-- LEFT: logo -->
     <a href="/" class="flex items-center gap-2 min-h-[44px] shrink-0">
@@ -8,61 +8,53 @@
 
     <!-- CENTER: nav links (desktop) -->
     <div class="hidden md:flex items-center gap-1">
-      <a href="/#features" class="px-3 py-2.5 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors min-h-[44px] flex items-center">Features</a>
-      <a href="/docs" class="px-3 py-2.5 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors min-h-[44px] flex items-center">Docs</a>
-      <a href="/status" class="px-3 py-2.5 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors min-h-[44px] flex items-center">Status</a>
-      <a href="/#faq" class="px-3 py-2.5 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors min-h-[44px] flex items-center">FAQ</a>
+      <a href="/#features" class="px-3 py-2 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors">Features</a>
+      <a href="/docs" class="px-3 py-2 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors">Docs</a>
+      <a href="/status" class="px-3 py-2 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors">Status</a>
+      <a href="/#faq" class="px-3 py-2 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors">FAQ</a>
+      {% if is_logged_in %}
+      <a href="/dashboard" class="px-3 py-2 text-xs font-medium text-muted hover:text-primary rounded-lg transition-colors">Dashboard</a>
+      {% endif %}
     </div>
 
     <!-- RIGHT: actions -->
-    <div class="flex items-center gap-1.5">
-      <!-- theme toggle (icon only, all sizes — sits next to hamburger on mobile) -->
+    <div class="flex items-center gap-2">
+      <!-- theme toggle -->
       <button onclick="toggleTheme()" class="p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Toggle theme">
         <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
       </button>
 
-      <!-- desktop actions -->
-      <div class="hidden md:flex items-center gap-2">
-        {% if is_logged_in %}
-        <a href="/dashboard" class="text-xs font-medium px-4 py-2 rounded-md bg-accent/10 text-accent-bright border border-accent/30 hover:bg-accent/20 transition-colors">Dashboard</a>
-        <a href="/auth/logout" class="text-xs text-muted hover:text-red-400 transition-colors px-2 py-2">Logout</a>
-        {% else %}
-        <a href="/auth" class="text-xs font-medium px-3 py-2 text-muted hover:text-primary transition-colors">Sign In</a>
-        <a href="/auth?signup=true" class="text-xs font-medium px-4 py-2 rounded-md bg-accent text-white hover:opacity-90 transition-opacity">Get Started</a>
-        {% endif %}
-      </div>
-
-      <!-- MOBILE hamburger -->
-      <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Menu" id="hamburger-btn">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
+      {% if is_logged_in %}
+      <a href="/auth/logout" class="text-xs text-muted hover:text-red-400 transition-colors px-2 py-2">Logout</a>
+      {% else %}
+      <a href="/auth" class="text-xs font-medium px-3 py-2 text-muted hover:text-primary transition-colors">Sign In</a>
+      <a href="/auth?signup=true" class="text-xs font-medium px-4 py-2 rounded-md bg-accent text-white hover:opacity-90 transition-opacity">Get Started</a>
+      {% endif %}
     </div>
+
+    <!-- MOBILE hamburger -->
+    <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Menu" id="hamburger-btn">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
   </nav>
 
-  <!-- MOBILE MENU (all navigation + actions live here on mobile) -->
-  <div id="mobile-nav-panel" class="vrouter-mobile-menu hidden md:hidden border-t border-border bg-[#08090D] px-4 py-3">
+  <!-- MOBILE MENU -->
+  <div id="mobile-nav-panel" class="hidden md:hidden border-t border-border bg-[#08090D] px-4 py-3">
     <a href="/#features" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Features</a>
     <a href="/docs" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Docs</a>
     <a href="/status" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Status</a>
     <a href="/#faq" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">FAQ</a>
-
-    <!-- Auth actions -->
-    <div class="mt-2 pt-3 border-t border-border">
-      {% if is_logged_in %}
-      <a href="/dashboard" onclick="closeMobileNav()" class="block py-2.5 text-sm text-accent-bright font-medium">Dashboard</a>
-      <a href="/auth/logout" onclick="closeMobileNav()" class="block py-2.5 text-sm text-red-400">Logout</a>
-      {% else %}
-      <a href="/auth" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Sign In</a>
-      <a href="/auth?signup=true" onclick="closeMobileNav()" class="block py-2.5 text-sm font-medium text-white bg-accent rounded-lg text-center mt-1">Get Started</a>
-      {% endif %}
-    </div>
+    {% if is_logged_in %}
+    <a href="/dashboard" onclick="closeMobileNav()" class="block py-2.5 text-sm text-accent-bright">Dashboard</a>
+    <a href="/auth/logout" onclick="closeMobileNav()" class="block py-2.5 text-sm text-red-400">Logout</a>
+    {% else %}
+    <a href="/auth" onclick="closeMobileNav()" class="block py-2.5 text-sm text-muted hover:text-primary">Sign In</a>
+    {% endif %}
   </div>
 </header>
 
 <script>
-(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
-function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
 function toggleMobileNav() {
   var panel = document.getElementById('mobile-nav-panel');
   if (panel) panel.classList.toggle('hidden');
@@ -74,7 +66,7 @@ function closeMobileNav() {
 </script>
 
 <style>
-/* Light mode header overrides */
+/* Light mode header overrides — Warm Brown UCEL */
 html:not(.dark) .vrouter-header {
   background: rgba(250,249,247,0.92) !important;
   border-color: #e8e4de !important;
@@ -84,16 +76,16 @@ html:not(.dark) .vrouter-mobile-menu {
   border-color: #e8e4de !important;
 }
 html:not(.dark) .vrouter-header .text-primary { color: #1a1715 !important; }
-html:not(.dark) .vrouter-header .text-muted { color: #4a4540 !important; }
+html:not(.dark) .vrouter-header .text-muted { color: #9c9590 !important; }
 html:not(.dark) .vrouter-header .text-muted:hover { color: #1a1715 !important; }
 html:not(.dark) .vrouter-header .hover\:text-primary:hover { color: #1a1715 !important; }
-html:not(.dark) .vrouter-header .hover\:bg-surface:hover { background: rgba(0,0,0,0.04) !important; }
+html:not(.dark) .vrouter-header .hover\:bg-surface:hover { background: rgba(26,23,21,0.04) !important; }
 html:not(.dark) .vrouter-header .bg-accent { background: #a08060 !important; }
 html:not(.dark) .vrouter-header .bg-accent\/10 { background: rgba(160,128,96,0.1) !important; }
 html:not(.dark) .vrouter-header .text-accent-bright { color: #806040 !important; }
 html:not(.dark) .vrouter-header .border-accent\/30 { border-color: rgba(160,128,96,0.3) !important; }
 html:not(.dark) .vrouter-header .hover\:bg-accent\/20:hover { background: rgba(160,128,96,0.2) !important; }
-html:not(.dark) .vrouter-mobile-menu .text-muted { color: #4a4540 !important; }
+html:not(.dark) .vrouter-mobile-menu .text-muted { color: #9c9590 !important; }
 html:not(.dark) .vrouter-mobile-menu .text-muted:hover { color: #1a1715 !important; }
 html:not(.dark) .vrouter-mobile-menu .text-accent-bright { color: #806040 !important; }
 html:not(.dark) .vrouter-mobile-menu .hover\:text-primary:hover { color: #1a1715 !important; }

@@ -3,31 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#08090D" id="theme-color-meta">
     <title>Dashboard — {{ site_name }}</title>
-<link rel="stylesheet" href="/static/dark-ambient.css">
     <script src="https://cdn.tailwindcss.com"></script>
-<script>
-(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);var m=document.getElementById('theme-color-meta');if(m)m.setAttribute('content',d?'#08090D':'#faf9f7');}catch(e){}}());
-function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');var m=document.getElementById('theme-color-meta');if(m)m.setAttribute('content',d?'#08090D':'#faf9f7');}
-</script>
-<script>
-tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondary:'#0C0E13',surface:'#11131A',elevated:'#151821',border:'#222632',primary:'#F5F7FA',secondaryText:'#8B93A7',muted:'#5F6678',accent:'#10B981','accent-bright':'#34D399','accent-dark':'#059669'}}}}
-</script>
-    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#08090D',
+                        surface: '#11131A',
+                        surfaceHover: '#151821',
+                        elevated: '#151821',
+                        border: '#222632',
+                        accent: '#8B5CF6',
+                        accentDim: 'rgba(139,92,246,0.12)',
+                        muted: '#5F6678',
+                        text: '#F5F7FA',
+                        textSec: '#8B93A7',
+                        secBg: '#0C0E13',
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
-    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
-        body { font-family: 'Inter', sans-serif; background: #08090D; color: #F5F7FA; }
+        body { font-family: 'JetBrains Mono', monospace; background: #08090D; color: #F5F7FA; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #3A3F50; }
-        .sidebar-link.active { background: rgba(16,185,129,0.12); color: #10B981; border-right: 2px solid #10B981; }
-        .sidebar-link:hover { background: rgba(16,185,129,0.06); }
-        .tab-btn.active { color: #10B981; border-bottom: 2px solid #10B981; }
+        .sidebar-link.active { background: rgba(139,92,246,0.12); color: #8B5CF6; border-right: 2px solid #8B5CF6; }
+        .sidebar-link:hover { background: rgba(139,92,246,0.06); }
+        .tab-btn.active { color: #8B5CF6; border-bottom: 2px solid #8B5CF6; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
@@ -35,16 +49,12 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
         .toast.success { background: #166534; color: #BBF7D0; border: 1px solid #22C55E; }
         .toast.error { background: #7F1D1D; color: #FCA5A5; border: 1px solid #EF4444; }
         .model-chip { transition: all 0.15s ease; }
-        .model-chip:hover { border-color: #10B981; background: rgba(16,185,129,0.06); }
+        .model-chip:hover { border-color: #8B5CF6; background: rgba(139,92,246,0.06); }
         .stat-card { transition: transform 0.15s ease, border-color 0.15s ease; }
-        .stat-card:hover { transform: translateY(-2px); border-color: rgba(16,185,129,0.3); }
+        .stat-card:hover { transform: translateY(-2px); border-color: rgba(139,92,246,0.3); }
         @media (max-width: 768px) {
             .sidebar-open .sidebar-overlay { display: block; }
             .sidebar-open .sidebar { transform: translateX(0); }
-            /* Mobile: full-bleed layout (Nodea-style) — sidebar is fixed overlay,
-               main takes full viewport width. Prevents the 24px phantom gutter
-               from the fixed sidebar still occupying flex layout space. */
-            .flex.min-h-screen { display: block; }
             /* Mobile stat cards — tighter padding */
             .stat-card { padding: 1rem; }
             .stat-card .text-2xl { font-size: 1.25rem; }
@@ -58,150 +68,10 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
             .create-key-row button { width: 100%; justify-content: center; }
         }
         .code-tab { transition: all 0.15s ease; }
-        .code-tab.active { background: rgba(16,185,129,0.12); color: #10B981; border-color: #10B981; }
-
-        /* De-boxify: flatten stat cards (dead class but clean up) */
-        .stat-card {
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-        }
-        .stat-card:hover {
-            border-color: transparent !important;
-        }
-
-        /* De-boxify: flatten all bg-surface card wrappers in content area */
-        .bg-surface.border.border-border.rounded-xl {
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-        }
-
-        /* Re-allow model-chip grid items to keep their card appearance */
-        .model-chip.bg-surface.border.border-border.rounded-xl {
-            background: #11131A !important;
-            border: 1px solid #222632 !important;
-            border-radius: 0.75rem !important;
-        }
-        html:not(.dark) .model-chip.bg-surface.border.border-border.rounded-xl {
-            background: #ffffff !important;
-            border: 1px solid #e8e4de !important;
-        }
-
-        /* Focus states — accessible ring on interactive elements */
-        *:focus-visible {
-            outline: 2px solid #10B981;
-            outline-offset: 2px;
-        }
-        input:focus-visible, select:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(16,185,129,0.3);
-        }
-
-        /* ===== LIGHT MODE — Warm Brown UCEL Classic (html:not(.dark)) ===== */
-        html:not(.dark) body {
-            background: #faf9f7;
-            color: #1a1715;
-        }
-        html:not(.dark) ::-webkit-scrollbar-track { background: #faf9f7; }
-        html:not(.dark) ::-webkit-scrollbar-thumb { background: #e8e4de; }
-        html:not(.dark) ::-webkit-scrollbar-thumb:hover { background: #d8d0c4; }
-
-        /* Tailwind semantic color swaps */
-        html:not(.dark) .bg-base { background: #faf9f7; }
-                html:not(.dark) .bg-base\/80 { background: rgba(250,249,247,0.8); }
-                html:not(.dark) .bg-base\/50 { background: rgba(250,249,247,0.5); }
-                html:not(.dark) .bg-base\/30 { background: rgba(250,249,247,0.3); }
-                html:not(.dark) .bg-secondary { background: #f3f0ec; }
-                html:not(.dark) .bg-surface { background: #ffffff; }
-                html:not(.dark) .bg-elevated { background: #f5f3f0; }
-                html:not(.dark) .border-border { border-color: #e8e4de; }
-                html:not(.dark) .text-text { color: #1a1715; }
-                html:not(.dark) .text-secondaryText { color: #6b6560; }
-                html:not(.dark) .text-muted { color: #9c9590; }
-
-        /* Accent — warm brown */
-        html:not(.dark) .text-accent { color: #806040; }
-        html:not(.dark) .bg-accent { background: #a08060; }
-        html:not(.dark) .hover\:bg-accent-dark:hover { background: #806040; }
-        html:not(.dark) .bg-accent\/5 { background: rgba(160,128,96,0.05); }
-        html:not(.dark) .bg-accent\/10 { background: rgba(160,128,96,0.10); }
-        html:not(.dark) .bg-accent\/20 { background: rgba(160,128,96,0.20); }
-        html:not(.dark) .border-accent { border-color: #a08060; }
-        html:not(.dark) .border-accent\/20 { border-color: rgba(160,128,96,0.20); }
-        html:not(.dark) .text-accent-bright { color: #806040; }
-
-        /* Status green — warm green */
-        html:not(.dark) .text-emerald-400 { color: #2d8a4e; }
-        html:not(.dark) .bg-emerald-500 { background: #2d8a4e; }
-        html:not(.dark) .bg-emerald-400 { background: #2d8a4e; }
-        html:not(.dark) .border-emerald-500 { border-color: #2d8a4e; }
-        html:not(.dark) .text-emerald-300 { color: #2d8a4e; }
-
-        /* Emerald/status translucent fills → warm-neutral tones (kills #EEF4F0 wash) */
-        html:not(.dark) .bg-emerald-500\/10 { background: rgba(160,128,96,0.08); }
-        html:not(.dark) .bg-emerald-500\/15 { background: rgba(160,128,96,0.12); }
-        html:not(.dark) .bg-emerald-500\/20 { background: rgba(160,128,96,0.16); }
-        html:not(.dark) .bg-emerald-500\/30 { background: rgba(160,128,96,0.24); }
-        html:not(.dark) .border-emerald-500\/20 { border-color: rgba(160,128,96,0.25); }
-        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(160,128,96,0.3); }
-        html:not(.dark) .border-green-500\/20 { border-color: rgba(160,128,96,0.25); }
-        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background: rgba(160,128,96,0.1); }
-        html:not(.dark) .bg-green-500\/10 { background: rgba(160,128,96,0.08); }
-        html:not(.dark) .bg-emerald-400\/10 { background: rgba(160,128,96,0.08); }
-        html:not(.dark) .text-emerald-400\/80 { color: rgba(45,138,78,0.8); }
-
-        /* Sidebar & nav */
-        html:not(.dark) .sidebar-link.active { background: rgba(160,128,96,0.12); color: #806040; border-right-color: #a08060; }
-        html:not(.dark) .sidebar-link:hover { background: rgba(160,128,96,0.06); }
-        html:not(.dark) .tab-btn.active { color: #806040; border-bottom-color: #a08060; }
-        html:not(.dark) .code-tab.active { background: rgba(160,128,96,0.12); color: #806040; border-color: #a08060; }
-        html:not(.dark) .model-chip:hover { border-color: #a08060; background: rgba(160,128,96,0.06); }
-        html:not(.dark) .stat-card:hover { border-color: rgba(160,128,96,0.3); }
-
-        /* Buttons & inputs */
-        html:not(.dark) input[type="text"], html:not(.dark) input[type="email"], html:not(.dark) input[type="password"],
-        html:not(.dark) input[type="number"], html:not(.dark) textarea, html:not(.dark) select {
-            background: #ffffff; color: #1a1715; border-color: #e8e4de;
-        }
-        html:not(.dark) input[type="text"]:focus, html:not(.dark) input[type="email"]:focus,
-        html:not(.dark) input[type="password"]:focus, html:not(.dark) input[type="number"]:focus,
-        html:not(.dark) textarea:focus, html:not(.dark) select:focus {
-            border-color: #a08060;
-        }
-
-        /* Toast */
-        html:not(.dark) .toast { background: #ffffff; border-color: #e8e4de; color: #1a1715; }
-        html:not(.dark) .toast.success { background: #f0f7f2; border-color: #2d8a4e; color: #1a1715; }
-        html:not(.dark) .toast.error { background: #fdf3f2; border-color: #d64545; color: #1a1715; }
-
-        /* Tables */
-        html:not(.dark) table { color: #1a1715; }
-        html:not(.dark) td, html:not(.dark) th { border-color: #e8e4de; color: #1a1715; }
-        html:not(.dark) tr:hover { background: #f5f3f0; }
-
-        /* Model chips — re-allow card look in light mode */
-        html:not(.dark) .model-chip.bg-surface.border.border-border.rounded-xl {
-            background: #ffffff !important;
-            border: 1px solid #e8e4de !important;
-            border-radius: 0.75rem !important;
-        }
-
-        /* Focus states light */
-        html:not(.dark) *:focus-visible { outline-color: #a08060; }
-        html:not(.dark) input:focus-visible, html:not(.dark) select:focus-visible {
-            box-shadow: 0 0 0 2px rgba(160,128,96,0.3);
-        }
+        .code-tab.active { background: rgba(139,92,246,0.12); color: #8B5CF6; border-color: #8B5CF6; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
-<body>
-<div class="aurora" aria-hidden="true">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-
+<body class="dark">
 
     <!-- Mobile Overlay -->
     <div class="sidebar-overlay fixed inset-0 bg-black/60 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
@@ -209,11 +79,11 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
     <div class="flex min-h-screen">
 
         <!-- ============ SIDEBAR ============ -->
-        <aside id="sidebar" class="sidebar fixed md:sticky top-0 left-0 h-screen w-52 bg-surface border-r border-border flex flex-col z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-200">
+        <aside id="sidebar" class="sidebar fixed md:sticky top-0 left-0 h-screen w-64 bg-surface border-r border-border flex flex-col z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-200">
             <!-- Brand -->
             <div class="flex items-center gap-3 px-5 py-5 border-b border-border">
                 <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-8 w-auto" />
-                <span class="ml-auto text-[10px] text-accent-bright font-medium">BETA</span>
+                <span class="ml-auto text-[10px] font-medium px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">BETA</span>
             </div>
 
             <!-- Nav Links -->
@@ -266,18 +136,12 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
             </nav>
 
             <!-- User Info -->
-            <div class="px-4 py-3 border-t border-border">
-                <a href="/status" class="flex items-center gap-2 text-xs text-muted hover:text-emerald-400 transition-colors">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                    All Systems Operational
-                </a>
-            </div>
-<div class="border-t border-border px-4 py-4">
+            <div class="border-t border-border px-4 py-4">
                 <div class="flex items-center gap-3 mb-3">
                     {% if stats.avatar_url %}
                     <img src="{{ stats.avatar_url }}" class="w-9 h-9 rounded-full object-cover shrink-0">
                     {% else %}
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-accent to-emerald-700 flex items-center justify-center text-white font-semibold text-sm shrink-0">{{ (stats.full_name[0] if stats.full_name else stats.email[0])|upper }}</div>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-accent to-violet-700 flex items-center justify-center text-white font-semibold text-sm shrink-0">{{ (stats.full_name[0] if stats.full_name else stats.email[0])|upper }}</div>
                     {% endif %}
                     <div class="min-w-0">
                         {% if stats.full_name %}
@@ -285,12 +149,12 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                         {% endif %}
                         <div class="text-xs text-muted truncate">{{ stats.email }}</div>
                         {% if stats.username %}
-                        <div class="text-[11px] text-emerald-400">@{{ stats.username }}</div>
+                        <div class="text-[11px] text-violet-400">@{{ stats.username }}</div>
                         {% endif %}
                     </div>
                 </div>
                 {% if stats.is_admin %}
-                <a href="/admin" class="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-xs font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all duration-150 mb-1 border border-emerald-500/20">
+                <a href="/admin" class="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-xs font-medium text-violet-400 hover:text-violet-300 hover:bg-violet-500/10 transition-all duration-150 mb-1 border border-violet-500/20">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     Model Manager
                 </a>
@@ -316,10 +180,13 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                         <h1 class="text-base sm:text-lg font-semibold text-text truncate" id="page-title">Overview</h1>
                     </div>
                     <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                        <button onclick="toggleTheme()" class="p-2 rounded-lg text-muted hover:text-primary hover:bg-surface transition-colors" aria-label="Toggle theme">
-                            <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                        </button>
+                        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border text-xs text-muted">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            All Systems Operational
+                        </div>
+                        <a href="/auth/logout" title="Sign Out" class="p-2 rounded-lg text-muted hover:text-red-400 hover:bg-red-400/10 transition-all duration-150">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        </a>
                     </div>
                 </div>
             </header>
@@ -335,26 +202,46 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                         <p class="text-muted text-sm">Here's your account at a glance.</p>
                     </div>
 
-                    <!-- Stats (flat) -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-10">
-                        <div>
-                            <div class="text-[11px] uppercase tracking-wider text-muted mb-1">Requests</div>
-                            <div class="text-2xl font-bold text-primary">{{ stats.total_requests }}</div>
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+                        <div class="stat-card bg-surface border border-border rounded-xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-medium text-muted uppercase tracking-wider">Requests</span>
+                                <div class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                </div>
+                            </div>
+                            <div class="text-2xl font-bold text-text">{{ stats.total_requests }}</div>
                             <div class="text-[11px] text-muted mt-1">Total API calls</div>
                         </div>
-                        <div>
-                            <div class="text-[11px] uppercase tracking-wider text-muted mb-1">Tokens In</div>
-                            <div class="text-2xl font-bold text-primary">{{ stats.tokens_in|default(0) }}</div>
+                        <div class="stat-card bg-surface border border-border rounded-xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-medium text-muted uppercase tracking-wider">Tokens In</span>
+                                <div class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                                </div>
+                            </div>
+                            <div class="text-2xl font-bold text-text">{{ stats.tokens_in|default(0) }}</div>
                             <div class="text-[11px] text-muted mt-1">Input tokens consumed</div>
                         </div>
-                        <div>
-                            <div class="text-[11px] uppercase tracking-wider text-muted mb-1">Tokens Out</div>
-                            <div class="text-2xl font-bold text-primary">{{ stats.tokens_out|default(0) }}</div>
+                        <div class="stat-card bg-surface border border-border rounded-xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-medium text-muted uppercase tracking-wider">Tokens Out</span>
+                                <div class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                                </div>
+                            </div>
+                            <div class="text-2xl font-bold text-text">{{ stats.tokens_out|default(0) }}</div>
                             <div class="text-[11px] text-muted mt-1">Output tokens generated</div>
                         </div>
-                        <div>
-                            <div class="text-[11px] uppercase tracking-wider text-muted mb-1">Models</div>
-                            <div class="text-2xl font-bold text-primary">{{ model_count }}</div>
+                        <div class="stat-card bg-surface border border-border rounded-xl p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-medium text-muted uppercase tracking-wider">Models</span>
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                                </div>
+                            </div>
+                            <div class="text-2xl font-bold text-text">{{ model_count }}</div>
                             <div class="text-[11px] text-muted mt-1">Available models</div>
                         </div>
                     </div>
@@ -363,10 +250,10 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                     <div class="bg-surface border border-border rounded-xl p-4 sm:p-6 mb-8">
                         <div class="flex items-center justify-between mb-4 gap-2">
                             <h3 class="text-sm sm:text-base font-semibold text-text flex items-center gap-2">
-                                <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                <svg class="w-4 h-4 text-violet-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                                 Your API Keys
                             </h3>
-                            <button onclick="showTab('apikeys'); return false" class="text-xs text-emerald-400 hover:text-emerald-400/80 font-medium transition shrink-0">Manage →</button>
+                            <button onclick="showTab('apikeys'); return false" class="text-xs text-violet-400 hover:text-violet-400/80 font-medium transition shrink-0">Manage →</button>
                         </div>
                         {% if api_keys %}
                         <div class="space-y-2">
@@ -390,14 +277,14 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                             </button>
                         </div>
                         {% endif %}
-                        <p class="text-xs text-muted mt-3">Use your key with the <code class="text-emerald-400/80 bg-accent/5 px-1 rounded">Authorization: Bearer</code> header.</p>
+                        <p class="text-xs text-muted mt-3">Use your key with the <code class="text-violet-400/80 bg-accent/5 px-1 rounded">Authorization: Bearer</code> header.</p>
                     </div>
 
                     <!-- Recent Models Preview -->
                     <div class="bg-surface border border-border rounded-xl p-6">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-base font-semibold text-text">Popular Models</h3>
-                            <button onclick="showTab('models'); return false" class="text-xs text-emerald-400 hover:text-emerald-400/80 font-medium transition">View All →</button>
+                            <button onclick="showTab('models'); return false" class="text-xs text-violet-400 hover:text-violet-400/80 font-medium transition">View All →</button>
                         </div>
                         <div class="flex flex-wrap gap-2">
                             {% for model in models[:12] %}
@@ -407,7 +294,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                             </span>
                             {% endfor %}
                             {% if model_count > 12 %}
-                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-accent/5 border border-emerald-500/20 text-xs font-medium text-emerald-400">+{{ model_count - 12 }} more</span>
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-accent/5 border border-violet-500/20 text-xs font-medium text-violet-400">+{{ model_count - 12 }} more</span>
                             {% endif %}
                         </div>
                     </div>
@@ -433,7 +320,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                     </div>
 
                     <!-- New Key Created Alert (hidden by default) -->
-                    <div id="new-key-alert" class="hidden bg-emerald-500/10 rounded-xl p-4 sm:p-5 mb-6">
+                    <div id="new-key-alert" class="hidden bg-emerald-500/10 border border-green-500/20 rounded-xl p-4 sm:p-5 mb-6">
                         <div class="flex items-start gap-3">
                             <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 mt-0.5">
                                 <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -443,7 +330,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                                 <p class="text-xs text-muted mb-3">Copy this key now — it won't be shown in full again.</p>
                                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-base rounded-lg border border-border px-3 sm:px-4 py-2.5">
                                     <code class="flex-1 font-mono text-xs sm:text-sm text-emerald-400 break-all" id="new-key-value"></code>
-                                    <button onclick="copyToClipboard(document.getElementById('new-key-value').textContent, 'API key')" class="shrink-0 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition">Copy</button>
+                                    <button onclick="copyToClipboard(document.getElementById('new-key-value').textContent, 'API key')" class="shrink-0 px-3 py-1.5 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-medium hover:bg-violet-500/20 transition">Copy</button>
                                 </div>
                             </div>
                             <button onclick="document.getElementById('new-key-alert').classList.add('hidden')" class="shrink-0 p-1 text-muted hover:text-text transition">
@@ -459,8 +346,8 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                             <div class="px-4 sm:px-5 py-4">
                                 <div class="key-card-row flex items-center justify-between gap-3">
                                     <div class="flex items-center gap-3 min-w-0">
-                                        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                        <div class="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0">
+                                            <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-sm font-semibold text-text truncate">{{ k.name }}</div>
@@ -475,7 +362,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                                         <button onclick="toggleKeyVisibility({{ k.id }})" id="eye-btn-{{ k.id }}" class="p-2 rounded-lg text-muted hover:text-amber-400 hover:bg-amber-500/10 transition" title="Show / Hide key">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </button>
-                                        <button onclick="copyApiKey({{ k.id }})" class="p-2 rounded-lg text-muted hover:text-emerald-400 hover:bg-emerald-500/10 transition" title="Copy key">
+                                        <button onclick="copyApiKey({{ k.id }})" class="p-2 rounded-lg text-muted hover:text-violet-400 hover:bg-violet-500/10 transition" title="Copy key">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                                         </button>
                                         <button onclick="deleteApiKey({{ k.id }}, '{{ k.name }}')" class="p-2 rounded-lg text-muted hover:text-red-400 hover:bg-red-500/10 transition" title="Delete key">
@@ -485,7 +372,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                                 </div>
                             </div>
                             <div class="px-5 py-2.5 border-t border-border bg-base/50 text-[11px] text-muted">
-                                Created {{ k.created_at[:10] if k.created_at else 'unknown' }} &middot; Use with <code class="text-emerald-400/80 bg-accent/5 px-1 rounded">Authorization: Bearer &lt;key&gt;
+                                Created {{ k.created_at[:10] if k.created_at else 'unknown' }} &middot; Use with <code class="text-violet-400/80 bg-accent/5 px-1 rounded">Authorization: Bearer &lt;key&gt;
                             </div>
                         </div>
                         {% endfor %}
@@ -493,7 +380,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
 
                     <!-- Empty State -->
                     {% if not api_keys %}
-                    <div id="empty-keys" class="text-center py-12 mb-6">
+                    <div id="empty-keys" class="text-center py-12 bg-surface border border-border border-dashed rounded-xl mb-6">
                         <svg class="w-12 h-12 mx-auto text-muted/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                         <h3 class="text-lg font-semibold text-text mb-2">No API Keys</h3>
                         <p class="text-sm text-muted mb-4">Create your first API key to start making requests.</p>
@@ -503,7 +390,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                     <!-- Security Tips -->
                     <div class="bg-surface border border-border rounded-xl p-4 sm:p-6">
                         <h3 class="text-sm font-semibold text-text mb-3 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <svg class="w-4 h-4 text-violet-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                             Security Best Practices
                         </h3>
                         <ul class="space-y-2 text-xs sm:text-sm text-muted">
@@ -522,51 +409,6 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                         <p class="text-muted text-sm">Monitor your API consumption, token usage, and request history.</p>
                     </div>
 
-                    <!-- View Toggle: Overview / Details -->
-                    <div class="flex flex-wrap items-center gap-3 mb-6">
-                        <div class="flex bg-base border border-border rounded-lg p-1">
-                            <button onclick="switchUsageView('overview')" id="usage-view-overview" class="px-4 py-1.5 text-sm font-medium rounded-md transition-colors bg-accent text-white">Overview</button>
-                            <button onclick="switchUsageView('details')" id="usage-view-details" class="px-4 py-1.5 text-sm font-medium rounded-md transition-colors text-muted hover:text-text">Details</button>
-                        </div>
-                        <span class="text-xs text-muted">Filter by time range, provider, or model</span>
-                    </div>
-
-                    <!-- Filter Bar -->
-                    <div class="bg-surface border border-border rounded-xl p-4 mb-8 flex flex-wrap items-end gap-3">
-                        <div>
-                            <label class="text-[11px] font-medium text-muted uppercase tracking-wider block mb-1.5">Period</label>
-                            <select id="usage-period" onchange="reloadUsageLogs()" class="bg-base border border-border rounded-lg px-3 py-2 text-sm text-text focus:outline-none focus:border-accent/40">
-                                <option value="all">All time</option>
-                                <option value="today">Today</option>
-                                <option value="24h">Last 24 hours</option>
-                                <option value="7d">Last 7 days</option>
-                                <option value="30d">Last 30 days</option>
-                                <option value="60d">Last 60 days</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-medium text-muted uppercase tracking-wider block mb-1.5">Provider</label>
-                            <select id="usage-provider" onchange="reloadUsageLogs()" class="bg-base border border-border rounded-lg px-3 py-2 text-sm text-text focus:outline-none focus:border-accent/40">
-                                <option value="">All providers</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-medium text-muted uppercase tracking-wider block mb-1.5">Model</label>
-                            <select id="usage-model" onchange="reloadUsageLogs()" class="bg-base border border-border rounded-lg px-3 py-2 text-sm text-text focus:outline-none focus:border-accent/40">
-                                <option value="">All models</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-medium text-muted uppercase tracking-wider block mb-1.5">From</label>
-                            <input type="datetime-local" id="usage-start" onchange="reloadUsageLogs()" class="bg-base border border-border rounded-lg px-3 py-2 text-sm text-text focus:outline-none focus:border-accent/40">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-medium text-muted uppercase tracking-wider block mb-1.5">To</label>
-                            <input type="datetime-local" id="usage-end" onchange="reloadUsageLogs()" class="bg-base border border-border rounded-lg px-3 py-2 text-sm text-text focus:outline-none focus:border-accent/40">
-                        </div>
-                        <button onclick="resetUsageFilters()" class="ml-auto px-3 py-2 text-sm text-muted hover:text-text transition-colors">Reset</button>
-                    </div>
-
                     <!-- Summary Cards -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         <div class="bg-surface border border-border rounded-xl p-4">
@@ -574,116 +416,79 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                             <div id="usage-total-requests" class="text-2xl font-bold text-text">—</div>
                         </div>
                         <div class="bg-surface border border-border rounded-xl p-4">
-                            <div class="text-[11px] font-medium text-muted uppercase tracking-wider mb-2">Cached Tokens</div>
-                            <div id="usage-total-cached" class="text-2xl font-bold text-emerald-400">—</div>
+                            <div class="text-[11px] font-medium text-muted uppercase tracking-wider mb-2">Tokens In</div>
+                            <div id="usage-total-in" class="text-2xl font-bold text-violet-400">—</div>
                         </div>
                         <div class="bg-surface border border-border rounded-xl p-4">
                             <div class="text-[11px] font-medium text-muted uppercase tracking-wider mb-2">Tokens Out</div>
-                            <div id="usage-total-out" class="text-2xl font-bold text-emerald-400">—</div>
+                            <div id="usage-total-out" class="text-2xl font-bold text-violet-400">—</div>
                         </div>
                         <div class="bg-surface border border-border rounded-xl p-4">
-                            <div class="text-[11px] font-medium text-muted uppercase tracking-wider mb-2">Avg TTFT</div>
-                            <div id="usage-avg-ttft" class="text-2xl font-bold text-emerald-400">—</div>
+                            <div class="text-[11px] font-medium text-muted uppercase tracking-wider mb-2">Avg Latency</div>
+                            <div id="usage-avg-latency" class="text-2xl font-bold text-emerald-400">—</div>
                         </div>
                     </div>
 
-                    <!-- Charts Row: Requests Timeline + Model Donut -->
-                    <div id="usage-charts-section" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-                        <!-- Requests Over Time (line chart) -->
-                        <div class="lg:col-span-2 bg-surface border border-border rounded-xl p-5">
+                    <!-- Last 24h + Model Breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <!-- Last 24h -->
+                        <div class="bg-surface border border-border rounded-xl p-5">
                             <h3 class="text-sm font-semibold text-text mb-4 flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                Requests Over Time
+                                Last 24 Hours
                             </h3>
-                            <div class="relative" style="height:240px">
-                                <canvas id="chart-requests"></canvas>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-muted">Requests</span>
+                                    <span id="usage-24h-requests" class="text-sm font-medium text-text">—</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-muted">Tokens In</span>
+                                    <span id="usage-24h-in" class="text-sm font-medium text-violet-400">—</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-muted">Tokens Out</span>
+                                    <span id="usage-24h-out" class="text-sm font-medium text-violet-400">—</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Model Breakdown (donut chart) -->
+                        <!-- Model Breakdown -->
                         <div class="bg-surface border border-border rounded-xl p-5">
-                            <h3 class="text-sm font-semibold text-text mb-4">Model Usage</h3>
-                            <div class="relative" style="height:240px">
-                                <canvas id="chart-models"></canvas>
+                            <h3 class="text-sm font-semibold text-text mb-4">Top Models (24h)</h3>
+                            <div id="usage-model-breakdown" class="space-y-2">
+                                <div class="text-sm text-muted">Loading...</div>
                             </div>
-                            <div id="usage-model-breakdown" class="mt-4 space-y-1.5"></div>
-                        </div>
-                    </div>
-
-                    <!-- Token Usage Chart -->
-                    <div id="usage-token-chart" class="bg-surface border border-border rounded-xl p-5 mb-8">
-                        <h3 class="text-sm font-semibold text-text mb-4">Token Consumption</h3>
-                        <div class="relative" style="height:200px">
-                            <canvas id="chart-tokens"></canvas>
                         </div>
                     </div>
 
                     <!-- Request Logs Table -->
-                    <div id="usage-table-section" class="bg-surface border border-border rounded-xl overflow-hidden">
+                    <div class="bg-surface border border-border rounded-xl overflow-hidden">
                         <div class="px-5 py-4 border-b border-border flex items-center justify-between">
                             <h3 class="text-sm font-semibold text-text">Request History</h3>
                             <span id="usage-log-count" class="text-[11px] text-muted bg-base px-2 py-1 rounded-full">0 logs</span>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-sm" id="usage-log-table">
+                            <table class="w-full text-sm">
                                 <thead>
                                     <tr class="border-b border-border bg-base/50">
                                         <th class="text-left px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Time</th>
                                         <th class="text-left px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Model</th>
-                                        <th class="text-left px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Provider</th>
-                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Input Tokens</th>
-                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Cached</th>
-                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Cache Creation</th>
-                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Output Tokens</th>
-                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">TTFT</th>
+                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Tokens In</th>
+                                        <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Tokens Out</th>
                                         <th class="text-right px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Latency</th>
                                         <th class="text-center px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Status</th>
-                                        <th class="text-center px-5 py-3 text-[11px] font-medium text-muted uppercase tracking-wider">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usage-log-body" class="divide-y divide-border">
-                                    <tr><td colspan="10" class="px-5 py-8 text-center text-muted text-sm">Loading logs...</td></tr>
+                                    <tr><td colspan="6" class="px-5 py-8 text-center text-muted text-sm">Loading logs...</td></tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <!-- Pagination -->
-                        <div id="usage-log-pagination" class="hidden px-5 py-3 border-t border-border flex items-center justify-between">
-                            <span id="usage-log-pageinfo" class="text-xs text-muted"></span>
-                            <div class="flex items-center gap-2">
-                                <select id="usage-page-size" onchange="reloadUsageLogs()" class="bg-base border border-border rounded-lg px-2 py-1.5 text-xs text-text focus:outline-none">
-                                    <option value="10">10 / page</option>
-                                    <option value="20" selected>20 / page</option>
-                                    <option value="50">50 / page</option>
-                                    <option value="100">100 / page</option>
-                                </select>
-                                <button onclick="usagePage(-1)" id="usage-prev-btn" class="px-3 py-1.5 text-xs rounded-lg bg-base border border-border text-muted hover:text-text transition-colors disabled:opacity-40">‹ Prev</button>
-                                <button onclick="usagePage(1)" id="usage-next-btn" class="px-3 py-1.5 text-xs rounded-lg bg-base border border-border text-muted hover:text-text transition-colors disabled:opacity-40">Next ›</button>
-                            </div>
                         </div>
                         <div id="usage-log-empty" class="hidden px-5 py-12 text-center">
                             <svg class="w-12 h-12 text-muted/30 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                             <div class="text-sm text-muted">No usage logs yet</div>
                             <div class="text-xs text-muted/60 mt-1">Logs will appear here after your first API request</div>
-                        </div>
-                    </div>
-
-                    <!-- Detail Modal -->
-                    <div id="usage-detail-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
-                        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeUsageDetail()"></div>
-                        <div class="relative bg-surface border border-border rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col">
-                            <div class="px-6 py-4 border-b border-border flex items-center justify-between">
-                                <h3 class="text-sm font-semibold text-text">Request Detail</h3>
-                                <button onclick="closeUsageDetail()" class="text-muted hover:text-text transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                </button>
-                            </div>
-                            <div class="flex border-b border-border">
-                                <button onclick="switchDetailTab('req')" id="detail-tab-req" class="px-5 py-2.5 text-xs font-medium border-b-2 border-accent text-text">Request</button>
-                                <button onclick="switchDetailTab('resp')" id="detail-tab-resp" class="px-5 py-2.5 text-xs font-medium border-b-2 border-transparent text-muted hover:text-text">Response</button>
-                            </div>
-                            <div class="p-5 overflow-auto flex-1">
-                                <pre id="usage-detail-content" class="text-xs text-text font-mono whitespace-pre-wrap break-words"></pre>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -707,15 +512,15 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="model-grid">
                         {% for model in models %}
                         <div class="model-chip bg-surface border border-border rounded-xl px-4 py-3 flex items-center gap-3 cursor-default model-item" data-name="{{ model.id|lower }}" data-tier="{{ model.tier|default('free') }}">
-                            <div class="w-8 h-8 rounded-lg {% if model.tier == 'pro' %}bg-emerald-500/15{% else %}bg-emerald-500/10{% endif %} flex items-center justify-center shrink-0">
-                                <span class="{% if model.tier == 'pro' %}text-emerald-400{% else %}text-emerald-400{% endif %} text-xs font-bold">{{ (model.display_name if model.display_name else model.id)[0]|upper }}</span>
+                            <div class="w-8 h-8 rounded-lg {% if model.tier == 'pro' %}bg-violet-500/15{% else %}bg-emerald-500/10{% endif %} flex items-center justify-center shrink-0">
+                                <span class="{% if model.tier == 'pro' %}text-violet-400{% else %}text-emerald-400{% endif %} text-xs font-bold">{{ (model.display_name if model.display_name else model.id)[0]|upper }}</span>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <div class="text-sm font-medium text-text truncate" title="{{ model.id }}">{{ model.display_name if model.display_name else model.id }}</div>
                                 <div class="text-[11px] text-muted">{{ model.provider|default('Provider') }}</div>
                             </div>
                             {% if model.tier == 'pro' %}
-                            <span class="badge-pro text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">PRO</span>
+                            <span class="badge-pro text-[10px] font-semibold px-2 py-0.5 rounded-md bg-violet-500/10 text-violet-400 border border-violet-500/20 shrink-0">PRO</span>
                             {% else %}
                             <span class="badge-free text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">FREE</span>
                             {% endif %}
@@ -751,7 +556,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                             Copy
                         </button>
-<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-emerald-400">curl</span> <span class="text-emerald-400">{{ site_url }}/v1/chat/completions</span> \
+<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-violet-400">curl</span> <span class="text-emerald-400">{{ site_url }}/v1/chat/completions</span> \
   -H <span class="text-amber-300">"Authorization: Bearer YOUR_API_KEY"</span> \\
   -H <span class="text-amber-300">"Content-Type: application/json"</span>
   -d <span class="text-amber-300">'{
@@ -769,9 +574,9 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                             Copy
                         </button>
-<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-emerald-400">import</span> requests
+<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-purple-400">import</span> requests
 
-response = requests.<span class="text-emerald-400">post</span>(
+response = requests.<span class="text-violet-400">post</span>(
     <span class="text-emerald-400">"{{ site_url }}/v1/chat/completions"</span>,
     headers={
         <span class="text-amber-300">"Authorization"</span>: <span class="text-emerald-400">"Bearer YOUR_API_KEY"</span>,
@@ -782,13 +587,13 @@ response = requests.<span class="text-emerald-400">post</span>(
         <span class="text-amber-300">"messages"</span>: [
             {<span class="text-amber-300">"role"</span>: <span class="text-emerald-400">"user"</span>, <span class="text-amber-300">"content"</span>: <span class="text-emerald-400">"Hello!"</span>}
         ],
-        <span class="text-amber-300">"stream"</span>: <span class="text-emerald-400">True</span>,
+        <span class="text-amber-300">"stream"</span>: <span class="text-purple-400">True</span>,
     }
 )
 
-<span class="text-emerald-400">for</span> line <span class="text-emerald-400">in</span> response.<span class="text-emerald-400">iter_lines</span>():
-    <span class="text-emerald-400">if</span> line:
-        <span class="text-emerald-400">print</span>(line.<span class="text-emerald-400">decode</span>())</pre>
+<span class="text-purple-400">for</span> line <span class="text-purple-400">in</span> response.<span class="text-violet-400">iter_lines</span>():
+    <span class="text-purple-400">if</span> line:
+        <span class="text-purple-400">print</span>(line.<span class="text-violet-400">decode</span>())</pre>
                     </div>
 
                     <!-- Node.js -->
@@ -797,28 +602,28 @@ response = requests.<span class="text-emerald-400">post</span>(
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                             Copy
                         </button>
-<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-emerald-400">const</span> response = <span class="text-emerald-400">await</span> <span class="text-emerald-400">fetch</span>(<span class="text-emerald-400">"{{ site_url }}/v1/chat/completions"</span>, {
+<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-purple-400">const</span> response = <span class="text-purple-400">await</span> <span class="text-violet-400">fetch</span>(<span class="text-emerald-400">"{{ site_url }}/v1/chat/completions"</span>, {
   method: <span class="text-emerald-400">"POST"</span>,
   headers: {
     <span class="text-amber-300">"Authorization"</span>: <span class="text-emerald-400">`Bearer YOUR_API_KEY`</span>,
     <span class="text-amber-300">"Content-Type"</span>: <span class="text-emerald-400">"application/json"</span>,
   },
-  body: JSON.<span class="text-emerald-400">stringify</span>({
+  body: JSON.<span class="text-violet-400">stringify</span>({
     model: <span class="text-emerald-400">"deepseek-v4-flash"</span>,
     messages: [
       { role: <span class="text-emerald-400">"user"</span>, content: <span class="text-emerald-400">"Hello!"</span> },
     ],
-    stream: <span class="text-emerald-400">true</span>,
+    stream: <span class="text-purple-400">true</span>,
   }),
 });
 
-<span class="text-emerald-400">const</span> reader = response.body.<span class="text-emerald-400">getReader</span>();
-<span class="text-emerald-400">const</span> decoder = <span class="text-emerald-400">new</span> <span class="text-emerald-400">TextDecoder</span>();
+<span class="text-purple-400">const</span> reader = response.body.<span class="text-violet-400">getReader</span>();
+<span class="text-purple-400">const</span> decoder = <span class="text-purple-400">new</span> <span class="text-violet-400">TextDecoder</span>();
 
-<span class="text-emerald-400">while</span> (<span class="text-emerald-400">true</span>) {
-  <span class="text-emerald-400">const</span> { done, value } = <span class="text-emerald-400">await</span> reader.<span class="text-emerald-400">read</span>();
-  <span class="text-emerald-400">if</span> (done) <span class="text-emerald-400">break</span>;
-  console.<span class="text-emerald-400">log</span>(decoder.<span class="text-emerald-400">decode</span>(value));
+<span class="text-purple-400">while</span> (<span class="text-purple-400">true</span>) {
+  <span class="text-purple-400">const</span> { done, value } = <span class="text-purple-400">await</span> reader.<span class="text-violet-400">read</span>();
+  <span class="text-purple-400">if</span> (done) <span class="text-purple-400">break</span>;
+  console.<span class="text-violet-400">log</span>(decoder.<span class="text-violet-400">decode</span>(value));
 }</pre>
                     </div>
 
@@ -828,24 +633,24 @@ response = requests.<span class="text-emerald-400">post</span>(
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                             Copy
                         </button>
-<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-emerald-400">from</span> openai <span class="text-emerald-400">import</span> OpenAI
+<pre class="bg-base border border-border rounded-xl p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-muted"><span class="text-purple-400">from</span> openai <span class="text-purple-400">import</span> OpenAI
 
 client = OpenAI(
     api_key=<span class="text-emerald-400">"YOUR_API_KEY"</span>,
     base_url=<span class="text-emerald-400">"{{ site_url }}/v1"</span>
 )
 
-stream = client.chat.completions.<span class="text-emerald-400">create</span>(
+stream = client.chat.completions.<span class="text-violet-400">create</span>(
     model=<span class="text-emerald-400">"deepseek-v4-flash"</span>,
     messages=[
         {<span class="text-amber-300">"role"</span>: <span class="text-emerald-400">"user"</span>, <span class="text-amber-300">"content"</span>: <span class="text-emerald-400">"Hello!"</span>}
     ],
-    stream=<span class="text-emerald-400">True</span>
+    stream=<span class="text-purple-400">True</span>
 )
 
-<span class="text-emerald-400">for</span> chunk <span class="text-emerald-400">in</span> stream:
-    <span class="text-emerald-400">if</span> chunk.choices[0].delta.content:
-        <span class="text-emerald-400">print</span>(chunk.choices[0].delta.content, end=<span class="text-emerald-400">""</span>)</pre>
+<span class="text-purple-400">for</span> chunk <span class="text-purple-400">in</span> stream:
+    <span class="text-purple-400">if</span> chunk.choices[0].delta.content:
+        <span class="text-purple-400">print</span>(chunk.choices[0].delta.content, end=<span class="text-emerald-400">""</span>)</pre>
                     </div>
 
                     <!-- API Info -->
@@ -854,19 +659,19 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                             <div>
                                 <span class="text-muted">Base URL:</span>
-                                <code class="ml-2 text-emerald-400 font-mono text-xs">{{ site_url }}/v1</code>
+                                <code class="ml-2 text-violet-400 font-mono text-xs">{{ site_url }}/v1</code>
                             </div>
                             <div>
                                 <span class="text-muted">Auth Header:</span>
-                                <code class="ml-2 text-emerald-400 font-mono text-xs">Authorization: Bearer &lt;key&gt;</code>
+                                <code class="ml-2 text-violet-400 font-mono text-xs">Authorization: Bearer &lt;key&gt;</code>
                             </div>
                             <div>
                                 <span class="text-muted">Format:</span>
-                                <code class="ml-2 text-emerald-400 font-mono text-xs">OpenAI-compatible</code>
+                                <code class="ml-2 text-violet-400 font-mono text-xs">OpenAI-compatible</code>
                             </div>
                             <div>
                                 <span class="text-muted">Streaming:</span>
-                                <code class="ml-2 text-emerald-400 font-mono text-xs">SSE (Server-Sent Events)</code>
+                                <code class="ml-2 text-violet-400 font-mono text-xs">SSE (Server-Sent Events)</code>
                             </div>
                         </div>
                     </div>
@@ -886,9 +691,9 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
                             <div class="flex items-center gap-6">
                                 <div id="profile-avatar-display" class="relative">
                                     {% if stats.avatar_url %}
-                                    <img src="{{ stats.avatar_url }}" class="w-20 h-20 rounded-full object-cover border-2 border-emerald-500/30 shadow-lg shadow-accent/10" id="avatar-img">
+                                    <img src="{{ stats.avatar_url }}" class="w-20 h-20 rounded-full object-cover border-2 border-violet-500/30 shadow-lg shadow-accent/10" id="avatar-img">
                                     {% else %}
-                                    <div class="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl font-bold shadow-lg shadow-accent/10" id="avatar-initials">
+                                    <div class="w-20 h-20 rounded-full bg-violet-500/20 border-2 border-violet-500/30 flex items-center justify-center text-violet-400 text-2xl font-bold shadow-lg shadow-accent/10" id="avatar-initials">
                                         {{ stats.full_name[0] if stats.full_name else stats.email[0]|upper }}
                                     </div>
                                     {% endif %}
@@ -968,7 +773,7 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
                                         <div class="text-sm font-medium text-text">Plan</div>
                                         <div class="text-xs text-muted">Free Tier</div>
                                     </div>
-                                    <span class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Free</span>
+                                    <span class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20">Free</span>
                                 </div>
                                 <div class="flex items-center justify-between py-3">
                                     <div>
@@ -1137,7 +942,7 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
             const data = await resp.json();
             if (data.ok) {
                 const container = document.getElementById('profile-avatar-display');
-                container.innerHTML = '<img src="' + data.avatar_url + '" class="w-20 h-20 rounded-full object-cover border-2 border-emerald-500/30" id="avatar-img">';
+                container.innerHTML = '<img src="' + data.avatar_url + '" class="w-20 h-20 rounded-full object-cover border-2 border-violet-500/30" id="avatar-img">';
                 status.className = 'text-xs text-emerald-400';
                 status.textContent = '✓ Avatar updated';
             } else {
@@ -1159,7 +964,7 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
             const data = await resp.json();
             if (data.ok) {
                 const container = document.getElementById('profile-avatar-display');
-                container.innerHTML = '<div class="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl font-bold" id="avatar-initials">' + (document.getElementById('profile-fullname').value[0] || '{{ stats.email[0]|upper }}').toUpperCase() + '</div>';
+                container.innerHTML = '<div class="w-20 h-20 rounded-full bg-violet-500/20 border-2 border-violet-500/30 flex items-center justify-center text-violet-400 text-2xl font-bold" id="avatar-initials">' + (document.getElementById('profile-fullname').value[0] || '{{ stats.email[0]|upper }}').toUpperCase() + '</div>';
                 status.className = 'text-xs text-muted';
                 status.textContent = 'Avatar removed';
             }
@@ -1196,304 +1001,72 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
     }
 
     // ============ USAGE LOGS ============
-    // ─── Usage view state ───
-    let usagePageNum = 1;
-    let usageTotalPages = 1;
-    let usageDetailCurrent = 'req';
-
-    function switchUsageView(view) {
-        const isOverview = view === 'overview';
-        document.getElementById('usage-view-overview').className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-colors ' + (isOverview ? 'bg-accent text-white' : 'text-muted hover:text-text');
-        document.getElementById('usage-view-details').className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-colors ' + (!isOverview ? 'bg-accent text-white' : 'text-muted hover:text-text');
-        // Overview = charts + summary; Details = table only
-        const charts = document.getElementById('usage-charts-section');
-        const tokenChart = document.getElementById('usage-token-chart');
-        const table = document.getElementById('usage-table-section');
-        if (charts) charts.style.display = isOverview ? '' : 'none';
-        if (tokenChart) tokenChart.style.display = isOverview ? '' : 'none';
-        if (table) table.style.display = isOverview ? 'none' : '';
-    }
-
-    function reloadUsageLogs() {
-        usagePageNum = 1;
-        loadUsageLogs();
-    }
-
-    function resetUsageFilters() {
-        document.getElementById('usage-period').value = 'all';
-        document.getElementById('usage-provider').value = '';
-        document.getElementById('usage-model').value = '';
-        document.getElementById('usage-start').value = '';
-        document.getElementById('usage-end').value = '';
-        reloadUsageLogs();
-    }
-
-    function usagePage(delta) {
-        usagePageNum = Math.min(usageTotalPages, Math.max(1, usagePageNum + delta));
-        loadUsageLogs();
-    }
-
-    function openUsageDetail(id) {
-        usageDetailCurrent = 'req';
-        const modal = document.getElementById('usage-detail-modal');
-        document.getElementById('usage-detail-content').textContent = 'Loading...';
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        fetch('/dashboard/usage-detail?id=' + encodeURIComponent(id))
-            .then(r => r.json())
-            .then(data => {
-                if (!data.ok) throw new Error('Not found');
-                renderUsageDetail(data.request, data.response);
-            })
-            .catch(() => {
-                document.getElementById('usage-detail-content').textContent = 'Failed to load detail';
-            });
-    }
-
-    function renderUsageDetail(reqStr, respStr) {
-        _usageDetailReq = reqStr;
-        _usageDetailResp = respStr;
-        const contentEl = document.getElementById('usage-detail-content');
-        if (usageDetailCurrent === 'req') {
-            try { contentEl.textContent = JSON.stringify(JSON.parse(reqStr || '{}'), null, 2); }
-            catch { contentEl.textContent = reqStr || '(empty)'; }
-        } else {
-            try { contentEl.textContent = JSON.stringify(JSON.parse(respStr || '{}'), null, 2); }
-            catch { contentEl.textContent = respStr || '(empty)'; }
-        }
-    }
-
-    function switchDetailTab(tab) {
-        usageDetailCurrent = tab;
-        const reqTab = document.getElementById('detail-tab-req');
-        const respTab = document.getElementById('detail-tab-resp');
-        reqTab.className = 'px-5 py-2.5 text-xs font-medium border-b-2 ' + (tab === 'req' ? 'border-accent text-text' : 'border-transparent text-muted hover:text-text');
-        respTab.className = 'px-5 py-2.5 text-xs font-medium border-b-2 ' + (tab === 'resp' ? 'border-accent text-text' : 'border-transparent text-muted hover:text-text');
-        // Re-render from cached strings
-        const contentEl = document.getElementById('usage-detail-content');
-        if (tab === 'req') {
-            try { contentEl.textContent = JSON.stringify(JSON.parse(_usageDetailReq || '{}'), null, 2); }
-            catch { contentEl.textContent = _usageDetailReq || '(empty)'; }
-        } else {
-            try { contentEl.textContent = JSON.stringify(JSON.parse(_usageDetailResp || '{}'), null, 2); }
-            catch { contentEl.textContent = _usageDetailResp || '(empty)'; }
-        }
-    }
-
-    let _usageDetailReq = '';
-    let _usageDetailResp = '';
-
-    function closeUsageDetail() {
-        const modal = document.getElementById('usage-detail-modal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-
     async function loadUsageLogs() {
         try {
-            // Build query string from filters
-            const params = new URLSearchParams();
-            const period = document.getElementById('usage-period') ? document.getElementById('usage-period').value : 'all';
-            const provider = document.getElementById('usage-provider') ? document.getElementById('usage-provider').value : '';
-            const model = document.getElementById('usage-model') ? document.getElementById('usage-model').value : '';
-            const start = document.getElementById('usage-start') ? document.getElementById('usage-start').value : '';
-            const end = document.getElementById('usage-end') ? document.getElementById('usage-end').value : '';
-            const pageSize = document.getElementById('usage-page-size') ? document.getElementById('usage-page-size').value : '20';
-            params.set('period', period);
-            if (provider) params.set('provider', provider);
-            if (model) params.set('model', model);
-            if (start) params.set('start', start);
-            if (end) params.set('end', end);
-            params.set('page', usagePageNum);
-            params.set('page_size', pageSize);
-
-            const resp = await fetch('/dashboard/usage-logs?' + params.toString());
+            const resp = await fetch('/dashboard/usage-logs');
             const data = await resp.json();
             if (!data.ok) return;
 
             const s = data.summary || {};
+            const l = data.last_24h || {};
             const m = data.models || [];
             const logs = data.logs || [];
-            const pg = data.pagination || {page:1,pages:1,total:0};
-            usageTotalPages = pg.pages || 1;
 
             // Summary cards
             document.getElementById('usage-total-requests').textContent = (s.total_requests || 0).toLocaleString();
-            document.getElementById('usage-total-cached').textContent = (s.total_cached_tokens || 0).toLocaleString();
+            document.getElementById('usage-total-in').textContent = (s.total_tokens_in || 0).toLocaleString();
             document.getElementById('usage-total-out').textContent = (s.total_tokens_out || 0).toLocaleString();
-            document.getElementById('usage-avg-ttft').textContent = s.avg_ttft ? Math.round(s.avg_ttft) + 'ms' : '—';
+            document.getElementById('usage-avg-latency').textContent = s.avg_latency ? Math.round(s.avg_latency) + 'ms' : '—';
 
-            // Populate provider dropdown once (all providers from breakdown)
-            const provSel = document.getElementById('usage-provider');
-            if (provSel && provSel.options.length <= 1) {
-                (data.providers || []).forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.provider === '(unknown)' ? '' : p.provider;
-                    opt.textContent = p.provider + ' (' + p.requests + ')';
-                    provSel.appendChild(opt);
-                });
-            }
-
-            // Populate model dropdown once
-            const modelSel = document.getElementById('usage-model');
-            if (modelSel && modelSel.options.length <= 1) {
-                m.forEach(md => {
-                    const opt = document.createElement('option');
-                    opt.value = md.model;
-                    opt.textContent = md.model;
-                    modelSel.appendChild(opt);
-                });
-            }
+            // Last 24h
+            document.getElementById('usage-24h-requests').textContent = (l.requests || 0).toLocaleString();
+            document.getElementById('usage-24h-in').textContent = (l.tokens_in || 0).toLocaleString();
+            document.getElementById('usage-24h-out').textContent = (l.tokens_out || 0).toLocaleString();
 
             // Model breakdown
             const modelDiv = document.getElementById('usage-model-breakdown');
-            if (modelDiv) {
-                if (m.length === 0) {
-                    modelDiv.innerHTML = '<div class="text-xs text-muted">No models used yet</div>';
-                } else {
-                    modelDiv.innerHTML = m.map(md => {
-                        return '<div class="flex items-center justify-between py-1 border-b border-border/50 last:border-0">' +
-                            '<div class="flex items-center gap-1.5 min-w-0">' +
-                            '<span class="w-4 h-4 rounded bg-emerald-500/10 flex items-center justify-center text-[9px] font-bold text-emerald-400 shrink-0">' + (md.model.charAt(0) || '?').toUpperCase() + '</span>' +
-                            '<span class="text-xs text-text truncate">' + md.model + '</span>' +
-                            '</div>' +
-                            '<span class="text-[10px] text-muted shrink-0 ml-2">' + md.requests + ' req</span>' +
-                            '</div>';
-                    }).join('');
-                }
+            if (m.length === 0) {
+                modelDiv.innerHTML = '<div class="text-sm text-muted">No models used yet</div>';
+            } else {
+                modelDiv.innerHTML = m.map(md => {
+                    const total = (md.tokens_in || 0) + (md.tokens_out || 0);
+                    return `<div class="flex items-center justify-between py-1.5 border-b border-border/50 last:border-0">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-5 h-5 rounded bg-violet-500/10 flex items-center justify-center text-[10px] font-bold text-violet-400 shrink-0">${md.model.charAt(0).toUpperCase()}</span>
+                            <span class="text-sm text-text truncate">${md.model}</span>
+                        </div>
+                        <div class="text-right shrink-0 ml-3">
+                            <div class="text-xs font-medium text-text">${md.requests} req</div>
+                            <div class="text-[10px] text-muted">${total.toLocaleString()} tokens</div>
+                        </div>
+                    </div>`;
+                }).join('');
             }
 
             // Logs table
             const tbody = document.getElementById('usage-log-body');
             const emptyState = document.getElementById('usage-log-empty');
             const countBadge = document.getElementById('usage-log-count');
-            countBadge.textContent = pg.total + ' logs (' + (logs.length > 0 ? 'showing ' + logs.length : '') + ')';
+            countBadge.textContent = logs.length + ' logs';
+
             if (logs.length === 0) {
+                tbody.parentElement.parentElement.classList.add('hidden');
                 emptyState.classList.remove('hidden');
             } else {
-                emptyState.classList.add('hidden');
                 tbody.innerHTML = logs.map(log => {
                     const time = log.created_at ? new Date(log.created_at + 'Z').toLocaleString() : '—';
                     const statusColor = log.status === 'ok' ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10';
                     const statusDot = log.status === 'ok' ? 'bg-emerald-400' : 'bg-red-400';
-                    const ttft = log.ttft_ms ? log.ttft_ms + 'ms' : '—';
-                    const cached = (log.cached_tokens || 0).toLocaleString();
-                    const cacheCreation = (log.cache_creation_tokens || 0).toLocaleString();
-                    return `<tr class="hover:bg-base/30 transition-colors cursor-pointer" onclick="openUsageDetail(${log.id})">
+                    return `<tr class="hover:bg-base/30 transition-colors">
                         <td class="px-5 py-3 text-xs text-muted whitespace-nowrap">${time}</td>
                         <td class="px-5 py-3"><span class="text-sm text-text font-medium">${log.model || '—'}</span></td>
-                        <td class="px-5 py-3"><span class="text-xs text-muted">${log.provider || '—'}</span></td>
-                        <td class="px-5 py-3 text-right text-sm text-emerald-400 font-mono">${(log.tokens_in || 0).toLocaleString()}</td>
-                        <td class="px-5 py-3 text-right text-sm text-amber-400 font-mono">${cached}</td>
-                        <td class="px-5 py-3 text-right text-sm text-muted font-mono">${cacheCreation}</td>
-                        <td class="px-5 py-3 text-right text-sm text-emerald-400 font-mono">${(log.tokens_out || 0).toLocaleString()}</td>
-                        <td class="px-5 py-3 text-right text-sm text-muted font-mono">${ttft}</td>
+                        <td class="px-5 py-3 text-right text-sm text-violet-400 font-mono">${(log.tokens_in || 0).toLocaleString()}</td>
+                        <td class="px-5 py-3 text-right text-sm text-violet-400 font-mono">${(log.tokens_out || 0).toLocaleString()}</td>
                         <td class="px-5 py-3 text-right text-sm text-muted font-mono">${log.latency_ms || 0}ms</td>
                         <td class="px-5 py-3 text-center"><span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium ${statusColor}"><span class="w-1.5 h-1.5 rounded-full ${statusDot}"></span>${log.status || 'ok'}</span></td>
-                        <td class="px-5 py-3 text-center">
-                            <button onclick="event.stopPropagation(); openUsageDetail(${log.id})" class="text-[11px] px-2.5 py-1 rounded-lg bg-base border border-border text-muted hover:text-text hover:border-accent/40 transition-colors">View</button>
-                        </td>
                     </tr>`;
                 }).join('');
             }
-
-            // Pagination UI
-            const pagEl = document.getElementById('usage-log-pagination');
-            if (pagEl) {
-                if (pg.pages > 1) {
-                    pagEl.classList.remove('hidden');
-                    pagEl.classList.add('flex');
-                    document.getElementById('usage-log-pageinfo').textContent = 'Page ' + pg.page + ' of ' + pg.pages + ' (' + pg.total + ' total)';
-                    document.getElementById('usage-prev-btn').disabled = pg.page <= 1;
-                    document.getElementById('usage-next-btn').disabled = pg.page >= pg.pages;
-                } else {
-                    pagEl.classList.add('hidden');
-                    pagEl.classList.remove('flex');
-                }
-            }
-            // ═══ CHARTS ═══
-            try {
-                const tsResp = await fetch('/dashboard/usage-timeseries');
-                const tsData = await tsResp.json();
-
-                // --- Requests Over Time (Line Chart) ---
-                const hourly = tsData.hourly || [];
-                const c1 = document.getElementById('chart-requests');
-                if (hourly.length > 0 && c1) {
-                    const labels = hourly.map(function(h) {
-                        var d = new Date(h.hour + ':00Z');
-                        return d.toLocaleDateString('en', {month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString('en', {hour:'2-digit',minute:'2-digit'});
-                    });
-                    new Chart(c1.getContext('2d'), {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Requests',
-                                data: hourly.map(function(h) { return h.requests; }),
-                                borderColor: '#10B981',
-                                backgroundColor: 'rgba(16,185,129,0.1)',
-                                fill: true, tension: 0.4, borderWidth: 2,
-                                pointRadius: 3, pointBackgroundColor: '#10B981'
-                            }]
-                        },
-                        options: {
-                            responsive: true, maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
-                            scales: {
-                                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', font: { size: 10 }, maxRotation: 45 } },
-                                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', font: { size: 10 } }, beginAtZero: true }
-                            }
-                        }
-                    });
-                } else if (c1) {
-                    c1.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-muted">No data for the last 7 days</div>';
-                }
-
-                // --- Model Donut Chart ---
-                var m2 = data.models || [];
-                var c2 = document.getElementById('chart-models');
-                if (m2.length > 0 && c2) {
-                    var palette = ['#10B981','#34D399','#059669','#6EE7B7','#A7F3D0','#047857','#065F46','#10B981','#34D399','#059669'];
-                    new Chart(c2.getContext('2d'), {
-                        type: 'doughnut',
-                        data: {
-                            labels: m2.map(function(x) { return x.model; }),
-                            datasets: [{ data: m2.map(function(x) { return x.requests; }), backgroundColor: palette.slice(0, m2.length), borderColor: document.documentElement.classList.contains('dark') ? '#11131A' : '#e8e4de', borderWidth: 2 }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: false } } }
-                    });
-                } else if (c2) {
-                    c2.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-muted">No data</div>';
-                }
-
-                // --- Token Consumption (Bar Chart) ---
-                var daily = tsData.daily || [];
-                var c3 = document.getElementById('chart-tokens');
-                if (daily.length > 0 && c3) {
-                    new Chart(c3.getContext('2d'), {
-                        type: 'bar',
-                        data: {
-                            labels: daily.map(function(d) { return d.day; }),
-                            datasets: [
-                                { label: 'Tokens In', data: daily.map(function(d) { return d.tokens_in; }), backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 4 },
-                                { label: 'Tokens Out', data: daily.map(function(d) { return d.tokens_out; }), backgroundColor: 'rgba(52,211,153,0.4)', borderRadius: 4 }
-                            ]
-                        },
-                        options: {
-                            responsive: true, maintainAspectRatio: false,
-                            plugins: { legend: { labels: { color: '#94A3B8', font: { size: 11 } } } },
-                            scales: {
-                                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', font: { size: 10 } } },
-                                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', font: { size: 10 } }, beginAtZero: true }
-                            }
-                        }
-                    });
-                } else if (c3) {
-                    c3.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-muted">No token data for the last 30 days</div>';
-                }
-            } catch (e2) { console.error('Chart render error:', e2); }
-
         } catch (e) {
             console.error('Failed to load usage logs:', e);
         }
@@ -1639,6 +1212,5 @@ stream = client.chat.completions.<span class="text-emerald-400">create</span>(
     });
     </script>
 
-<script src="/static/particles.js" defer></script>
 </body>
 </html>

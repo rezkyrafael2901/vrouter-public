@@ -1,48 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Status — {{ site_name }}</title>
-<link rel="stylesheet" href="/static/dark-ambient.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
-function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        bg: '#08090D',
+        surface: '#11131A',
+        border: '#222632',
+        accent: '#8B5CF6',
+        'accent-light': '#A78BFA',
+        'accent-dim': '#4C1D95',
+        primary: '#F5F7FA',
+        secondary: '#8B93A7',
+      }
+    }
+  }
+}
 </script>
-<script>
-tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondary:'#0C0E13',surface:'#11131A',elevated:'#151821',border:'#222632',primary:'#F5F7FA',secondaryText:'#8B93A7',muted:'#5F6678',accent:'#10B981','accent-bright':'#34D399','accent-dark':'#059669'}}}}
-</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
-    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
+@import url('https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: #08090D; color: #F5F7FA; font-family: 'Inter', sans-serif; margin: 0; -webkit-font-smoothing: antialiased; }
-::selection { background: rgba(16,185,129,0.3); }
-a { color: #34D399; text-decoration: none; transition: color 0.2s; }
+body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; margin: 0; -webkit-font-smoothing: antialiased; }
+::selection { background: rgba(139,92,246,0.3); }
+a { color: #A78BFA; text-decoration: none; transition: color 0.2s; }
 a:hover { color: #C4B5FD; }
-
-/* LIGHT MODE — Warm Brown UCEL */
-html:not(.dark) body { background: #faf9f7; color: #1a1715; }
-html:not(.dark) ::selection { background: rgba(160,128,96,0.3); }
-html:not(.dark) a { color: #806040; }
-html:not(.dark) a:hover { color: #a08060; }
-html:not(.dark) .bg-base { background: #faf9f7; }
-html:not(.dark) .bg-surface { background: #ffffff; }
-html:not(.dark) .bg-elevated { background: #f5f3f0; }
-html:not(.dark) .border-border { border-color: #e8e4de; }
-html:not(.dark) .text-primary { color: #1a1715; }
-html:not(.dark) .text-secondaryText { color: #6b6560; }
-html:not(.dark) .text-muted { color: #9c9590; }
-html:not(.dark) .text-accent { color: #806040; }
-html:not(.dark) .bg-accent { background: #a08060; }
-html:not(.dark) .border-accent { border-color: #a08060; }
-html:not(.dark) .text-emerald-400 { color: #2d8a4e; }
-html:not(.dark) .bg-emerald-500 { background: #2d8a4e; }
-html:not(.dark) .text-emerald-300 { color: #2d8a4e; }
 
 /* ── Animations ── */
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -60,9 +54,6 @@ html:not(.dark) .text-emerald-300 { color: #2d8a4e; }
 .status-banner {
   border-radius: 16px; padding: 28px 32px; position: relative; overflow: hidden;
   border: 1px solid rgba(34,197,94,0.12); background: #11131A;
-}
-html:not(.dark) .status-banner {
-  background: #ffffff; border-color: rgba(45,138,78,0.15);
 }
 .status-banner::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -92,11 +83,7 @@ html:not(.dark) .status-banner {
   background: #11131A; border: 1px solid #222632;
   border-radius: 14px; padding: 20px 24px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-html:not(.dark) .service-card {
-  background: #ffffff; border-color: #e8e4de;
-}
 .service-card:hover { border-color: #2d3244; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-html:not(.dark) .service-card:hover { border-color: #d8d2ca; box-shadow: 0 8px 24px rgba(26,23,21,0.06); }
 .service-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .service-dot.ok { background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.4); }
 .service-dot.warn { background: #f59e0b; box-shadow: 0 0 8px rgba(251,191,36,0.4); }
@@ -116,7 +103,7 @@ html:not(.dark) .service-card:hover { border-color: #d8d2ca; box-shadow: 0 8px 2
   content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); left: 50%;
   transform: translateX(-50%); background: #1A1C26; color: #F5F7FA; padding: 5px 10px;
   border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 10;
-  border: 1px solid #222632; font-family: 'Inter', sans-serif;
+  border: 1px solid #222632; font-family: 'JetBrains Mono', monospace;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
@@ -126,19 +113,12 @@ html:not(.dark) .service-card:hover { border-color: #d8d2ca; box-shadow: 0 8px 2
   border-radius: 14px; padding: 20px 24px;
   transition: border-color 0.25s ease;
 }
-html:not(.dark) .stat-card {
-  background: #ffffff; border-color: #e8e4de;
-}
 .stat-card:hover { border-color: #2d3244; }
-html:not(.dark) .stat-card:hover { border-color: #d8d2ca; }
 
 /* ── Incident Card ── */
 .incident-card {
   background: #11131A; border: 1px solid #222632;
   border-radius: 12px; padding: 20px; border-left: 3px solid #222632;
-}
-html:not(.dark) .incident-card {
-  background: #ffffff; border-color: #e8e4de; border-left-color: #d8d2ca;
 }
 
 /* ── Responsive ── */
@@ -149,19 +129,49 @@ html:not(.dark) .incident-card {
 </style>
 </head>
 <body style="overflow-x:hidden">
-<div class="aurora" aria-hidden="true">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-
 
 <!-- NAVBAR -->
-{% include 'partials/header.html' %}
+<nav class="sticky top-0 z-50" style="background:rgba(8,9,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid #222632;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 24px;" class="flex items-center justify-between h-16 relative">
+    <!-- Left: Logo only -->
+    <a href="/" class="flex items-center gap-2 shrink-0">
+      <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-8 w-auto" />
+    </a>
+    <!-- Center: Nav links (desktop) -->
+    <div class="flex items-center gap-5 nav-links-desktop">
+      <a href="/features" style="font-size:13px;color:#8B93A7;font-weight:500;">Features</a>
+      <a href="/docs" style="font-size:13px;color:#8B93A7;font-weight:500;">Docs</a>
+      <a href="/status" style="color:#8B5CF6;font-size:13px;font-weight:500;">Status</a>
+      <a href="/faq" style="font-size:13px;color:#8B93A7;font-weight:500;">FAQ</a>
+    </div>
+    <!-- Right: CTA -->
+    <div class="flex items-center gap-3">
+      {% if is_logged_in %}
+      <a href="/dashboard" style="font-size:13px;color:#8B93A7;font-weight:500;">Dashboard</a>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#6D28D9);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;">{{ user_initial }}</div>
+        <a href="/auth/logout" style="font-size:13px;color:#8B93A7;" onmouseover="this.style.color='#F5F7FA'" onmouseout="this.style.color='#8B93A7'">Logout</a>
+      </div>
+      {% else %}
+      <a href="/auth" class="text-[13px] font-medium px-4 py-2 rounded-lg transition-all" style="border:1px solid #222632;color:#F5F7FA;">Sign In</a>
+      {% endif %}
+      <button id="status-hamburger" class="mobile-menu-btn md:hidden flex items-center justify-center w-9 h-9 rounded-lg" style="background:rgba(139,92,246,0.08);" onclick="toggleStatusMobileNav()">
+        <svg width="18" height="18" fill="none" stroke="#8B93A7" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile dropdown menu -->
+  <div id="status-mobile-panel" class="hidden" style="background:rgba(8,9,13,0.95);border-bottom:1px solid #222632;padding:12px 24px;">
+    <a href="/features" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Features</a>
+    <a href="/docs" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Docs</a>
+    <a href="/status" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B5CF6;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">Status</a>
+    <a href="/faq" onclick="closeStatusMobileNav()" style="display:block;font-size:14px;color:#8B93A7;font-weight:500;padding:10px 12px;border-radius:8px;text-decoration:none;">FAQ</a>
+  </div>
+</nav>
 <script>
-function toggleMobileNav(){const p=document.getElementById('status-mobile-panel');p.classList.contains('hidden')?p.classList.remove('hidden'):p.classList.add('hidden');}
-function closeMobileNav(){document.getElementById('status-mobile-panel')?.classList.add('hidden');}
-document.addEventListener('click',function(e){const p=document.getElementById('status-mobile-panel'),b=document.getElementById('status-hamburger');if(p&&!p.contains(e.target)&&b&&!b.contains(e.target))closeMobileNav();});
+function toggleStatusMobileNav(){const p=document.getElementById('status-mobile-panel');p.classList.contains('hidden')?p.classList.remove('hidden'):p.classList.add('hidden');}
+function closeStatusMobileNav(){document.getElementById('status-mobile-panel')?.classList.add('hidden');}
+document.addEventListener('click',function(e){const p=document.getElementById('status-mobile-panel'),b=document.getElementById('status-hamburger');if(p&&!p.contains(e.target)&&b&&!b.contains(e.target))closeStatusMobileNav();});
 </script>
 
 <!-- MAIN -->
@@ -170,7 +180,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
   <!-- PAGE HEADER -->
   <div class="mb-10 animate-in">
     <div class="flex items-center gap-2 mb-3">
-      <span style="font-size:11px;font-weight:700;color:#10B981;letter-spacing:0.1em;text-transform:uppercase;font-family: 'Inter', sans-serif;">SYSTEM STATUS</span>
+      <span style="font-size:11px;font-weight:700;color:#8B5CF6;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">SYSTEM STATUS</span>
     </div>
     <h1 style="font-size:32px;font-weight:800;color:#F5F7FA;letter-spacing:-0.02em;margin-bottom:8px;">Service Status</h1>
     <p style="color:#8B93A7;font-size:14px;margin:0;">Real-time health monitoring for all VRouter infrastructure.</p>
@@ -187,7 +197,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:11px;color:#555C70;font-family: 'Inter', sans-serif;">LAST CHECKED</div>
+        <div style="font-size:11px;color:#555C70;font-family:'JetBrains Mono',monospace;">LAST CHECKED</div>
         <div style="font-size:13px;color:#8B93A7;font-weight:500;" id="lastChecked">—</div>
       </div>
     </div>
@@ -196,7 +206,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
   <!-- SERVICE CARDS -->
   <div class="mb-8 animate-in delay-2">
     <div class="flex items-center gap-2 mb-4">
-      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family: 'Inter', sans-serif;">SERVICES</span>
+      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">SERVICES</span>
     </div>
     <div id="serviceGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <!-- Populated by JS -->
@@ -226,18 +236,18 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
   <!-- UPTIME OVERVIEW -->
   <div class="mb-8 animate-in delay-3">
     <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
-      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family: 'Inter', sans-serif;">UPTIME — LAST 30 DAYS</span>
-      <span style="font-size:14px;font-weight:700;color:#22c55e;font-family: 'Inter', sans-serif;" id="uptimePercent">—</span>
+      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">UPTIME — LAST 30 DAYS</span>
+      <span style="font-size:14px;font-weight:700;color:#22c55e;font-family:'JetBrains Mono',monospace;" id="uptimePercent">—</span>
     </div>
     <div style="background:#11131A;border:1px solid #222632;border-radius:14px;padding:20px;">
       <div class="uptime-bar" id="uptimeBar">
         <!-- Populated by JS -->
       </div>
-      <div class="flex justify-between mt-3" style="font-size:11px;color:#475569;font-family: 'Inter', sans-serif;">
+      <div class="flex justify-between mt-3" style="font-size:11px;color:#475569;font-family:'JetBrains Mono',monospace;">
         <span>30 days ago</span>
         <span>Today</span>
       </div>
-      <div class="flex flex-wrap items-center gap-3 mt-3" style="font-size:11px;color:#555C70;font-family: 'Inter', sans-serif;">
+      <div class="flex flex-wrap items-center gap-3 mt-3" style="font-size:11px;color:#555C70;font-family:'JetBrains Mono',monospace;">
         <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-sm" style="background:rgba(34,197,94,0.6);"></div> Operational</div>
         <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-sm" style="background:rgba(251,191,36,0.6);"></div> Degraded</div>
         <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-sm" style="background:rgba(239,68,68,0.6);"></div> Down</div>
@@ -249,20 +259,20 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
   <div class="mb-8 animate-in delay-4">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="statsGrid">
       <div class="stat-card">
-        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family: 'Inter', sans-serif;">UPTIME</div>
-        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family: 'Inter', sans-serif;" id="statUptime">—</div>
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">UPTIME</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statUptime">—</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family: 'Inter', sans-serif;">REQUESTS</div>
-        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family: 'Inter', sans-serif;" id="statRequests">—</div>
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">REQUESTS</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statRequests">—</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family: 'Inter', sans-serif;">USERS</div>
-        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family: 'Inter', sans-serif;" id="statUsers">—</div>
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">USERS</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statUsers">—</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family: 'Inter', sans-serif;">AVG LATENCY</div>
-        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family: 'Inter', sans-serif;" id="statLatency">—</div>
+        <div style="font-size:11px;color:#555C70;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;font-family:'JetBrains Mono',monospace;">AVG LATENCY</div>
+        <div style="font-size:24px;font-weight:800;color:#F5F7FA;font-family:'JetBrains Mono',monospace;" id="statLatency">—</div>
       </div>
     </div>
   </div>
@@ -270,7 +280,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
   <!-- RECENT INCIDENTS -->
   <div class="mb-8 animate-in delay-5">
     <div class="flex items-center gap-2 mb-4">
-      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family: 'Inter', sans-serif;">RECENT INCIDENTS</span>
+      <span style="font-size:11px;font-weight:700;color:#555C70;letter-spacing:0.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">RECENT INCIDENTS</span>
     </div>
     <div id="incidentsList">
       <div class="incident-card">
@@ -297,7 +307,7 @@ document.addEventListener('click',function(e){const p=document.getElementById('s
       <a href="/docs" class="text-[12px]" style="color:#555C70;">Docs</a>
       <a href="/faq" class="text-[12px]" style="color:#555C70;">FAQ</a>
     </div>
-    <span class="text-[11px]" style="color:#3D4358;font-family: 'Inter', sans-serif;">© 2026 {{ site_name }}</span>
+    <span class="text-[11px]" style="color:#3D4358;font-family:'JetBrains Mono',monospace;">© 2026 {{ site_name }}</span>
   </div>
 </footer>
 
@@ -351,12 +361,12 @@ async function loadStatus() {
             <div class="service-dot ${s.ok ? 'ok' : 'warn'}"></div>
             <div>
               <div style="font-size:14px;font-weight:600;color:#F5F7FA;">${s.name}</div>
-              <div style="font-size:12px;color:#555C70;margin-top:2px;font-family: 'Inter', sans-serif;">${s.icon} ${s.endpoint}</div>
+              <div style="font-size:12px;color:#555C70;margin-top:2px;font-family:'JetBrains Mono',monospace;">${s.icon} ${s.endpoint}</div>
             </div>
           </div>
           <div style="text-align:right;">
             <div style="font-size:13px;font-weight:600;color:${s.ok ? '#22c55e' : '#f59e0b'};">${s.ok ? 'Operational' : 'Degraded'}</div>
-            <div style="font-size:11px;color:#555C70;margin-top:2px;font-family: 'Inter', sans-serif;">${s.latency}</div>
+            <div style="font-size:11px;color:#555C70;margin-top:2px;font-family:'JetBrains Mono',monospace;">${s.latency}</div>
           </div>
         </div>
       </div>
@@ -398,7 +408,7 @@ async function loadStatus() {
             <div class="service-dot err"></div>
             <div>
               <div style="font-size:14px;font-weight:600;color:#F5F7FA;">${s.name}</div>
-              <div style="font-size:12px;color:#555C70;margin-top:2px;font-family: 'Inter', sans-serif;">${s.icon} ${s.endpoint}</div>
+              <div style="font-size:12px;color:#555C70;margin-top:2px;font-family:'JetBrains Mono',monospace;">${s.icon} ${s.endpoint}</div>
             </div>
           </div>
           <div style="text-align:right;">
@@ -440,6 +450,5 @@ loadStatus();
 // Auto-refresh every 60s
 setInterval(loadStatus, 60000);
 </script>
-<script src="/static/particles.js" defer></script>
 </body>
 </html>

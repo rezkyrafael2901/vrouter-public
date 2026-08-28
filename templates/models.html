@@ -6,64 +6,64 @@
 <meta name="theme-color" content="#08090D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
-function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: '#08090D',
+        secondary: '#0C0E13',
+        surface: '#11131A',
+        elevated: '#151821',
+        border: '#222632',
+        primary: '#F5F7FA',
+        secondaryText: '#8B93A7',
+        muted: '#5F6678',
+        accent: '#8B5CF6',
+        'accent-bright': '#A78BFA',
+        'accent-dark': '#7C3AED',
+      },
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
 </script>
-<script>
-tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondary:'#0C0E13',surface:'#11131A',elevated:'#151821',border:'#222632',primary:'#F5F7FA',secondaryText:'#8B93A7',muted:'#5F6678',accent:'#10B981','accent-bright':'#34D399','accent-dark':'#059669'}}}}
-</script>
-
 <style>
-    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
-    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
   html { scroll-behavior: smooth; }
-  body { background: #08090D; color: #F5F7FA; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { background: #08090D; color: #F5F7FA; font-family: 'JetBrains Mono', monospace; -webkit-font-smoothing: antialiased; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #08090D; }
   ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
   a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
-    outline: 2px solid rgba(16,185,129,0.5); outline-offset: 2px; border-radius: 4px;
+    outline: 2px solid rgba(139,92,246,0.5); outline-offset: 2px; border-radius: 4px;
   }
   a:active, button:active { transform: scale(0.98); transition: transform 0.1s ease; }
-
-  /* LIGHT MODE — Warm Brown UCEL */
-  html:not(.dark) body { background: #faf9f7; color: #1a1715; }
-  html:not(.dark) ::-webkit-scrollbar-track { background: #faf9f7; }
-  html:not(.dark) ::-webkit-scrollbar-thumb { background: #e8e4de; }
-  html:not(.dark) .bg-base { background: #faf9f7; }
-  html:not(.dark) .bg-surface { background: #ffffff; }
-  html:not(.dark) .bg-elevated { background: #f5f3f0; }
-  html:not(.dark) .border-border { border-color: #e8e4de; }
-  html:not(.dark) .text-primary { color: #1a1715; }
-  html:not(.dark) .text-secondaryText { color: #6b6560; }
-  html:not(.dark) .text-muted { color: #9c9590; }
-  html:not(.dark) .text-accent { color: #806040; }
-  html:not(.dark) .bg-accent { background: #a08060; }
-  html:not(.dark) .border-accent { border-color: #a08060; }
-  html:not(.dark) .text-emerald-400 { color: #2d8a4e; }
-  html:not(.dark) a { color: #806040; }
-  html:not(.dark) a:hover { color: #a08060; }
-  html:not(.dark) a:focus-visible, html:not(.dark) button:focus-visible,
-  html:not(.dark) input:focus-visible, html:not(.dark) select:focus-visible {
-    outline-color: rgba(160,128,96,0.5);
-  }
-  html:not(.dark) input[type="text"], html:not(.dark) select {
-    background: #ffffff; color: #1a1715; border-color: #e8e4de;
-  }
-  html:not(.dark) table { color: #1a1715; }
-  html:not(.dark) td, html:not(.dark) th { border-color: #e8e4de; color: #1a1715; }
-  html:not(.dark) tr:hover { background: #f5f3f0; }
 </style>
-<link rel="stylesheet" href="/static/dark-ambient.css">
-</head><body>
-<div class="aurora" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
 <title>Models — {{ site_name }}</title>
-</html>
 
-{% include 'partials/header.html' %}
+<nav class="border-b border-border bg-[#08090D]/90 backdrop-blur-lg sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/static/vrouter-logo.svg" alt="{{ site_name }}" class="h-6 w-auto" />
+      </a>
+      <div class="flex items-center gap-1 text-muted text-xs font-mono">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span>/</span>
+        <span class="text-secondaryText">models</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/" class="text-sm text-muted hover:text-primary transition-colors">Home</a>
+      <a href="/auth?signup=true" class="text-sm font-semibold text-white bg-accent hover:bg-accent-dark px-4 py-2 rounded-lg transition-colors">Get Started</a>
+    </div>
+  </div>
+</nav>
 
 <section class="py-16 md:py-24">
   <div class="max-w-6xl mx-auto px-6">
@@ -120,7 +120,7 @@ tailwind.config={darkMode:'class',theme:{extend:{colors:{base:'#08090D',secondar
         <span class="text-accent-bright">curl</span> <span class="text-muted">{{ site_url }}/v1/chat/completions</span> \<br>
         &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-emerald-400">"Authorization: Bearer YOUR_KEY"</span> \<br>
         &nbsp;&nbsp;<span class="text-primary">-H</span> <span class="text-emerald-400">"Content-Type: application/json"</span> \<br>
-        &nbsp;&nbsp;<span class="text-primary">-d</span> <span class="text-emerald-400">'{ "model": "<span class="text-primary" id="example-model">gpt-4o-latest</span>", "messages": [{"role": "user", "content": "Hello"}] }'</span>
+        &nbsp;&nbsp;<span class="text-primary">-d</span> <span class="text-emerald-400">'{ "model": "<span class="text-primary" id="example-model">nemotron-3.5-lite</span>", "messages": [{"role": "user", "content": "Hello"}] }'</span>
       </div>
     </div>
   </div>
@@ -191,6 +191,4 @@ function escHtml(s) {
 // Initial render
 filterModels();
 </script>
-<script src="/static/particles.js" defer></script>
-</body>
-</html>
+</title>

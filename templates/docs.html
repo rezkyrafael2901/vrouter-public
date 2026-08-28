@@ -5,24 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#08090D">
 <title>Docs • VRouter</title>
-<link rel="stylesheet" href="/static/dark-ambient.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/tailwind.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
-(function(){try{var s=localStorage.getItem('vrouter-theme');var d=s?s==='dark':true;document.documentElement.classList.toggle('dark',d);}catch(e){}}());
-function toggleTheme(){var h=document.documentElement;var d=h.classList.contains('dark');h.classList.toggle('dark',!d);localStorage.setItem('vrouter-theme',d?'light':'dark');}
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        base: '#08090D',
+        secondary: '#0C0E13',
+        surface: '#11131A',
+        elevated: '#151821',
+        border: '#222632',
+        primary: '#F5F7FA',
+        secondaryText: '#8B93A7',
+        muted: '#5F6678',
+        accent: '#8B5CF6',
+        'accent-bright': '#A78BFA',
+        'accent-dark': '#7C3AED',
+        green: '#22C55E',
+        red: '#EF4444',
+        amber: '#F59E0B',
+      },
+      fontFamily: {
+        sans: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'monospace'],
+      }
+    }
+  }
+}
 </script>
-
 <style>
-    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Space Grotesk', sans-serif; }
-    code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', monospace; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   background: #08090D;
   color: #F5F7FA;
-  font-family: 'Inter', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -37,15 +57,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
   border-left: 2px solid transparent;
   color: #8B93A7;
 }
-.sidebar-link:hover { color: #F5F7FA; background: rgba(16,185,129,0.06); }
-.sidebar-link.active { color: #34D399; background: rgba(16,185,129,0.1); border-left-color: #10B981; }
+.sidebar-link:hover { color: #F5F7FA; background: rgba(139,92,246,0.06); }
+.sidebar-link.active { color: #A78BFA; background: rgba(139,92,246,0.1); border-left-color: #8B5CF6; }
 
 /* Code blocks */
 .code-tabs-btn {
   transition: all 0.15s ease;
   border-bottom: 2px solid transparent;
 }
-.code-tabs-btn.active { color: #34D399; border-bottom-color: #10B981; }
+.code-tabs-btn.active { color: #A78BFA; border-bottom-color: #8B5CF6; }
 .code-tabs-btn:hover:not(.active) { color: #F5F7FA; }
 .code-panel { display: none; }
 .code-panel.active { display: block; }
@@ -55,8 +75,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 .group:hover .copy-btn { opacity: 1; }
 
 /* Method badges */
-.badge-get { background: rgba(16,185,129,0.12); color: #34D399; }
-.badge-post { background: rgba(16,185,129,0.18); color: #C4B5FD; }
+.badge-get { background: rgba(139,92,246,0.12); color: #A78BFA; }
+.badge-post { background: rgba(139,92,246,0.18); color: #C4B5FD; }
 .badge-delete { background: rgba(239,68,68,0.12); color: #EF4444; }
 
 /* Sidebar mobile overlay */
@@ -71,52 +91,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 ::-webkit-scrollbar-thumb { background: #222632; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #5F6678; }
 
-/* ═══════════════════════════════════════════
-   LIGHT MODE — Warm Brown UCEL (html:not(.dark))
-   ═══════════════════════════════════════════ */
-html:not(.dark) body { background: #faf9f7; color: #1a1715; }
-html:not(.dark) ::-webkit-scrollbar-track { background: #faf9f7; }
-html:not(.dark) ::-webkit-scrollbar-thumb { background: #e8e4de; }
-html:not(.dark) ::-webkit-scrollbar-thumb:hover { background: #d8d0c4; }
-html:not(.dark) .bg-base { background: #faf9f7; }
-html:not(.dark) .bg-surface { background: #ffffff; }
-html:not(.dark) .bg-elevated { background: #f5f3f0; }
-html:not(.dark) .border-border { border-color: #e8e4de; }
-html:not(.dark) .text-primary { color: #1a1715; }
-html:not(.dark) .text-secondaryText { color: #6b6560; }
-html:not(.dark) .text-muted { color: #9c9590; }
-html:not(.dark) .text-accent { color: #806040; }
-html:not(.dark) .text-accent-bright { color: #806040; }
-html:not(.dark) .bg-accent { background: #a08060; }
-html:not(.dark) .border-accent { border-color: #a08060; }
-html:not(.dark) .text-emerald-400 { color: #2d8a4e; }
-html:not(.dark) .bg-emerald-500 { background: #2d8a4e; }
-html:not(.dark) a { color: #806040; }
-html:not(.dark) a:hover { color: #a08060; }
-/* Sidebar */
-html:not(.dark) .sidebar-link { color: #6b6560; }
-html:not(.dark) .sidebar-link:hover { color: #1a1715; background: rgba(160,128,96,0.06); }
-html:not(.dark) .sidebar-link.active { color: #806040; background: rgba(160,128,96,0.1); border-left-color: #a08060; }
-/* Code tabs */
-html:not(.dark) .code-tabs-btn.active { color: #806040; border-bottom-color: #a08060; }
-html:not(.dark) .code-tabs-btn:hover:not(.active) { color: #1a1715; }
-/* Badges */
-html:not(.dark) .badge-get { background: rgba(45,138,78,0.12); color: #2d8a4e; }
-html:not(.dark) .badge-post { background: rgba(160,128,96,0.15); color: #806040; }
-/* Hero gradient */
-html:not(.dark) section[style*="linear-gradient(180deg,#11131A 0%,#08090D 100%)"] {
-  background: linear-gradient(180deg, #ffffff 0%, #faf9f7 100%) !important;
-}
-html:not(.dark) section[style*="radial-gradient(ellipse, rgba(16,185,129,0.06)"] {
-  background: radial-gradient(ellipse, rgba(160,128,96,0.08) 0%, transparent 70%) !important;
-}
-/* Grid pattern */
-html:not(.dark) .grid-pattern {
-  background-image:
-    linear-gradient(rgba(232,228,222,0.5) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232,228,222,0.5) 1px, transparent 1px);
-}
-
 /* Table */
 .doc-table th { text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
 
@@ -130,20 +104,40 @@ html:not(.dark) .grid-pattern {
 </style>
 </head>
 <body class="min-h-screen">
-<div class="aurora" aria-hidden="true">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-
 
 <!-- ═══════════════════ NAVBAR ═══════════════════ -->
-{% include 'partials/header.html' %}
+<nav class="sticky top-0 z-50 border-b border-border" style="background:rgba(8,9,13,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <div class="flex items-center gap-3">
+      <button id="mobile-menu-btn" class="lg:hidden p-2 -ml-2 text-secondaryText hover:text-primary rounded-lg hover:bg-surface">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <a href="/" class="flex items-center gap-2 font-bold text-lg text-primary hover:no-underline">
+        <img src="/static/vrouter-logo.svg" alt="VRouter" class="h-8 w-auto" />
+      </a>
+    </div>
+    <div class="hidden sm:flex items-center gap-6">
+      <a href="/#features" class="text-sm text-secondaryText hover:text-primary font-medium transition">Features</a>
+      <a href="/docs" class="text-sm text-accent font-medium">Docs</a>
+      <a href="/status" class="text-sm text-secondaryText hover:text-primary font-medium transition">Status</a>
+      <a href="/#faq" class="text-sm text-secondaryText hover:text-primary font-medium transition">FAQ</a>
+      {% if is_logged_in %}
+      <a href="/dashboard" class="text-sm text-secondaryText hover:text-primary font-medium transition">Dashboard</a>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-accent to-accent-dark flex items-center justify-center text-sm font-bold text-white">{{ user_initial }}</div>
+        <a href="/auth/logout" class="text-sm text-secondaryText hover:text-primary transition">Logout</a>
+      </div>
+      {% else %}
+      <a href="/auth?signup=true" class="text-sm font-medium px-4 py-2 rounded-lg bg-accent hover:bg-accent-dark text-white transition">Get Started</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
 
 <!-- ═══════════════════ HERO ═══════════════════ -->
 <section class="border-b border-border relative overflow-hidden" style="background:linear-gradient(180deg,#11131A 0%,#08090D 100%);">
   <div class="absolute inset-0 grid-pattern opacity-30 pointer-events-none"></div>
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] pointer-events-none" style="background:radial-gradient(ellipse, rgba(16,185,129,0.06) 0%, transparent 70%);"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] pointer-events-none" style="background:radial-gradient(ellipse, rgba(139,92,246,0.06) 0%, transparent 70%);"></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24 relative z-10">
     <div class="max-w-2xl">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 text-accent-bright text-xs font-medium mb-6">
@@ -287,7 +281,7 @@ html:not(.dark) .grid-pattern {
   -H <span class="text-green">"Content-Type: application/json"</span> \
   -H <span class="text-green">"Authorization: Bearer ***</span> \
   -d <span class="text-green">'{
-    "model": "gpt-4o",
+    "model": 'nemotron-3.5-lite',
     "messages": [
       {"role": "user", "content": "Hello, world!"}
     ]
@@ -303,7 +297,7 @@ client <span class="text-accent-bright">=</span> OpenAI(
 )
 
 response <span class="text-accent-bright">=</span> client.chat.completions.create(
-    model<span class="text-accent-bright">=</span><span class="text-green">"gpt-4o"</span>,
+    model<span class="text-accent-bright">=</span><span class="text-green">'nemotron-3.5-lite'</span>,
     messages<span class="text-accent-bright">=</span>[{<span class="text-green">"role"</span>: <span class="text-green">"user"</span>, <span class="text-green">"content"</span>: <span class="text-green">"Hello, world!"</span>}]
 )
 
@@ -319,7 +313,7 @@ response <span class="text-accent-bright">=</span> client.chat.completions.creat
 });
 
 <span class="text-accent-bright">const</span> res <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
-  model: <span class="text-green">"gpt-4o"</span>,
+  model: <span class="text-green">'nemotron-3.5-lite'</span>,
   messages: [{ role: <span class="text-green">"user"</span>, content: <span class="text-green">"Hello, world!"</span> }],
 });
 
@@ -340,7 +334,7 @@ console.log(res.choices[<span class="amber">0</span>].message.content);</code></
             <pre class="text-sm"><code>{
   <span class="text-green">"id"</span>: <span class="text-green">"chatcmpl-abc123"</span>,
   <span class="text-green">"object"</span>: <span class="text-green">"chat.completion"</span>,
-  <span class="text-green">"model"</span>: <span class="text-green">"gpt-4o"</span>,
+  <span class="text-green">"model"</span>: <span class="text-green">'nemotron-3.5-lite'</span>,
   <span class="text-green">"choices"</span>: [{
     <span class="text-green">"index"</span>: <span class="amber">0</span>,
     <span class="text-green">"message"</span>: { <span class="text-green">"role"</span>: <span class="text-green">"assistant"</span>, <span class="text-green">"content"</span>: <span class="text-green">"Hello! How can I help?"</span> },
@@ -454,7 +448,7 @@ client <span class="text-accent-bright">=</span> OpenAI(
   <span class="text-green">"object"</span>: <span class="text-green">"list"</span>,
   <span class="text-green">"total"</span>: <span class="amber">127</span>,
   <span class="text-green">"data"</span>: [
-    { <span class="text-green">"id"</span>: <span class="text-green">"gpt-4o"</span>, <span class="text-green">"name"</span>: <span class="text-green">"GPT 4O"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"openai"</span> },
+    { <span class="text-green">"id"</span>: <span class="text-green">'nemotron-3.5-lite'</span>, <span class="text-green">"name"</span>: <span class="text-green">"GPT 4O"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"openai"</span> },
     { <span class="text-green">"id"</span>: <span class="text-green">"claude-3-5-sonnet"</span>, <span class="text-green">"name"</span>: <span class="text-green">"CLAUDE 3 5 SONNET"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"anthropic"</span> },
     { <span class="text-green">"id"</span>: <span class="text-green">"google/gemini-2.0-flash"</span>, <span class="text-green">"name"</span>: <span class="text-green">"GEMINI 2 0 FLASH"</span>, <span class="text-green">"provider"</span>: <span class="text-green">"google"</span> }
   ]
@@ -564,7 +558,7 @@ client <span class="text-accent-bright">=</span> OpenAI(
   -H <span class="text-green">"Content-Type: application/json"</span> \
   -H <span class="text-green">"Authorization: Bearer ***</span> \
   -d <span class="text-green">'{
-    "model": "gpt-4o",
+    "model": 'nemotron-3.5-lite',
     "messages": [{"role": "user", "content": "Count to 5"}],
     "stream": true
   }'</span> --no-buffer</code></pre>
@@ -578,7 +572,7 @@ client <span class="text-accent-bright">=</span> OpenAI(
 )
 
 <span class="text-accent-bright">with</span> client.chat.completions.create(
-    model<span class="text-accent-bright">=</span><span class="text-green">"gpt-4o"</span>,
+    model<span class="text-accent-bright">=</span><span class="text-green">'nemotron-3.5-lite'</span>,
     messages<span class="text-accent-bright">=</span>[{<span class="text-green">"role"</span>: <span class="text-green">"user"</span>, <span class="text-green">"content"</span>: <span class="text-green">"Count to 5"</span>}],
     stream<span class="text-accent-bright">=</span><span class="text-accent-bright">True</span>,
 ) <span class="text-accent-bright">as</span> response:
@@ -596,7 +590,7 @@ client <span class="text-accent-bright">=</span> OpenAI(
 });
 
 <span class="text-accent-bright">const</span> stream <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
-  model: <span class="text-green">"gpt-4o"</span>,
+  model: <span class="text-green">'nemotron-3.5-lite'</span>,
   messages: [{ role: <span class="text-green">"user"</span>, content: <span class="text-green">"Count to 5"</span> }],
   stream: <span class="text-accent-bright">true</span>,
 });
@@ -798,7 +792,7 @@ client <span class="text-accent-bright">=</span> OpenAI(
 });
 
 <span class="text-accent-bright">const</span> completion: ChatCompletion <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
-  model: <span class="text-green">"gpt-4o"</span>,
+  model: <span class="text-green">'nemotron-3.5-lite'</span>,
   messages: [
     { role: <span class="text-green">"system"</span>, content: <span class="text-green">"You are a helpful assistant."</span> },
     { role: <span class="text-green">"user"</span>,   content: <span class="text-green">"What is the capital of France?"</span> },
@@ -818,7 +812,7 @@ console.log(completion.choices[<span class="amber">0</span>].message.content);
 });
 
 <span class="text-accent-bright">const</span> stream <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
-  model: <span class="text-green">"gpt-4o"</span>,
+  model: <span class="text-green">'nemotron-3.5-lite'</span>,
   messages: [{ role: <span class="text-green">"user"</span>, content: <span class="text-green">"Write a haiku about code"</span> }],
   stream: <span class="text-accent-bright">true</span>,
 });
@@ -843,7 +837,7 @@ console.log(completion.choices[<span class="amber">0</span>].message.content);
 <span class="text-muted">// Typed helper function</span>
 <span class="text-accent-bright">async function</span> <span class="text-accent-bright">chat</span>(
   messages: ChatCompletionMessageParam[],
-  model: <span class="text-accent-bright">string</span> <span class="text-accent-bright">=</span> <span class="text-green">"gpt-4o"</span>
+  model: <span class="text-accent-bright">string</span> <span class="text-accent-bright">=</span> <span class="text-green">'nemotron-3.5-lite'</span>
 ): Promise&lt;<span class="text-accent-bright">string</span>&gt; {
   <span class="text-accent-bright">const</span> res <span class="text-accent-bright">=</span> <span class="text-accent-bright">await</span> client.chat.completions.create({
     model,
@@ -904,7 +898,7 @@ console.log(reply);</code></pre>
   <span class="text-green">"models"</span>: [{
     <span class="text-green">"title"</span>: <span class="text-green">"VRouter GPT-4o"</span>,
     <span class="text-green">"provider"</span>: <span class="text-green">"openai"</span>,
-    <span class="text-green">"model"</span>: <span class="text-green">"gpt-4o"</span>,
+    <span class="text-green">"model"</span>: <span class="text-green">'nemotron-3.5-lite'</span>,
     <span class="text-green">"apiBase"</span>: <span class="text-green">"https://vrouter.my.id/v1"</span>,
     <span class="text-green">"apiKey"</span>: <span class="text-green">"***"</span>
   }]
@@ -1130,6 +1124,5 @@ function copyCodeBlock(btn) {
   }
 }
 </script>
-<script src="/static/particles.js" defer></script>
 </body>
 </html>
